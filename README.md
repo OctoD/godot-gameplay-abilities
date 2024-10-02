@@ -1,6 +1,6 @@
 # godot-gameplay-abilities
 
-![GGAS logo](godot/icon.svg)
+![GGAS logo](demo/icon.svg)
 
 > (Part of [Godot Gameplay Systems](https://github.com/OctoD/godot-gameplay-systems))
 

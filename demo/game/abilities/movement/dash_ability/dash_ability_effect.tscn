@@ -1,0 +1,90 @@
+[gd_scene load_steps=14 format=3 uid="uid://defxknsrevi8t"]
+
+[ext_resource type="Script" path="res://game/abilities/movement/dash_ability/dash_ability_effect.gd" id="1_1bnqu"]
+
+[sub_resource type="Gradient" id="Gradient_j2yqs"]
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_02v3m"]
+gradient = SubResource("Gradient_j2yqs")
+
+[sub_resource type="Gradient" id="Gradient_l6qn1"]
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_fdgx1"]
+gradient = SubResource("Gradient_l6qn1")
+
+[sub_resource type="Curve" id="Curve_nj16k"]
+_data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(0.492239, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 3
+
+[sub_resource type="CurveTexture" id="CurveTexture_66eqd"]
+curve = SubResource("Curve_nj16k")
+
+[sub_resource type="Curve" id="Curve_j4j62"]
+_data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(0.512195, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 3
+
+[sub_resource type="CurveTexture" id="CurveTexture_f2355"]
+curve = SubResource("Curve_j4j62")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_gqfhg"]
+particle_flag_rotate_y = true
+angle_min = 1.07288e-05
+angle_max = 1.07288e-05
+gravity = Vector3(0, 0, 0)
+linear_accel_min = -2.23517e-06
+linear_accel_max = 25.0
+scale_min = 10.0
+scale_max = 10.0
+scale_curve = SubResource("CurveTexture_f2355")
+color_ramp = SubResource("GradientTexture1D_fdgx1")
+color_initial_ramp = SubResource("GradientTexture1D_02v3m")
+emission_curve = SubResource("CurveTexture_66eqd")
+hue_variation_min = -0.02
+hue_variation_max = 0.05
+anim_speed_min = 11.0
+anim_speed_max = 11.0
+turbulence_noise_strength = 3.29
+turbulence_influence_min = 0.595
+turbulence_influence_max = 0.595
+turbulence_initial_displacement_min = -43.3
+turbulence_initial_displacement_max = 1.49012e-06
+sub_emitter_mode = 1
+sub_emitter_frequency = 4.0
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_u4ti8"]
+transparency = 3
+alpha_hash_scale = 0.4
+alpha_antialiasing_mode = 0
+blend_mode = 4
+cull_mode = 1
+diffuse_mode = 3
+specular_mode = 1
+emission_enabled = true
+emission = Color(1, 0.820313, 0, 1)
+emission_energy_multiplier = 6.19
+emission_on_uv2 = true
+rim_enabled = true
+rim = 0.65
+rim_tint = 0.34
+backlight = Color(1, 0.569336, 0.015625, 1)
+proximity_fade_distance = 0.01
+
+[sub_resource type="TorusMesh" id="TorusMesh_r6gyv"]
+material = SubResource("StandardMaterial3D_u4ti8")
+outer_radius = 0.4
+rings = 12
+ring_segments = 12
+
+[sub_resource type="Skin" id="Skin_oue81"]
+
+[node name="DashAbilityEffect" type="GPUParticles3D"]
+amount = 1
+lifetime = 1.5
+preprocess = 1.0
+visibility_aabb = AABB(-4, -4, -4, 8, 2, 8)
+transform_align = 2
+trail_lifetime = 1.0
+process_material = SubResource("ParticleProcessMaterial_gqfhg")
+draw_pass_1 = SubResource("TorusMesh_r6gyv")
+draw_skin = SubResource("Skin_oue81")
+script = ExtResource("1_1bnqu")

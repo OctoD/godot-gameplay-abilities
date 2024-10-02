@@ -1,0 +1,105 @@
+[gd_scene load_steps=13 format=3 uid="uid://hky6bv1xmhdb"]
+
+[ext_resource type="Script" path="res://game/player/hud/hud.gd" id="1_ym1ti"]
+[ext_resource type="PackedScene" uid="uid://onosa0te2yl3" path="res://game/player/hud/ability.tscn" id="2_pn3ye"]
+[ext_resource type="Script" path="res://game/abilities/attack/fire_projectile_ability/fire_projectile_ability.gd" id="3_tt5j4"]
+[ext_resource type="Script" path="res://game/abilities/movement/dash_ability/dash_ability.gd" id="4_4n0fo"]
+[ext_resource type="Script" path="res://game/abilities/defensive/energy_shield_ability/energy_shield_ability.gd" id="4_clsay"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_xgikw"]
+bg_color = Color(0.00784314, 0.00784314, 0.00784314, 0.117647)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ukrno"]
+bg_color = Color(0.44258, 0.0432126, 0.107728, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_kaxkh"]
+bg_color = Color(0.0365563, 0.0365563, 0.0365563, 0.133333)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_e28wn"]
+bg_color = Color(0.196383, 0.420599, 0.137771, 1)
+
+[sub_resource type="Ability" id="Ability_gqkts"]
+script = ExtResource("3_tt5j4")
+
+[sub_resource type="Ability" id="Ability_k5dwg"]
+script = ExtResource("4_4n0fo")
+stamina_consumption = 20.0
+cooldown = 10.0
+dash_speed = 20.0
+dash_jump = 4.0
+
+[sub_resource type="Ability" id="Ability_i1umf"]
+script = ExtResource("4_clsay")
+
+[node name="Hud" type="MarginContainer"]
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -32.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+script = ExtResource("1_ym1ti")
+
+[node name="Hud" type="HBoxContainer" parent="."]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="BaseStats" type="VBoxContainer" parent="Hud"]
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+
+[node name="Health" type="ProgressBar" parent="Hud/BaseStats"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 10)
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_styles/background = SubResource("StyleBoxFlat_xgikw")
+theme_override_styles/fill = SubResource("StyleBoxFlat_ukrno")
+show_percentage = false
+
+[node name="JumpBar" type="ProgressBar" parent="Hud/BaseStats"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 10)
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_styles/background = SubResource("StyleBoxFlat_kaxkh")
+theme_override_styles/fill = SubResource("StyleBoxFlat_e28wn")
+show_percentage = false
+
+[node name="AbilityBar" type="HBoxContainer" parent="Hud"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 10
+
+[node name="Ability000" parent="Hud/AbilityBar" instance=ExtResource("2_pn3ye")]
+unique_name_in_owner = true
+layout_mode = 2
+ability = SubResource("Ability_gqkts")
+
+[node name="Ability001" parent="Hud/AbilityBar" instance=ExtResource("2_pn3ye")]
+unique_name_in_owner = true
+layout_mode = 2
+ability = SubResource("Ability_k5dwg")
+
+[node name="Ability002" parent="Hud/AbilityBar" instance=ExtResource("2_pn3ye")]
+unique_name_in_owner = true
+layout_mode = 2
+ability = SubResource("Ability_i1umf")
+
+[node name="Ability003" parent="Hud/AbilityBar" instance=ExtResource("2_pn3ye")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="Ability004" parent="Hud/AbilityBar" instance=ExtResource("2_pn3ye")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="Ability005" parent="Hud/AbilityBar" instance=ExtResource("2_pn3ye")]
+unique_name_in_owner = true
+layout_mode = 2

@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<class name="RuntimeAbility" inherits="RefCounted" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/godotengine/godot/master/doc/class.xsd">
+	<brief_description>
+	</brief_description>
+	<description>
+	</description>
+	<tutorials>
+	</tutorials>
+	<methods>
+		<method name="activate">
+			<return type="int" enum="ggas.AbilityEventType" />
+			<description>
+				Activates the ability.
+			</description>
+		</method>
+		<method name="block">
+			<return type="int" enum="ggas.AbilityEventType" />
+			<description>
+				Blocks the ability.
+			</description>
+		</method>
+		<method name="end">
+			<return type="int" enum="ggas.AbilityEventType" />
+			<description>
+				Ends the ability.
+			</description>
+		</method>
+		<method name="get_ability" qualifiers="const">
+			<return type="Ability" />
+			<description>
+				Gets the [Ability] associated with this runtime ability.
+			</description>
+		</method>
+		<method name="get_container" qualifiers="const">
+			<return type="AbilityContainer" />
+			<description>
+				Gets the [AbilityContainer] associated with this runtime ability.
+			</description>
+		</method>
+		<method name="get_cooldown" qualifiers="const">
+			<return type="float" />
+			<description>
+				Gets the cooldown of the ability.
+			</description>
+		</method>
+		<method name="get_duration" qualifiers="const">
+			<return type="float" />
+			<description>
+				Gets the duration of the ability.
+			</description>
+		</method>
+		<method name="grant">
+			<return type="int" enum="ggas.AbilityEventType" />
+			<description>
+				Grants the ability.
+			</description>
+		</method>
+		<method name="is_active" qualifiers="const">
+			<return type="bool" />
+			<description>
+				Returns [code]true[/code] if the ability is active.
+			</description>
+		</method>
+		<method name="is_blocked" qualifiers="const">
+			<return type="bool" />
+			<description>
+				Returns [code]true[/code] if the ability is blocked.
+			</description>
+		</method>
+		<method name="is_cooldown_active" qualifiers="const">
+			<return type="bool" />
+			<description>
+				Returns [code]true[/code] if the cooldown is active.
+			</description>
+		</method>
+		<method name="is_duration_active" qualifiers="const">
+			<return type="bool" />
+			<description>
+				Returns [code]true[/code] if the duration is active.
+			</description>
+		</method>
+		<method name="is_ended" qualifiers="const">
+			<return type="bool" />
+			<description>
+				Returns [code]true[/code] if the ability is ended.
+			</description>
+		</method>
+		<method name="is_granted" qualifiers="const">
+			<return type="bool" />
+			<description>
+				Returns [code]true[/code] if the ability is granted.
+			</description>
+		</method>
+		<method name="revoke">
+			<return type="int" enum="ggas.AbilityEventType" />
+			<description>
+				Revokes the ability.
+			</description>
+		</method>
+		<method name="set_ability">
+			<return type="void" />
+			<param index="0" name="ability" type="Ability" />
+			<description>
+				Sets the [Ability] associated with this runtime ability.
+			</description>
+		</method>
+		<method name="set_container">
+			<return type="void" />
+			<param index="0" name="container" type="AbilityContainer" />
+			<description>
+				Sets the [AbilityContainer] associated with this runtime ability.
+			</description>
+		</method>
+	</methods>
+	<signals>
+		<signal name="activated">
+			<description>
+				Emitted when the ability is activated.
+			</description>
+		</signal>
+		<signal name="blocked">
+			<description>
+				Emitted when the ability is blocked.
+			</description>
+		</signal>
+		<signal name="cooldown_end">
+			<description>
+				Emitted when the cooldown ends.
+			</description>
+		</signal>
+		<signal name="cooldown_start">
+			<description>
+				Emitted when the cooldown starts.
+			</description>
+		</signal>
+		<signal name="ended">
+			<description>
+				Emitted when the ability ends.
+			</description>
+		</signal>
+		<signal name="granted">
+			<description>
+				Emitted when the ability is granted.
+			</description>
+		</signal>
+		<signal name="revoked">
+			<description>
+				Emitted when the ability is revoked.
+			</description>
+		</signal>
+	</signals>
+	<constants>
+		<constant name="ABILITY_EVENT_TYPE_ACTIVATED" value="0" enum="AbilityEventType">
+			The ability was activated.
+		</constant>
+		<constant name="ABILITY_EVENT_TYPE_BLOCKED" value="1" enum="AbilityEventType">
+			The ability was blocked.
+		</constant>
+		<constant name="ABILITY_EVENT_TYPE_ENDED" value="2" enum="AbilityEventType">
+			The ability ended.
+		</constant>
+		<constant name="ABILITY_EVENT_TYPE_GRANTED" value="3" enum="AbilityEventType">
+			The ability was granted.
+		</constant>
+		<constant name="ABILITY_EVENT_TYPE_REVOKED" value="4" enum="AbilityEventType">
+			The ability was revoked.
+		</constant>
+		<constant name="ABILITY_EVENT_TYPE_REFUSED_TO_ACTIVATE" value="5" enum="AbilityEventType">
+			The ability refused to activate.
+		</constant>
+		<constant name="ABILITY_EVENT_TYPE_REFUSED_TO_BLOCK" value="6" enum="AbilityEventType">
+			The ability refused to block.
+		</constant>
+		<constant name="ABILITY_EVENT_TYPE_REFUSED_TO_END" value="7" enum="AbilityEventType">
+			The ability refused to end.
+		</constant>
+		<constant name="ABILITY_EVENT_TYPE_REFUSED_TO_GRANT" value="8" enum="AbilityEventType">
+			The ability refused to grant.
+		</constant>
+		<constant name="ABILITY_EVENT_TYPE_REFUSED_TO_REVOKE" value="9" enum="AbilityEventType">
+			The ability refused to revoke.
+		</constant>
+		<constant name="ABILITY_EVENT_TYPE_ERROR_ACTIVATING" value="10" enum="AbilityEventType">
+			The ability encountered an error while activating.
+		</constant>
+		<constant name="ABILITY_EVENT_TYPE_ERROR_BLOCKING" value="11" enum="AbilityEventType">
+			The ability encountered an error while blocking.
+		</constant>
+		<constant name="ABILITY_EVENT_TYPE_ERROR_ENDING" value="12" enum="AbilityEventType">
+			The ability encountered an error while ending.
+		</constant>
+		<constant name="ABILITY_EVENT_TYPE_ERROR_GRANTING" value="13" enum="AbilityEventType">
+			The ability encountered an error while granting.
+		</constant>
+		<constant name="ABILITY_EVENT_TYPE_ERROR_REVOKING" value="14" enum="AbilityEventType">
+			The ability encountered an error while revoking.
+		</constant>
+	</constants>
+</class>

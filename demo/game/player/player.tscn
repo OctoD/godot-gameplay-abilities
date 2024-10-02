@@ -1,0 +1,120 @@
+[gd_scene load_steps=26 format=3 uid="uid://bngc4wxbowjcy"]
+
+[ext_resource type="Script" path="res://game/player/player.gd" id="1_xb68o"]
+[ext_resource type="AttributeSet" uid="uid://bsd4soau12r8o" path="res://game/player/player_attribute_set.tres" id="2_ji7al"]
+[ext_resource type="Script" path="res://game/abilities/movement/jump_ability.gd" id="3_est12"]
+[ext_resource type="Script" path="res://game/abilities/movement/move_ability.gd" id="4_yslyr"]
+[ext_resource type="Script" path="res://game/abilities/movement/look_ability.gd" id="5_n72p1"]
+[ext_resource type="Texture2D" uid="uid://djxv8gsdoigh2" path="res://game/abilities/attack/fire_projectile_ability/icon.png" id="6_2vdrt"]
+[ext_resource type="Script" path="res://game/abilities/attack/fire_projectile_ability/fire_projectile_ability.gd" id="7_56jw3"]
+[ext_resource type="Script" path="res://game/abilities/defensive/energy_shield_ability/energy_shield_ability.gd" id="8_xqqlt"]
+[ext_resource type="Script" path="res://game/abilities/passives/restore_stamina.gd" id="9_36ixd"]
+[ext_resource type="PackedScene" uid="uid://hky6bv1xmhdb" path="res://game/player/hud/hud.tscn" id="9_pupib"]
+[ext_resource type="Script" path="res://game/abilities/movement/dash_ability/dash_ability.gd" id="10_2l7m6"]
+
+[sub_resource type="Ability" id="Ability_dim7e"]
+script = ExtResource("4_yslyr")
+
+[sub_resource type="Ability" id="Ability_1alpd"]
+script = ExtResource("3_est12")
+stamina_consumption = 2.0
+debug_enabled = false
+
+[sub_resource type="Ability" id="Ability_6oirq"]
+script = ExtResource("5_n72p1")
+
+[sub_resource type="Ability" id="Ability_tg3qt"]
+script = ExtResource("7_56jw3")
+icon = ExtResource("6_2vdrt")
+
+[sub_resource type="Ability" id="Ability_ja2x6"]
+script = ExtResource("8_xqqlt")
+
+[sub_resource type="Ability" id="Ability_snndx"]
+script = ExtResource("9_36ixd")
+
+[sub_resource type="Ability" id="Ability_lre0b"]
+script = ExtResource("10_2l7m6")
+stamina_consumption = 20.0
+cooldown = 10.0
+dash_speed = 20.0
+dash_jump = 4.0
+
+[sub_resource type="Gradient" id="Gradient_tr4fi"]
+offsets = PackedFloat32Array(0.162047, 0.164179, 0.315565, 0.321962)
+colors = PackedColorArray(1, 1, 1, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_7femv"]
+gradient = SubResource("Gradient_tr4fi")
+width = 10
+height = 10
+fill = 1
+fill_from = Vector2(0.5, 0.5)
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_hxi4j"]
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_c812i"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_3fssx"]
+size = Vector3(0.1, 0.1, 0.2)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_6bjdp"]
+albedo_color = Color(0.160629, 0.160629, 0.160629, 1)
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_rwd05"]
+material = SubResource("StandardMaterial3D_6bjdp")
+top_radius = 0.1
+bottom_radius = 0.1
+height = 0.1
+radial_segments = 12
+rings = 1
+
+[node name="Player" type="CharacterBody3D"]
+collision_mask = 7
+script = ExtResource("1_xb68o")
+attribute_set = ExtResource("2_ji7al")
+abilities = Array[Ability]([SubResource("Ability_dim7e"), SubResource("Ability_1alpd"), SubResource("Ability_6oirq"), SubResource("Ability_tg3qt"), SubResource("Ability_ja2x6"), SubResource("Ability_snndx"), SubResource("Ability_lre0b")])
+
+[node name="CameraNeck" type="Node3D" parent="."]
+unique_name_in_owner = true
+
+[node name="Camera3D" type="Camera3D" parent="CameraNeck"]
+unique_name_in_owner = true
+transform = Transform3D(-1, -1.81762e-08, 8.55124e-08, 0, 0.978148, 0.207912, -8.74228e-08, 0.207912, -0.978148, -1, 1, -2)
+fov = 78.0
+
+[node name="Crosshair" type="CenterContainer" parent="CameraNeck/Camera3D"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="CrosshairTexture2D" type="TextureRect" parent="CameraNeck/Camera3D/Crosshair"]
+layout_mode = 2
+texture = SubResource("GradientTexture2D_7femv")
+
+[node name="Muzzle" type="Node3D" parent="CameraNeck/Camera3D"]
+unique_name_in_owner = true
+transform = Transform3D(1, 0, 1.42109e-14, 3.55271e-15, 1, 0, -1.42109e-14, 0, 1, -2.38419e-07, -0.395076, -3.36908)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("CapsuleShape3D_hxi4j")
+
+[node name="Hud" parent="." instance=ExtResource("9_pupib")]
+unique_name_in_owner = true
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+mesh = SubResource("CapsuleMesh_c812i")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="MeshInstance3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.290449, 0.577371)
+mesh = SubResource("BoxMesh_3fssx")
+
+[node name="RightEye" type="MeshInstance3D" parent="MeshInstance3D"]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, -0.225735, 0.516352, 0.495006)
+mesh = SubResource("CylinderMesh_rwd05")
+
+[node name="LeftEye" type="MeshInstance3D" parent="MeshInstance3D"]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0.226, 0.516, 0.495)
+mesh = SubResource("CylinderMesh_rwd05")

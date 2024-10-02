@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<class name="Ability" inherits="Resource" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/godotengine/godot/master/doc/class.xsd">
+	<brief_description>
+	</brief_description>
+	<description>
+	</description>
+	<tutorials>
+	</tutorials>
+	<methods>
+		<method name="_can_activate_cooldown" qualifiers="virtual const">
+			<return type="bool" />
+			<param index="0" name="ability_container" type="AbilityContainer" />
+			<param index="1" name="runtime_ability" type="RuntimeAbility" />
+			<description>
+				Called when the ability container checks if the ability cooldown can be activated and the method is overriden.
+			</description>
+		</method>
+		<method name="_can_be_activated" qualifiers="virtual const">
+			<return type="bool" />
+			<param index="0" name="ability_container" type="AbilityContainer" />
+			<param index="1" name="runtime_ability" type="RuntimeAbility" />
+			<description>
+				Called when the ability container checks if the ability can be activated and the method is overriden.
+			</description>
+		</method>
+		<method name="_can_be_blocked" qualifiers="virtual const">
+			<return type="bool" />
+			<param index="0" name="ability_container" type="AbilityContainer" />
+			<param index="1" name="runtime_ability" type="RuntimeAbility" />
+			<description>
+				Called when the ability container checks if the ability can be blocked and the method is overriden.
+			</description>
+		</method>
+		<method name="_can_be_ended" qualifiers="virtual const">
+			<return type="bool" />
+			<param index="0" name="ability_container" type="AbilityContainer" />
+			<param index="1" name="runtime_ability" type="RuntimeAbility" />
+			<description>
+				Called when the ability container checks if the ability can be cancelled and the method is overriden.
+			</description>
+		</method>
+		<method name="_can_be_granted" qualifiers="virtual const">
+			<return type="bool" />
+			<param index="0" name="ability_container" type="AbilityContainer" />
+			<param index="1" name="runtime_ability" type="RuntimeAbility" />
+			<description>
+				Called when the ability container checks if the ability can be ended and the method is overriden.
+			</description>
+		</method>
+		<method name="_can_be_revoked" qualifiers="virtual const">
+			<return type="bool" />
+			<param index="0" name="ability_container" type="AbilityContainer" />
+			<param index="1" name="runtime_ability" type="RuntimeAbility" />
+			<description>
+				Called when the ability container checks if the ability can be granted and the method is overriden.
+			</description>
+		</method>
+		<method name="_get_cooldown" qualifiers="virtual const">
+			<return type="float" />
+			<param index="0" name="ability_container" type="AbilityContainer" />
+			<description>
+				Gets the ability cooldown.
+			</description>
+		</method>
+		<method name="_get_duration" qualifiers="virtual const">
+			<return type="float" />
+			<param index="0" name="ability_container" type="AbilityContainer" />
+			<description>
+				Gets the ability duration.
+			</description>
+		</method>
+		<method name="_on_activate" qualifiers="virtual">
+			<return type="void" />
+			<param index="0" name="ability_container" type="AbilityContainer" />
+			<param index="1" name="runtime_ability" type="RuntimeAbility" />
+			<description>
+				Called when the ability is activated.
+			</description>
+		</method>
+		<method name="_on_block" qualifiers="virtual">
+			<return type="void" />
+			<param index="0" name="ability_container" type="AbilityContainer" />
+			<param index="1" name="runtime_ability" type="RuntimeAbility" />
+			<description>
+				Called when the ability is blocked.
+			</description>
+		</method>
+		<method name="_on_end" qualifiers="virtual">
+			<return type="void" />
+			<param index="0" name="ability_container" type="AbilityContainer" />
+			<param index="1" name="runtime_ability" type="RuntimeAbility" />
+			<description>
+				Called when the ability is ended.
+			</description>
+		</method>
+		<method name="_on_grant" qualifiers="virtual">
+			<return type="void" />
+			<param index="0" name="ability_container" type="AbilityContainer" />
+			<param index="1" name="runtime_ability" type="RuntimeAbility" />
+			<description>
+				Called when the ability is granted.
+			</description>
+		</method>
+		<method name="_on_revoke" qualifiers="virtual">
+			<return type="void" />
+			<param index="0" name="ability_container" type="AbilityContainer" />
+			<param index="1" name="runtime_ability" type="RuntimeAbility" />
+			<description>
+				Called when the ability is revoked.
+			</description>
+		</method>
+		<method name="_on_tick" qualifiers="virtual">
+			<return type="void" />
+			<param index="0" name="delta" type="float" />
+			<param index="1" name="tick_time" type="float" />
+			<param index="2" name="ability_container" type="AbilityContainer" />
+			<param index="3" name="runtime_ability" type="RuntimeAbility" />
+			<description>
+				Called when the ability is ticked. This will be called every frame and will replace the [RuntimeAbility] tick method entirely.
+			</description>
+		</method>
+		<method name="_should_be_activated" qualifiers="virtual const">
+			<return type="bool" />
+			<param index="0" name="ability_container" type="AbilityContainer" />
+			<description>
+				Called when the ability container checks if the ability should be activated.
+			</description>
+		</method>
+		<method name="_should_be_blocked" qualifiers="virtual const">
+			<return type="bool" />
+			<param index="0" name="ability_container" type="AbilityContainer" />
+			<description>
+				Called when the ability container checks if the ability should be blocked.
+			</description>
+		</method>
+		<method name="_should_be_ended" qualifiers="virtual const">
+			<return type="bool" />
+			<param index="0" name="ability_container" type="AbilityContainer" />
+			<description>
+				Called when the ability container checks if the ability should be granted.
+			</description>
+		</method>
+	</methods>
+	<members>
+		<member name="ability_name" type="StringName" setter="set_ability_name" getter="get_ability_name" default="&amp;&quot;&quot;">
+			The ability name.
+		</member>
+	</members>
+</class>

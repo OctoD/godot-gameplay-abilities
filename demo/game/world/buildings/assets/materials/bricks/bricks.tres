@@ -1,0 +1,12 @@
+[gd_resource type="ORMMaterial3D" load_steps=3 format=3 uid="uid://buxbcfgr54657"]
+
+[ext_resource type="Texture2D" uid="uid://dv707iw88anio" path="res://game/world/buildings/assets/materials/bricks/bricks_albedo.png" id="1"]
+[ext_resource type="Texture2D" uid="uid://cmb8a5b2aa5c5" path="res://game/world/buildings/assets/materials/bricks/bricks_normal.png" id="3"]
+
+[resource]
+albedo_color = Color(0.532242, 0.532242, 0.532242, 1)
+albedo_texture = ExtResource("1")
+albedo_texture_msdf = true
+normal_enabled = true
+normal_scale = 2.0
+normal_texture = ExtResource("3")

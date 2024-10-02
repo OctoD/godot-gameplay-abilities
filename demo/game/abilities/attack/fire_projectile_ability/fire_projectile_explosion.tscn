@@ -1,0 +1,61 @@
+[gd_scene load_steps=14 format=3 uid="uid://djqu1wh8oigju"]
+
+[ext_resource type="Shader" path="res://game/abilities/attack/fire_projectile_ability/fire_projectile_explosion.gdshader" id="1_1u5oh"]
+[ext_resource type="Script" path="res://game/abilities/attack/fire_projectile_ability/fire_projectile_explosion.gd" id="2_cxgqh"]
+
+[sub_resource type="Curve" id="Curve_hkqfi"]
+_data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(0.159645, 1), 1.77815, 1.77815, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 3
+
+[sub_resource type="CurveTexture" id="CurveTexture_twa8i"]
+curve = SubResource("Curve_hkqfi")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_6humg"]
+direction = Vector3(0, 50, 0)
+gravity = Vector3(0, 0, 0)
+scale_min = 5.0
+scale_max = 5.5
+scale_curve = SubResource("CurveTexture_twa8i")
+
+[sub_resource type="Gradient" id="Gradient_kl2bp"]
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_tauyw"]
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_54s7w"]
+color_ramp = SubResource("Gradient_kl2bp")
+noise = SubResource("FastNoiseLite_tauyw")
+
+[sub_resource type="Gradient" id="Gradient_mc0fx"]
+colors = PackedColorArray(1, 0, 0, 1, 1, 0.736176, 0.0351563, 1)
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_0sdt8"]
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_aka38"]
+color_ramp = SubResource("Gradient_mc0fx")
+noise = SubResource("FastNoiseLite_0sdt8")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_6ol80"]
+render_priority = 0
+shader = ExtResource("1_1u5oh")
+shader_parameter/Glow_Power = 3.913
+shader_parameter/Lightness_Difference = 1.34
+shader_parameter/Sun_Color = Vector4(150, 1, 0, 1)
+shader_parameter/waveSpeed = 0.137
+shader_parameter/fresnel = 1.0
+shader_parameter/scale = 1.321
+shader_parameter/blendSharpness = 0.3
+shader_parameter/voronoi_noise = SubResource("NoiseTexture2D_aka38")
+shader_parameter/emission_noise = SubResource("NoiseTexture2D_54s7w")
+
+[sub_resource type="SphereMesh" id="SphereMesh_pmahd"]
+material = SubResource("ShaderMaterial_6ol80")
+radius = 0.2
+height = 0.4
+
+[node name="FireProjectileExplosion" type="GPUParticles3D"]
+amount = 1
+explosiveness = 1.0
+randomness = 0.5
+process_material = SubResource("ParticleProcessMaterial_6humg")
+draw_pass_1 = SubResource("SphereMesh_pmahd")
+script = ExtResource("2_cxgqh")

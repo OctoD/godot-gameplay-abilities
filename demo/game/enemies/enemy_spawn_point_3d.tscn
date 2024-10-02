@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://blbio1th0o64u"]
+
+[ext_resource type="Script" path="res://game/enemies/enemy_spawn_point_3d.gd" id="1_qcnpf"]
+
+[node name="EnemySpawn" type="Node"]
+script = ExtResource("1_qcnpf")

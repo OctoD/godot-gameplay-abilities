@@ -1,0 +1,36 @@
+[gd_resource type="AttributeSet" load_steps=13 format=3 uid="uid://dedvgobrs6ie2"]
+
+[ext_resource type="Script" path="res://game/attributes/stats/constitution.gd" id="1_pew0y"]
+[ext_resource type="Script" path="res://game/attributes/stats/dexterity.gd" id="2_8krw0"]
+[ext_resource type="Script" path="res://game/attributes/derived/health.gd" id="3_s87el"]
+[ext_resource type="Script" path="res://game/attributes/stats/intelligence.gd" id="4_rgo05"]
+[ext_resource type="Script" path="res://game/attributes/derived/movement_speed.gd" id="5_pcxjf"]
+[ext_resource type="Script" path="res://game/attributes/stats/strength.gd" id="6_w5fcl"]
+
+[sub_resource type="Attribute" id="Attribute_tggjd"]
+initial_value = 2.0
+max_value = 2.0
+script = ExtResource("1_pew0y")
+
+[sub_resource type="Attribute" id="Attribute_jh6mh"]
+initial_value = 1.0
+max_value = 3.0
+script = ExtResource("2_8krw0")
+
+[sub_resource type="Attribute" id="Attribute_08vr8"]
+script = ExtResource("3_s87el")
+
+[sub_resource type="Attribute" id="Attribute_4d1t0"]
+initial_value = 1.0
+max_value = 1.0
+script = ExtResource("4_rgo05")
+
+[sub_resource type="Attribute" id="Attribute_ws2jk"]
+script = ExtResource("5_pcxjf")
+
+[sub_resource type="Attribute" id="Attribute_gy0k6"]
+initial_value = 1.0
+script = ExtResource("6_w5fcl")
+
+[resource]
+attributes = Array[AttributeBase]([SubResource("Attribute_tggjd"), SubResource("Attribute_jh6mh"), SubResource("Attribute_08vr8"), SubResource("Attribute_4d1t0"), SubResource("Attribute_ws2jk"), SubResource("Attribute_gy0k6")])

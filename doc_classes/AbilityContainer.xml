@@ -1,0 +1,294 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<class name="AbilityContainer" inherits="Node" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/godotengine/godot/master/doc/class.xsd">
+	<brief_description>
+	</brief_description>
+	<description>
+	</description>
+	<tutorials>
+	</tutorials>
+	<methods>
+		<method name="_build_runtime_ability" qualifiers="virtual const">
+			<return type="RuntimeAbility" />
+			<param index="0" name="ability_resource" type="Resource" />
+			<description>
+				Returns an instance of a [RuntimeAbility]. Override this method if you want to use an extended class of [RuntimeAbility].
+			</description>
+		</method>
+		<method name="_try_activate" qualifiers="virtual const">
+			<return type="int" />
+			<param index="0" name="ability_or_ability_name" type="Variant" />
+			<description>
+				The virtual method called to activate an ability.
+			</description>
+		</method>
+		<method name="_try_block" qualifiers="virtual const">
+			<return type="int" />
+			<param index="0" name="ability_or_ability_name" type="Variant" />
+			<description>
+				The virtual method called to block an ability.
+			</description>
+		</method>
+		<method name="_try_end" qualifiers="virtual const">
+			<return type="int" />
+			<param index="0" name="ability_or_ability_name" type="Variant" />
+			<description>
+				The virtual method called to end an ability.
+			</description>
+		</method>
+		<method name="_try_grant" qualifiers="virtual const">
+			<return type="int" />
+			<param index="0" name="ability_or_ability_name" type="Variant" />
+			<description>
+				The virtual method called to grant an ability.
+			</description>
+		</method>
+		<method name="_try_revoke" qualifiers="virtual const">
+			<return type="int" />
+			<param index="0" name="ability_or_ability_name" type="Variant" />
+			<description>
+				The virtual method called to revoke an ability.
+			</description>
+		</method>
+		<method name="add_ability">
+			<return type="bool" />
+			<param index="0" name="ability" type="Ability" />
+			<description>
+				Adds an [Ability] resource to the container.
+				[br]
+				This method calls automatically:
+				- [code]try_grant(ability)[/code].
+				- [code]try_activate(ability)[/code] if the ability is granted.
+			</description>
+		</method>
+		<method name="find_ability" qualifiers="const">
+			<return type="RuntimeAbility" />
+			<param index="0" name="predicate" type="Callable" />
+			<description>
+				Finds an ability in the container by calling a predicate.
+			</description>
+		</method>
+		<method name="get_abilities" qualifiers="const">
+			<return type="RuntimeAbility[]" />
+			<description>
+				Gets all of the [RuntimeAbility] instances.
+			</description>
+		</method>
+		<method name="get_ability" qualifiers="const">
+			<return type="RuntimeAbility" />
+			<param index="0" name="ability_name_or_instance" type="Variant" />
+			<description>
+				Gets an ability.
+				[codeblocks]
+				[gdscript]
+				var ability = get_ability("ability_name")
+				# or
+				var ability = get_ability(ability_instance)
+				[/gdscript]
+				[/codeblocks]
+			</description>
+		</method>
+		<method name="has_ability" qualifiers="const">
+			<return type="bool" />
+			<param index="0" name="ability_name_or_instance" type="Variant" />
+			<description>
+				Checks if the container has an ability. The parameter can be either a string or an [Ability] instance.
+			</description>
+		</method>
+		<method name="is_ability_active" qualifiers="const">
+			<return type="bool" />
+			<param index="0" name="ability_name_or_instance" type="Variant" />
+			<description>
+				Checks if an ability is active. The parameter can be either a string or an [Ability] instance.
+			</description>
+		</method>
+		<method name="is_ability_blocked" qualifiers="const">
+			<return type="bool" />
+			<param index="0" name="ability_name_or_instance" type="Variant" />
+			<description>
+				Checks if an ability is blocked. The parameter can be either a string or an [Ability] instance.
+			</description>
+		</method>
+		<method name="is_ability_ended" qualifiers="const">
+			<return type="bool" />
+			<param index="0" name="ability_name_or_instance" type="Variant" />
+			<description>
+				Check if an ability is ended. The parameter can be either a string or an [Ability] instance.
+			</description>
+		</method>
+		<method name="is_ability_granted" qualifiers="const">
+			<return type="bool" />
+			<param index="0" name="ability_name_or_instance" type="Variant" />
+			<description>
+				Checks if an ability is granted. The parameter can be either a string or an [Ability] instance.
+			</description>
+		</method>
+		<method name="remove_ability">
+			<return type="bool" />
+			<param index="0" name="ability" type="Ability" />
+			<description>
+				Ends the [Ability] if it is active, revokes it and then removes an [Ability] resource from the container.
+				[br]
+			</description>
+		</method>
+		<method name="try_activate">
+			<return type="int" enum="ggas.AbilityContainerEventType" />
+			<param index="0" name="ability_or_ability_name" type="Variant" />
+			<description>
+				Tries to activate an ability.
+				If the virtual method [method _try_activate] is overridden, it will be take control of the method. 
+				If the [Ability] is activated, the signal [signal ability_activated] will be emitted.
+			</description>
+		</method>
+		<method name="try_block">
+			<return type="int" enum="ggas.AbilityContainerEventType" />
+			<param index="0" name="ability_or_ability_name" type="Variant" />
+			<description>
+				Tries to block an ability.
+				If the virtual method [method _try_block] is overridden, it will be take control of the method.
+				If the [Ability] is blocked, the signal [signal ability_blocked] will be emitted.
+			</description>
+		</method>
+		<method name="try_end">
+			<return type="int" enum="ggas.AbilityContainerEventType" />
+			<param index="0" name="ability_or_ability_name" type="Variant" />
+			<description>
+				Tries to end an ability.
+				If the virtual method [method _try_end] is overridden, it will be take control of the method.
+				If the [Ability] is ended, the signal [signal ability_ended] will be emitted.
+			</description>
+		</method>
+		<method name="try_grant">
+			<return type="int" enum="ggas.AbilityContainerEventType" />
+			<param index="0" name="ability_or_ability_name" type="Variant" />
+			<description>
+				Tries to grant an ability.
+				If the virtual method [method _try_grant] is overridden, it will be take control of the method.
+				If the [Ability] is granted, the signal [signal ability_granted] will be emitted.
+			</description>
+		</method>
+		<method name="try_revoke">
+			<return type="int" enum="ggas.AbilityContainerEventType" />
+			<param index="0" name="ability_or_ability_name" type="Variant" />
+			<description>
+				Tries to revoke an ability.
+				If the virtual method [method _try_revoke] is overridden, it will be take control of the method.
+				If the [Ability] is revoked, the signal [signal ability_revoked] will be emitted.
+			</description>
+		</method>
+	</methods>
+	<signals>
+		<signal name="ability_activated">
+			<param index="0" name="ability" type="Ability" />
+			<description>
+				Emitted when an ability is activated.
+			</description>
+		</signal>
+		<signal name="ability_added">
+			<param index="0" name="ability" type="Ability" />
+			<description>
+				Emitted when an ability is added to the container.
+			</description>
+		</signal>
+		<signal name="ability_blocked">
+			<param index="0" name="ability" type="Ability" />
+			<description>
+				Emitted when an ability execution is blocked.
+			</description>
+		</signal>
+		<signal name="ability_ended">
+			<param index="0" name="ability" type="Ability" />
+			<description>
+				Emitted when an ability execution is ended.
+			</description>
+		</signal>
+		<signal name="ability_granted">
+			<param index="0" name="ability" type="Ability" />
+			<description>
+				Emitted when an ability is granted.
+			</description>
+		</signal>
+		<signal name="ability_removed">
+			<param index="0" name="ability" type="Ability" />
+			<description>
+				Emitted when an ability is removed from the container.
+			</description>
+		</signal>
+		<signal name="ability_revoked">
+			<param index="0" name="ability" type="Ability" />
+			<description>
+				Emitted when an ability is revoked.
+			</description>
+		</signal>
+		<signal name="cooldown_end">
+			<param index="0" name="ability" type="Ability" />
+			<description>
+				Emitted when an ability cooldown ends.
+			</description>
+		</signal>
+		<signal name="cooldown_start">
+			<param index="0" name="ability" type="Ability" />
+			<description>
+				Emitted when an ability cooldown starts.
+			</description>
+		</signal>
+	</signals>
+	<constants>
+		<constant name="ABILITY_NOT_FOUND" value="0" enum="AbilityContainerEventType">
+			The ability was not found.
+		</constant>
+		<constant name="ABILITY_ADDED" value="1" enum="AbilityContainerEventType">
+			The ability was added.
+		</constant>
+		<constant name="ABILITY_REMOVED" value="2" enum="AbilityContainerEventType">
+			The ability was removed.
+		</constant>
+		<constant name="ABILITY_ACTIVATED" value="3" enum="AbilityContainerEventType">
+			The ability was activated.
+		</constant>
+		<constant name="ABILITY_BLOCKED" value="4" enum="AbilityContainerEventType">
+			The ability was blocked.
+		</constant>
+		<constant name="ABILITY_ENDED" value="5" enum="AbilityContainerEventType">
+			The ability was ended.
+		</constant>
+		<constant name="ABILITY_GRANTED" value="6" enum="AbilityContainerEventType">
+			The ability was granted.
+		</constant>
+		<constant name="ABILITY_REVOKED" value="7" enum="AbilityContainerEventType">
+			The ability was revoked.
+		</constant>
+		<constant name="ABILITY_ERROR_ACTIVATING" value="8" enum="AbilityContainerEventType">
+			The ability could not be activated because of an error.
+		</constant>
+		<constant name="ABILITY_ERROR_BLOCKING" value="9" enum="AbilityContainerEventType">
+			The ability could not be blocked because of an error.
+		</constant>
+		<constant name="ABILITY_ERROR_ENDING" value="10" enum="AbilityContainerEventType">
+			The ability could not be ended because of an error.
+		</constant>
+		<constant name="ABILITY_ERROR_GRANTING" value="11" enum="AbilityContainerEventType">
+			The ability could not be granted because of an error.
+		</constant>
+		<constant name="ABILITY_ERROR_REVOKING" value="12" enum="AbilityContainerEventType">
+			The ability could not be revoked because of an error.
+		</constant>
+		<constant name="ABILITY_REFUSED_TO_ACTIVATE" value="13" enum="AbilityContainerEventType">
+			The ability refused to activate.
+		</constant>
+		<constant name="ABILITY_REFUSED_TO_BLOCK" value="14" enum="AbilityContainerEventType">
+			The ability refused to block.
+		</constant>
+		<constant name="ABILITY_REFUSED_TO_END" value="15" enum="AbilityContainerEventType">
+			The ability refused to end.
+		</constant>
+		<constant name="ABILITY_REFUSED_TO_GRANT" value="16" enum="AbilityContainerEventType">
+			The ability refused to be granted.
+		</constant>
+		<constant name="ABILITY_REFUSED_TO_REVOKE" value="17" enum="AbilityContainerEventType">
+			The ability refused to be revoked.
+		</constant>
+		<constant name="ABILITY_PARAMETER_IS_NULL" value="18" enum="AbilityContainerEventType">
+			The ability parameter is null.
+		</constant>
+	</constants>
+</class>

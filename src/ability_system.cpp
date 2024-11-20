@@ -1,4 +1,5 @@
 #include "ability_system.hpp"
+#include <godot_cpp/classes/engine.hpp>
 
 using namespace ggas;
 
@@ -348,12 +349,14 @@ void AbilityContainer::_bind_methods()
 	ClassDB::bind_method(D_METHOD("find_ability", "predicate"), &AbilityContainer::find_ability);
 	ClassDB::bind_method(D_METHOD("get_ability", "ability_name_or_instance"), &AbilityContainer::get_ability);
 	ClassDB::bind_method(D_METHOD("get_abilities"), &AbilityContainer::get_abilities);
+	ClassDB::bind_method(D_METHOD("get_initial_abilities"), &AbilityContainer::get_initial_abilities);
 	ClassDB::bind_method(D_METHOD("has_ability", "ability_name_or_instance"), &AbilityContainer::has_ability);
 	ClassDB::bind_method(D_METHOD("is_ability_active", "ability_name_or_instance"), &AbilityContainer::is_ability_active);
 	ClassDB::bind_method(D_METHOD("is_ability_blocked", "ability_name_or_instance"), &AbilityContainer::is_ability_blocked);
 	ClassDB::bind_method(D_METHOD("is_ability_ended", "ability_name_or_instance"), &AbilityContainer::is_ability_ended);
 	ClassDB::bind_method(D_METHOD("is_ability_granted", "ability_name_or_instance"), &AbilityContainer::is_ability_granted);
 	ClassDB::bind_method(D_METHOD("remove_ability", "ability"), &AbilityContainer::remove_ability);
+	ClassDB::bind_method(D_METHOD("set_initial_abilities", "abilities"), &AbilityContainer::set_initial_abilities);
 	ClassDB::bind_method(D_METHOD("try_activate", "ability_or_ability_name"), &AbilityContainer::try_activate);
 	ClassDB::bind_method(D_METHOD("try_block", "ability_or_ability_name"), &AbilityContainer::try_block);
 	ClassDB::bind_method(D_METHOD("try_end", "ability_or_ability_name"), &AbilityContainer::try_end);
@@ -376,6 +379,9 @@ void AbilityContainer::_bind_methods()
 	ClassDB::bind_method(D_METHOD("_on_revoked_ability", "runtime_ability"), &AbilityContainer::_on_revoked_ability);
 	ClassDB::bind_method(D_METHOD("_on_cooldown_end", "runtime_ability"), &AbilityContainer::_on_cooldown_end);
 	ClassDB::bind_method(D_METHOD("_on_cooldown_start", "runtime_ability"), &AbilityContainer::_on_cooldown_start);
+
+	/// binding properties to godot
+	ADD_PROPERTY(PropertyInfo(Variant::ARRAY, "abilities", PROPERTY_HINT_RESOURCE_TYPE, "24/17:Ability"), "set_initial_abilities", "get_initial_abilities");
 
 	/// binds enum constants to godot
 	BIND_ENUM_CONSTANT(ABILITY_NOT_FOUND);
@@ -475,6 +481,21 @@ void AbilityContainer::_physics_process(double p_delta)
 	}
 }
 
+void AbilityContainer::_ready()
+{
+	for (int i = 0; i < initial_abilities.size(); i++) {
+		Ref<Ability> ability = initial_abilities[i];
+
+		if (ability.is_valid() && !ability.is_null()) {
+			add_ability(ability);
+		}
+	}
+
+	if (!Engine::get_singleton()->is_editor_hint()) {
+		initial_abilities.clear();
+	}
+}
+
 bool AbilityContainer::add_ability(const Ref<Ability> p_ability)
 {
 	ERR_FAIL_COND_V_MSG(p_ability.is_null(), false, "The Ability cannot be null.");
@@ -524,6 +545,11 @@ Ref<RuntimeAbility> AbilityContainer::get_ability(const Variant &p_variant) cons
 TypedArray<RuntimeAbility> AbilityContainer::get_abilities() const
 {
 	return runtime_abilities.values();
+}
+
+TypedArray<Ability> AbilityContainer::get_initial_abilities() const
+{
+	return initial_abilities;
 }
 
 Ref<RuntimeAbility> AbilityContainer::find_ability(const Callable &p_predicate) const
@@ -620,6 +646,11 @@ bool AbilityContainer::remove_ability(const Ref<Ability> p_ability)
 	}
 
 	return false;
+}
+
+void AbilityContainer::set_initial_abilities(const TypedArray<Ability> &p_abilities)
+{
+	initial_abilities = p_abilities;
 }
 
 AbilityContainerEventType AbilityContainer::try_activate(const Variant &p_ability_or_ability_name)

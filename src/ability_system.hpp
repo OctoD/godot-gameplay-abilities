@@ -252,6 +252,7 @@ namespace ggas
 		static void _bind_methods();
 		/// @brief The runtime abilities.
 		Dictionary runtime_abilities = Dictionary();
+		TypedArray<Ability> initial_abilities = TypedArray<Ability>();
 
 		Ref<RuntimeAbility> build_runtime_ability(const Ref<Ability> &p_ability);
 
@@ -294,6 +295,8 @@ namespace ggas
 		/// @brief Overrides the physics process.
 		/// @param p_delta The delta time.
 		void _physics_process(double p_delta) override;
+		/// @brief Overrides the ready method.
+		void _ready() override;
 
 		/// @brief Adds an ability to the container.
 		/// @param p_ability The ability to add.
@@ -306,6 +309,9 @@ namespace ggas
 		/// @brief Gets the runtime abilities.
 		/// @return The runtime abilities.
 		TypedArray<RuntimeAbility> get_abilities() const;
+		/// @brief Gets the initial abilities.
+		/// @return The initial abilities.
+		TypedArray<Ability> get_initial_abilities() const;
 		/// @brief Gets an ability.
 		/// @param p_variant The ability to get.
 		/// @return The ability.
@@ -334,6 +340,9 @@ namespace ggas
 		/// @param p_ability The ability to remove.
 		/// @return True if the ability was removed, false otherwise.
 		bool remove_ability(const Ref<Ability> p_ability);
+		/// @brief Sets the abilities in the container.
+		/// @param p_abilities The abilities to set.
+		void set_initial_abilities(const TypedArray<Ability> &p_abilities);
 		/// @brief Activates an ability in the container.
 		/// @param p_ability The ability to activate.
 		/// @return True if the ability was activated, false otherwise.

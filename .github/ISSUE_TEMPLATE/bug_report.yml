@@ -1,12 +1,12 @@
 name: Bug report
-description: Report a bug with the godot-cpp template
+description: Report a bug with this lib
 body:
 
 - type: markdown
   attributes:
     value: |
       - Write a descriptive issue title above.
-      - Search [open](https://github.com/godotengine/godot-cpp-template/issues) and [closed](https://github.com/godotengine/godot-cpp-template/issues?q=is%3Aissue+is%3Aclosed) issues to ensure it has not already been reported.
+      - Search [open](https://github.com/octod/godot-gameplay-abilities/issues) and [closed](https://github.com/octod/godot-gameplay-abilities/issues?q=is%3Aissue+is%3Aclosed) issues to ensure it has not already been reported.
 - type: input
   attributes:
     label: Godot version

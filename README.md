@@ -2,6 +2,8 @@
 
 ![GGAS logo](demo/icon.svg)
 
+[discord server here](https://discord.gg/meA6pDTXpr)
+
 > (Part of [Godot Gameplay Systems](https://github.com/OctoD/godot-gameplay-systems))
 
 # Installation

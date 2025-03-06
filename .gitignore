@@ -1,5 +1,6 @@
 # Godot 4+ specific ignores
 .godot/
+*.uid
 
 # Ignore library files but not the gdextension file
 demo/bin/*
@@ -42,11 +43,19 @@ compile_commands.json
 *.includes
 *.idb
 *.exp
+*.wasm
 
 # Other stuff
 *.log
+
+# JetBrains
+.idea
 
 # VSCode
 .vscode/*
 !.vscode/extensions.json
 .DS_Store
+
+# CMake
+cmake-build-debug
+cmake-build-release

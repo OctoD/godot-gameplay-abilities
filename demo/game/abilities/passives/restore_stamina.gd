@@ -38,7 +38,7 @@ func _should_be_activated(ability_container: AbilityContainer) -> bool:
 
 	if character:
 		var stamina = character.attribute_container.get_attribute_by_name(StaminaAttribute.ATTRIBUTE_NAME)
-		return stamina.get_buffed_value() < stamina.get_max_value()
+		return stamina.get_constrained_value()
 
 	return false
 	

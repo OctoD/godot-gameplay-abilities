@@ -1,9 +1,9 @@
 [gd_scene load_steps=13 format=3 uid="uid://ql127a540p5d"]
 
 [ext_resource type="PackedScene" uid="uid://cpn2vlasn1kye" path="res://game/enemies/enemy.tscn" id="1_1bgwb"]
-[ext_resource type="Script" path="res://game/enemies/zombie/zombie.gd" id="2_5elcm"]
+[ext_resource type="Script" uid="uid://rfvrptvaokgi" path="res://game/enemies/zombie/zombie.gd" id="2_5elcm"]
 [ext_resource type="AttributeSet" uid="uid://dedvgobrs6ie2" path="res://game/enemies/zombie/zombie_attribute_set.tres" id="2_k4ieb"]
-[ext_resource type="Script" path="res://game/abilities/movement/move_ability.gd" id="3_prjr3"]
+[ext_resource type="Script" uid="uid://wd8j8y1sayqr" path="res://game/abilities/movement/move_ability.gd" id="3_prjr3"]
 
 [sub_resource type="Ability" id="Ability_l3lxi"]
 script = ExtResource("3_prjr3")

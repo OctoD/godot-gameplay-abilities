@@ -1,7 +1,7 @@
 [gd_scene load_steps=11 format=3 uid="uid://1t4hvqlam74c"]
 
-[ext_resource type="Shader" path="res://game/abilities/defensive/energy_shield_ability/the_energy_shield.gdshader" id="1_dwy3y"]
-[ext_resource type="Script" path="res://game/abilities/defensive/energy_shield_ability/the_energy_shield.gd" id="1_uw6gf"]
+[ext_resource type="Shader" uid="uid://14008n5xiefc" path="res://game/abilities/defensive/energy_shield_ability/the_energy_shield.gdshader" id="1_dwy3y"]
+[ext_resource type="Script" uid="uid://bfxyrje1gvoar" path="res://game/abilities/defensive/energy_shield_ability/the_energy_shield.gd" id="1_uw6gf"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_das4n"]
 render_priority = 0
@@ -68,10 +68,10 @@ resource_name = "idle"
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_a63no"]
 _data = {
-"RESET": SubResource("Animation_7nv6s"),
-"activated": SubResource("Animation_mjvub"),
-"deactivated": SubResource("Animation_avsnx"),
-"idle": SubResource("Animation_npbdr")
+&"RESET": SubResource("Animation_7nv6s"),
+&"activated": SubResource("Animation_mjvub"),
+&"deactivated": SubResource("Animation_avsnx"),
+&"idle": SubResource("Animation_npbdr")
 }
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_58knp"]
@@ -85,7 +85,7 @@ mesh = SubResource("SphereMesh_70qy4")
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 libraries = {
-"": SubResource("AnimationLibrary_a63no")
+&"": SubResource("AnimationLibrary_a63no")
 }
 
 [node name="Area3D" type="Area3D" parent="."]

@@ -1,6 +1,6 @@
 [gd_scene load_steps=4 format=3 uid="uid://onosa0te2yl3"]
 
-[ext_resource type="Script" path="res://game/player/hud/ability.gd" id="1_abt5d"]
+[ext_resource type="Script" uid="uid://dy6ybfq6rife6" path="res://game/player/hud/ability.gd" id="1_abt5d"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_kqree"]
 bg_color = Color(0.6, 0.6, 0.6, 0)

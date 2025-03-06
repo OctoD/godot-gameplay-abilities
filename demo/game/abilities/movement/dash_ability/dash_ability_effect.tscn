@@ -1,6 +1,6 @@
 [gd_scene load_steps=14 format=3 uid="uid://defxknsrevi8t"]
 
-[ext_resource type="Script" path="res://game/abilities/movement/dash_ability/dash_ability_effect.gd" id="1_1bnqu"]
+[ext_resource type="Script" uid="uid://tmcwcregvw2v" path="res://game/abilities/movement/dash_ability/dash_ability_effect.gd" id="1_1bnqu"]
 
 [sub_resource type="Gradient" id="Gradient_j2yqs"]
 

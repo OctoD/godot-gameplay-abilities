@@ -1,7 +1,7 @@
 [gd_scene load_steps=14 format=3 uid="uid://djqu1wh8oigju"]
 
-[ext_resource type="Shader" path="res://game/abilities/attack/fire_projectile_ability/fire_projectile_explosion.gdshader" id="1_1u5oh"]
-[ext_resource type="Script" path="res://game/abilities/attack/fire_projectile_ability/fire_projectile_explosion.gd" id="2_cxgqh"]
+[ext_resource type="Shader" uid="uid://d21b6u3e8uih3" path="res://game/abilities/attack/fire_projectile_ability/fire_projectile_explosion.gdshader" id="1_1u5oh"]
+[ext_resource type="Script" uid="uid://ccit4kwcjyykm" path="res://game/abilities/attack/fire_projectile_ability/fire_projectile_explosion.gd" id="2_cxgqh"]
 
 [sub_resource type="Curve" id="Curve_hkqfi"]
 _data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(0.159645, 1), 1.77815, 1.77815, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
@@ -40,12 +40,12 @@ shader = ExtResource("1_1u5oh")
 shader_parameter/Glow_Power = 3.913
 shader_parameter/Lightness_Difference = 1.34
 shader_parameter/Sun_Color = Vector4(150, 1, 0, 1)
+shader_parameter/voronoi_noise = SubResource("NoiseTexture2D_aka38")
+shader_parameter/emission_noise = SubResource("NoiseTexture2D_54s7w")
 shader_parameter/waveSpeed = 0.137
 shader_parameter/fresnel = 1.0
 shader_parameter/scale = 1.321
 shader_parameter/blendSharpness = 0.3
-shader_parameter/voronoi_noise = SubResource("NoiseTexture2D_aka38")
-shader_parameter/emission_noise = SubResource("NoiseTexture2D_54s7w")
 
 [sub_resource type="SphereMesh" id="SphereMesh_pmahd"]
 material = SubResource("ShaderMaterial_6ol80")

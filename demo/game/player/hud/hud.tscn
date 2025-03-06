@@ -1,10 +1,10 @@
 [gd_scene load_steps=13 format=3 uid="uid://hky6bv1xmhdb"]
 
-[ext_resource type="Script" path="res://game/player/hud/hud.gd" id="1_ym1ti"]
+[ext_resource type="Script" uid="uid://cends650d3mrs" path="res://game/player/hud/hud.gd" id="1_ym1ti"]
 [ext_resource type="PackedScene" uid="uid://onosa0te2yl3" path="res://game/player/hud/ability.tscn" id="2_pn3ye"]
-[ext_resource type="Script" path="res://game/abilities/attack/fire_projectile_ability/fire_projectile_ability.gd" id="3_tt5j4"]
-[ext_resource type="Script" path="res://game/abilities/movement/dash_ability/dash_ability.gd" id="4_4n0fo"]
-[ext_resource type="Script" path="res://game/abilities/defensive/energy_shield_ability/energy_shield_ability.gd" id="4_clsay"]
+[ext_resource type="Script" uid="uid://bc4g7o7nuor7k" path="res://game/abilities/attack/fire_projectile_ability/fire_projectile_ability.gd" id="3_tt5j4"]
+[ext_resource type="Script" uid="uid://b66wosxg3vgs2" path="res://game/abilities/movement/dash_ability/dash_ability.gd" id="4_4n0fo"]
+[ext_resource type="Script" uid="uid://b5qe5k6sqwhs0" path="res://game/abilities/defensive/energy_shield_ability/energy_shield_ability.gd" id="4_clsay"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_xgikw"]
 bg_color = Color(0.00784314, 0.00784314, 0.00784314, 0.117647)

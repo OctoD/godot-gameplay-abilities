@@ -1,6 +1,6 @@
 [gd_scene load_steps=8 format=3 uid="uid://xce2q77b032h"]
 
-[ext_resource type="Script" path="res://game/abilities/attack/fire_projectile_ability/fire_projectile_ability_bullet.gd" id="1_llqth"]
+[ext_resource type="Script" uid="uid://1p65cievvrq7" path="res://game/abilities/attack/fire_projectile_ability/fire_projectile_ability_bullet.gd" id="1_llqth"]
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_p7h7t"]
 radius = 0.4

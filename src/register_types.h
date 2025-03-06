@@ -5,7 +5,7 @@
 
 using namespace godot;
 
-void initialize_gdextension_types(ModuleInitializationLevel p_level);
-void uninitialize_gdextension_types(ModuleInitializationLevel p_level);
+void register_gdextension_types(ModuleInitializationLevel p_level);
+void unregister_gdextension_types(ModuleInitializationLevel p_level);
 
 #endif // GODOT_GAMEPLAY_ABILITIES_REGISTER_TYPES_H

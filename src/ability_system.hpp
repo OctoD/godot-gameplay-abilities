@@ -13,18 +13,6 @@ namespace ggas
 	class Ability;
 	class AbilityContainer;
 
-#ifndef CHECK_IF_SHOULD_BE_CALLED
-#define CHECK_IF_SHOULD_BE_CALLED(p_method_name, p_starting_value)     \
-	bool output = p_starting_value;                                    \
-                                                                       \
-	if (GDVIRTUAL_IS_OVERRIDDEN_PTR(ability, p_method_name)) {         \
-		GDVIRTUAL_CALL_PTR(ability, p_method_name, container, output); \
-	}                                                                  \
-                                                                       \
-	return output;
-
-#endif
-
 #pragma region RuntimeAbility
 
 	/// @brief Let's have fun with bitmasks to handle the ability internal state.
@@ -61,76 +49,7 @@ namespace ggas
 		GDCLASS(RuntimeAbility, RefCounted);
 
 	private:
-#ifndef CALL_VIRTUAL_ABILITY_METHOD
-#define CALL_VIRTUAL_ABILITY_METHOD(                                                      \
-		p_check_method_name,                                                              \
-		p_method_name,                                                                    \
-		p_error_type,                                                                     \
-		p_refusal_type)                                                                   \
-                                                                                          \
-	if (GDVIRTUAL_IS_OVERRIDDEN_PTR(ability, p_check_method_name)) {                      \
-		bool output = false;                                                              \
-                                                                                          \
-		if (!GDVIRTUAL_CALL_PTR(ability, p_check_method_name, container, this, output)) { \
-			SET_STATE(p_error_type);                                                      \
-			return p_error_type;                                                          \
-		}                                                                                 \
-                                                                                          \
-		if (!output) {                                                                    \
-			SET_STATE(p_refusal_type);                                                    \
-			return p_refusal_type;                                                        \
-		}                                                                                 \
-	}                                                                                     \
-                                                                                          \
-	if (GDVIRTUAL_IS_OVERRIDDEN_PTR(ability, p_method_name)) {                            \
-		if (!GDVIRTUAL_CALL_PTR(ability, p_method_name, container, this)) {               \
-			SET_STATE(p_error_type);                                                      \
-			return p_error_type;                                                          \
-		}                                                                                 \
-	}
-#endif
-#ifndef ENSURE_ABILITY_EXECUTION
-#define ENSURE_ABILITY_EXECUTION(p_error_type)                                     \
-	ERR_FAIL_COND_V_MSG(ability == nullptr, p_error_type, "The ability is null."); \
-	ERR_FAIL_COND_V_MSG(container == nullptr, p_error_type, "The container is null.");
-#endif
 
-#ifndef IS_STATE
-#define IS_STATE(p_state) ((state & p_state) == p_state)
-#endif
-
-#ifndef SET_STATE
-#define SET_STATE(p_state)                   \
-	switch (p_state) {                       \
-		case ABILITY_EVENT_TYPE_ACTIVATED:   \
-			state &= ~ABILITY_STATE_BLOCKED; \
-			state &= ~ABILITY_STATE_NONE;    \
-			state |= ABILITY_STATE_ACTIVE;   \
-			break;                           \
-		case ABILITY_EVENT_TYPE_BLOCKED:     \
-			state &= ~ABILITY_STATE_ACTIVE;  \
-			state &= ~ABILITY_STATE_NONE;    \
-			state |= ABILITY_STATE_BLOCKED;  \
-			break;                           \
-		case ABILITY_EVENT_TYPE_ENDED:       \
-			state &= ~ABILITY_STATE_ACTIVE;  \
-			state &= ~ABILITY_STATE_BLOCKED; \
-			state |= ABILITY_STATE_NONE;     \
-			break;                           \
-		case ABILITY_EVENT_TYPE_GRANTED:     \
-			state &= ~ABILITY_STATE_ACTIVE;  \
-			state &= ~ABILITY_STATE_BLOCKED; \
-			state &= ~ABILITY_STATE_NONE;    \
-			state |= ABILITY_STATE_GRANTED;  \
-			break;                           \
-		case ABILITY_EVENT_TYPE_REVOKED:     \
-			state &= ~ABILITY_STATE_ACTIVE;  \
-			state &= ~ABILITY_STATE_BLOCKED; \
-			state &= ~ABILITY_STATE_GRANTED; \
-			state |= ABILITY_STATE_NONE;     \
-			break;                           \
-	}
-#endif
 
 		/// @brief Marks the ability state. Using a bitmask to store the state.
 		int state = ABILITY_STATE_NONE;
@@ -163,53 +82,53 @@ namespace ggas
 		AbilityEventType end();
 		/// @brief Gets the ability.
 		/// @return The ability.
-		Ref<Ability> get_ability() const;
+		[[nodiscard]] Ref<Ability> get_ability() const;
 		/// @brief Gets the ability container.
 		/// @return The ability container.
-		AbilityContainer *get_container() const;
+		[[nodiscard]] AbilityContainer *get_container() const;
 		/// @brief Gets the ability cooldown.
 		/// @return The ability cooldown.
-		double get_cooldown() const;
+		[[nodiscard]] double get_cooldown() const;
 		/// @brief Gets the ability duration.
 		/// @return The ability duration.
-		double get_duration() const;
+		[[nodiscard]] double get_duration() const;
 		/// @brief Grants the ability.
 		AbilityEventType grant();
 		/// @brief Returns true if the ability is active.
 		/// @return True if the ability is active, false otherwise.
-		bool is_active() const;
+		[[nodiscard]] bool is_active() const;
 		/// @brief Returns true if the ability is blocked.
 		/// @return True if the ability is blocked, false otherwise.
-		bool is_blocked() const;
+		[[nodiscard]] bool is_blocked() const;
 		/// @brief Returns true if the ability is cooling down.
 		/// @return True if the ability is cooling down, false otherwise.
-		bool is_cooldown_active() const;
+		[[nodiscard]] bool is_cooldown_active() const;
 		/// @brief Returns true if the ability is duration active.
 		/// @return True if the ability is duration active, false otherwise.
-		bool is_duration_active() const;
+		[[nodiscard]] bool is_duration_active() const;
 		/// @brief Returns true if the ability is ended.
 		/// @return True if the ability is ended, false otherwise.
-		bool is_ended() const;
+		[[nodiscard]] bool is_ended() const;
 		/// @brief Returns true if the ability is granted.
 		/// @return True if the ability is granted, false otherwise.
-		bool is_granted() const;
+		[[nodiscard]] bool is_granted() const;
 		/// @brief Revokes the ability.
 		AbilityEventType revoke();
 		/// @brief Sets the ability.
 		/// @param p_ability The ability.
-		void set_ability(Ref<Ability> p_ability);
+		void set_ability(const Ref<Ability>& p_ability);
 		/// @brief Sets the ability container.
 		/// @param p_container The ability container.
 		void set_container(AbilityContainer *p_container);
 		/// @brief Returns true if the ability should be activated.
 		/// @return True if the ability should be activated, false otherwise.
-		bool should_be_activated() const;
+		[[nodiscard]] bool should_be_activated() const;
 		/// @brief Returns true if the ability should be blocked.
 		/// @return True if the ability should be blocked, false otherwise.
-		bool should_be_blocked() const;
+		[[nodiscard]] bool should_be_blocked() const;
 		/// @brief Returns true if the ability should be ended.
 		/// @return True if the ability should be ended, false otherwise.
-		bool should_be_ended() const;
+		[[nodiscard]] bool should_be_ended() const;
 	};
 
 #pragma endregion
@@ -254,43 +173,43 @@ namespace ggas
 		Dictionary runtime_abilities = Dictionary();
 		TypedArray<Ability> initial_abilities = TypedArray<Ability>();
 
-		Ref<RuntimeAbility> build_runtime_ability(const Ref<Ability> &p_ability);
+		[[nodiscard]] Ref<RuntimeAbility> build_runtime_ability(const Ref<Ability> &p_ability)const;
 
 		/// @brief Handles the active ability signal.
 		/// @param p_runtime_ability The runtime ability.
-		void _on_active_ability(const Ref<RuntimeAbility> p_runtime_ability);
+		void _on_active_ability(const Ref<RuntimeAbility> &p_runtime_ability);
 		/// @brief Handles the blocked ability signal.
 		/// @param p_runtime_ability The runtime ability.
-		void _on_blocked_ability(const Ref<RuntimeAbility> p_runtime_ability);
+		void _on_blocked_ability(const Ref<RuntimeAbility> &p_runtime_ability);
 		/// @brief Handles the ended ability signal.
 		/// @param p_runtime_ability The runtime ability.
-		void _on_ended_ability(const Ref<RuntimeAbility> p_runtime_ability);
+		void _on_ended_ability(const Ref<RuntimeAbility> &p_runtime_ability);
 		/// @brief Handles the granted ability signal.
 		/// @param p_runtime_ability The runtime ability.
-		void _on_granted_ability(const Ref<RuntimeAbility> p_runtime_ability);
+		void _on_granted_ability(const Ref<RuntimeAbility> &p_runtime_ability);
 		/// @brief Handles the revoked ability signal.
 		/// @param p_runtime_ability The runtime ability.
-		void _on_revoked_ability(const Ref<RuntimeAbility> p_runtime_ability);
+		void _on_revoked_ability(const Ref<RuntimeAbility> &p_runtime_ability);
 		/// @brief Handles the cooldown end signal.
 		/// @param p_runtime_ability The runtime ability.
-		void _on_cooldown_end(const Ref<RuntimeAbility> p_runtime_ability);
+		void _on_cooldown_end(const Ref<RuntimeAbility> &p_runtime_ability);
 		/// @brief Handles the cooldown start signal.
 		/// @param p_runtime_ability The runtime ability.
-		void _on_cooldown_start(const Ref<RuntimeAbility> p_runtime_ability);
+		void _on_cooldown_start(const Ref<RuntimeAbility> &p_runtime_ability);
 
 	public:
 		/// @brief Returns an instance of a RuntimeAbility. Override this method if you want to use an extended class of RuntimeAbility.
-		GDVIRTUAL1RC(Ref<RuntimeAbility>, _build_runtime_ability, Ref<Resource>);
+		GDVIRTUAL1RC(Ref<RuntimeAbility>, _build_runtime_ability, Ref<Resource>); // NOLINT(*-unnecessary-value-param)
 		/// @brief The virtual method called to activate an ability.
-		GDVIRTUAL1RC(int, _try_activate, Variant);
+		GDVIRTUAL1RC(int, _try_activate, Variant); // NOLINT(*-unnecessary-value-param)
 		/// @brief The virtual method called to block an ability.
-		GDVIRTUAL1RC(int, _try_block, Variant);
+		GDVIRTUAL1RC(int, _try_block, Variant); // NOLINT(*-unnecessary-value-param)
 		/// @brief The virtual method called to end an ability.
-		GDVIRTUAL1RC(int, _try_end, Variant);
+		GDVIRTUAL1RC(int, _try_end, Variant); // NOLINT(*-unnecessary-value-param)
 		/// @brief The virtual method called to grant an ability.
-		GDVIRTUAL1RC(int, _try_grant, Variant);
+		GDVIRTUAL1RC(int, _try_grant, Variant); // NOLINT(*-unnecessary-value-param)
 		/// @brief The virtual method called to revoke an ability.
-		GDVIRTUAL1RC(int, _try_revoke, Variant);
+		GDVIRTUAL1RC(int, _try_revoke, Variant); // NOLINT(*-unnecessary-value-param)
 
 		/// @brief Overrides the physics process.
 		/// @param p_delta The delta time.
@@ -301,65 +220,65 @@ namespace ggas
 		/// @brief Adds an ability to the container.
 		/// @param p_ability The ability to add.
 		/// @return True if the ability was added, false otherwise.
-		bool add_ability(const Ref<Ability> p_ability);
+		bool add_ability(const Ref<Ability> &p_ability);
 		/// @brief Finds an ability in the container by calling a predicate.
 		/// @param p_predicate The predicate to find the ability.
 		/// @return The ability
-		Ref<RuntimeAbility> find_ability(const Callable &p_predicate) const;
+		[[nodiscard]] Ref<RuntimeAbility> find_ability(const Callable &p_predicate) const;
 		/// @brief Gets the runtime abilities.
 		/// @return The runtime abilities.
-		TypedArray<RuntimeAbility> get_abilities() const;
+		[[nodiscard]] TypedArray<RuntimeAbility> get_abilities() const;
 		/// @brief Gets the initial abilities.
 		/// @return The initial abilities.
-		TypedArray<Ability> get_initial_abilities() const;
+		[[nodiscard]] TypedArray<Ability> get_initial_abilities() const;
 		/// @brief Gets an ability.
 		/// @param p_variant The ability to get.
 		/// @return The ability.
-		Ref<RuntimeAbility> get_ability(const Variant &p_variant) const;
+		[[nodiscard]] Ref<RuntimeAbility> get_ability(const Variant &p_variant) const;
 		/// @brief Checks if the container has an ability.
 		/// @param p_variant The ability to check.
 		/// @return True if the container has the ability, false otherwise.
-		bool has_ability(const Variant &p_variant) const;
+		[[nodiscard]] bool has_ability(const Variant &p_variant) const;
 		/// @brief Checks if the ability is active.
 		/// @param p_variant The ability to check.
 		/// @return True if the ability is active, false otherwise.
-		bool is_ability_active(const Variant &p_variant) const;
+		[[nodiscard]] bool is_ability_active(const Variant &p_variant) const;
 		/// @brief Checks if the ability is blocked.
 		/// @param p_variant The ability to check.
 		/// @return True if the ability is blocked, false otherwise.
-		bool is_ability_blocked(const Variant &p_variant) const;
+		[[nodiscard]] bool is_ability_blocked(const Variant &p_variant) const;
 		/// @brief Checks if the ability is ended.
 		/// @param p_variant The ability to check.
 		/// @return True if the ability is ended, false otherwise.
-		bool is_ability_ended(const Variant &p_variant) const;
+		[[nodiscard]] bool is_ability_ended(const Variant &p_variant) const;
 		/// @brief Checks if the ability is granted.
 		/// @param p_variant The ability to check.
 		/// @return True if the ability is granted, false otherwise.
-		bool is_ability_granted(const Variant &p_variant) const;
+		[[nodiscard]] bool is_ability_granted(const Variant &p_variant) const;
 		/// @brief Removes an ability from the container.
 		/// @param p_ability The ability to remove.
 		/// @return True if the ability was removed, false otherwise.
-		bool remove_ability(const Ref<Ability> p_ability);
+		bool remove_ability(const Ref<Ability> &p_ability);
 		/// @brief Sets the abilities in the container.
 		/// @param p_abilities The abilities to set.
 		void set_initial_abilities(const TypedArray<Ability> &p_abilities);
 		/// @brief Activates an ability in the container.
-		/// @param p_ability The ability to activate.
+		/// @param p_ability_or_ability_name The ability to activate.
 		/// @return True if the ability was activated, false otherwise.
 		AbilityContainerEventType try_activate(const Variant &p_ability_or_ability_name);
 		/// @brief Blocks an ability in the container.
-		/// @param p_ability The ability to block.
+		/// @param p_ability_or_ability_name The ability to block.
 		/// @return True if the ability was blocked, false otherwise.
 		AbilityContainerEventType try_block(const Variant &p_ability_or_ability_name);
 		/// @brief Ends an ability in the container.
-		/// @param p_ability The ability to end.
+		/// @param p_ability_or_ability_name The ability to end.
 		/// @return True if the ability was ended, false otherwise.
 		AbilityContainerEventType try_end(const Variant &p_ability_or_ability_name);
 		/// @brief Grants an ability to the container.
-		/// @param p_ability The ability to grant.
+		/// @param p_ability_or_ability_name The ability to grant.
 		AbilityContainerEventType try_grant(const Variant &p_ability_or_ability_name);
 		/// @brief Revokes an ability from the container.
-		/// @param p_ability The ability to revoke.
+		/// @param p_ability_or_ability_name The ability to revoke.
 		/// @return True if the ability was revoked, false otherwise.
 		AbilityContainerEventType try_revoke(const Variant &p_ability_or_ability_name);
 	};
@@ -421,7 +340,7 @@ namespace ggas
 
 		/// @brief Gets the ability name.
 		/// @return The ability name.
-		StringName get_ability_name() const;
+		[[nodiscard]] StringName get_ability_name() const;
 		/// @brief Sets the ability name.
 		/// @param p_ability_name The ability name.
 		void set_ability_name(const StringName &p_ability_name);

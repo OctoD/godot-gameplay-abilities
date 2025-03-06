@@ -35,13 +35,15 @@ func setup_attributes(attribute_container: AttributeContainer) -> void:
 	)
 	
 	var health_attribute = attribute_container.get_attribute_by_name(HealthAttribute.ATTRIBUTE_NAME)
+	var max_health_attribute = attribute_container.get_attribute_by_name(MaxHealthAttribute.ATTRIBUTE_NAME)
 	var stamina_attribute = attribute_container.get_attribute_by_name(StaminaAttribute.ATTRIBUTE_NAME)
 	
 	if health_attribute:
-		health.min_value = health_attribute.get_min_value()
-		health.max_value = health_attribute.get_max_value()
+		health.min_value = 0.0
 		health.value = health_attribute.get_buffed_value()
+	if max_health_attribute:
+		health.max_value = max_health_attribute.get_buffed_value()
 	if stamina_attribute:
-		stamina_bar.min_value = stamina_attribute.get_min_value()
-		stamina_bar.max_value = stamina_attribute.get_max_value()
+		stamina_bar.min_value = 0.0
+		stamina_bar.max_value = 100.0
 		stamina_bar.value = stamina_attribute.get_buffed_value()

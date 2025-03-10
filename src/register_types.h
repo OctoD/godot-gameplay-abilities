@@ -1,11 +1,17 @@
-#ifndef GODOT_GAMEPLAY_ABILITIES_REGISTER_TYPES_H
-#define GODOT_GAMEPLAY_ABILITIES_REGISTER_TYPES_H
+#ifndef OCTOD_GAMEPLAY_ABILITIES_REGISTER_TYPES_H
+#define OCTOD_GAMEPLAY_ABILITIES_REGISTER_TYPES_H
 
 #include <godot_cpp/core/class_db.hpp>
 
 using namespace godot;
 
-void register_gdextension_types(ModuleInitializationLevel p_level);
-void unregister_gdextension_types(ModuleInitializationLevel p_level);
+namespace octod::gameplay::abilities
+{
+	/// @brief Registers the types.
+	void register_types(ModuleInitializationLevel p_level);
 
-#endif // GODOT_GAMEPLAY_ABILITIES_REGISTER_TYPES_H
+	/// @brief Unregisters the types.
+	void unregister_types(ModuleInitializationLevel p_level);
+}
+
+#endif // OCTOD_GAMEPLAY_ABILITIES_REGISTER_TYPES_H

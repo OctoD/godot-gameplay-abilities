@@ -1,0 +1,45 @@
+[gd_scene load_steps=10 format=3 uid="uid://dqfn27u1o5uru"]
+
+[ext_resource type="Script" uid="uid://iy5iprwp4pb8" path="res://examples/abilities_as_states/player/abilities_as_states_player.gd" id="1_ykesy"]
+[ext_resource type="Script" uid="uid://0gbxwbbp35k0" path="res://examples/abilities_as_states/abilities/abilities_as_states_shoot_left.gd" id="3_quuog"]
+[ext_resource type="Script" uid="uid://d28fwtxtds0j0" path="res://examples/abilities_as_states/abilities/abilities_as_states_steer_ability.gd" id="3_ws8pb"]
+[ext_resource type="Script" uid="uid://b251cy2c5q3ju" path="res://examples/abilities_as_states/abilities/abilities_as_states_shoot_right.gd" id="4_bc8ot"]
+[ext_resource type="PackedScene" uid="uid://cb8nf2ob62h1" path="res://examples/abilities_as_states/ship/ship.tscn" id="4_ws8pb"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_bp1s4"]
+size = Vector3(5, 5, 10)
+
+[sub_resource type="Ability" id="Ability_bc8ot"]
+script = ExtResource("3_ws8pb")
+metadata/_custom_type_script = "uid://d28fwtxtds0j0"
+
+[sub_resource type="Ability" id="Ability_7bup8"]
+script = ExtResource("3_quuog")
+cannon_side = 0
+metadata/_custom_type_script = "uid://0gbxwbbp35k0"
+
+[sub_resource type="Ability" id="Ability_vy6ei"]
+script = ExtResource("4_bc8ot")
+cannon_side = 0
+metadata/_custom_type_script = "uid://b251cy2c5q3ju"
+
+[node name="AbilitiesAsStatesPlayer" type="RigidBody3D"]
+collision_mask = 63
+script = ExtResource("1_ykesy")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.34726, 0)
+shape = SubResource("BoxShape3D_bp1s4")
+
+[node name="AbilityContainer" type="AbilityContainer" parent="."]
+abilities = Array[Ability]([SubResource("Ability_bc8ot"), SubResource("Ability_7bup8"), SubResource("Ability_vy6ei")])
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(-0.998693, 0.0213003, -0.0464534, -0.0215927, 0.647992, 0.761341, 0.0463182, 0.761349, -0.646685, 0.360594, 21.4181, -15.8459)
+current = true
+fov = 90.0
+
+[node name="Ship" parent="." instance=ExtResource("4_ws8pb")]
+transform = Transform3D(0.999876, -0.0157079, 0, 0.0157079, 0.999876, 0, 0, 0, 1, 0, 0, 0)
+oscillation_deg = 3.0
+oscillation_max = 0.2

@@ -1,5 +1,5 @@
-#ifndef GODOT_GAMEPLAY_ABILITIES_ABILITY_SYSTEM_HPP
-#define GODOT_GAMEPLAY_ABILITIES_ABILITY_SYSTEM_HPP
+#ifndef OCTOD_GAMEPLAY_ABILITIES_ABILITY_SYSTEM_HPP
+#define OCTOD_GAMEPLAY_ABILITIES_ABILITY_SYSTEM_HPP
 
 #include <godot_cpp/classes/node.hpp>
 #include <godot_cpp/classes/resource.hpp>
@@ -8,7 +8,7 @@
 
 using namespace godot;
 
-namespace ggas
+namespace octod::gameplay::abilities
 {
 	class Ability;
 	class AbilityContainer;
@@ -265,22 +265,22 @@ namespace ggas
 		/// @brief Activates an ability in the container.
 		/// @param p_ability_or_ability_name The ability to activate.
 		/// @return True if the ability was activated, false otherwise.
-		AbilityContainerEventType try_activate(const Variant &p_ability_or_ability_name) const;
+		[[nodiscard]] AbilityContainerEventType try_activate(const Variant &p_ability_or_ability_name) const;
 		/// @brief Blocks an ability in the container.
 		/// @param p_ability_or_ability_name The ability to block.
 		/// @return True if the ability was blocked, false otherwise.
-		AbilityContainerEventType try_block(const Variant &p_ability_or_ability_name) const;
+		[[nodiscard]] AbilityContainerEventType try_block(const Variant &p_ability_or_ability_name) const;
 		/// @brief Ends an ability in the container.
 		/// @param p_ability_or_ability_name The ability to end.
 		/// @return True if the ability was ended, false otherwise.
-		AbilityContainerEventType try_end(const Variant &p_ability_or_ability_name) const;
+		[[nodiscard]] AbilityContainerEventType try_end(const Variant &p_ability_or_ability_name) const;
 		/// @brief Grants an ability to the container.
 		/// @param p_ability_or_ability_name The ability to grant.
-		AbilityContainerEventType try_grant(const Variant &p_ability_or_ability_name) const;
+		[[nodiscard]] AbilityContainerEventType try_grant(const Variant &p_ability_or_ability_name) const;
 		/// @brief Revokes an ability from the container.
 		/// @param p_ability_or_ability_name The ability to revoke.
 		/// @return True if the ability was revoked, false otherwise.
-		AbilityContainerEventType try_revoke(const Variant &p_ability_or_ability_name) const;
+		[[nodiscard]] AbilityContainerEventType try_revoke(const Variant &p_ability_or_ability_name) const;
 	};
 
 #pragma endregion
@@ -349,7 +349,7 @@ namespace ggas
 #pragma endregion
 } //namespace ggas
 
-VARIANT_ENUM_CAST(ggas::AbilityContainerEventType);
-VARIANT_ENUM_CAST(ggas::AbilityEventType);
+VARIANT_ENUM_CAST(octod::gameplay::abilities::AbilityContainerEventType);
+VARIANT_ENUM_CAST(octod::gameplay::abilities::AbilityEventType);
 
 #endif

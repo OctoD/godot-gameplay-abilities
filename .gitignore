@@ -1,6 +1,8 @@
 # Godot 4+ specific ignores
 .godot/
 *.uid
+*.fbx
+*.import
 
 # Ignore library files but not the gdextension file
 demo/bin/*

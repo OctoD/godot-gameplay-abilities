@@ -11,14 +11,9 @@ config_version=5
 [application]
 
 config/name="godot gameplay abilities"
-run/main_scene="res://game/world/world.tscn"
+run/main_scene="uid://6my7uk0ymjke"
 config/features=PackedStringArray("4.4", "Forward Plus")
 config/icon="res://icon.svg"
-
-[autoload]
-
-GameState="*res://game/game_state.gd"
-AiPuppeteer="*res://game/enemies/ai_puppeteer.gd"
 
 [input]
 

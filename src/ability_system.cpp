@@ -1,7 +1,7 @@
 #include "ability_system.hpp"
 #include <godot_cpp/classes/engine.hpp>
 
-using namespace ggas;
+using namespace octod::gameplay::abilities;
 
 #pragma region macros
 

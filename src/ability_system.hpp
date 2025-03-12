@@ -48,9 +48,6 @@ namespace octod::gameplay::abilities
 	{
 		GDCLASS(RuntimeAbility, RefCounted);
 
-	private:
-
-
 		/// @brief Marks the ability state. Using a bitmask to store the state.
 		int state = ABILITY_STATE_NONE;
 
@@ -156,10 +153,6 @@ namespace octod::gameplay::abilities
 		ABILITY_REFUSED_TO_REVOKE,
 		ABILITY_PARAMETER_IS_NULL,
 	};
-
-#ifndef ABILITY_PARAMETER_IS_NULL_CHECK
-#define ABILITY_PARAMETER_IS_NULL_CHECK(p_parameter) ERR_FAIL_COND_V_MSG(p_parameter.is_null(), ABILITY_PARAMETER_IS_NULL, "The Ability cannot be null.");
-#endif
 
 	/// @brief Represents a container of abilities.
 	class AbilityContainer : public Node

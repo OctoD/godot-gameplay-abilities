@@ -1,0 +1,50 @@
+[gd_scene load_steps=13 format=3 uid="uid://71xtkw8mxbst"]
+
+[ext_resource type="Script" uid="uid://bmu85r5jc1kft" path="res://examples/naval_battles/enemies/skelly_sloop/skelly_sloop.gd" id="1_3rx67"]
+[ext_resource type="Script" uid="uid://btyijg2do31l0" path="res://examples/naval_battles/enemies/ship_ai.gd" id="4_fh4y0"]
+[ext_resource type="Script" uid="uid://k5x7flsj40ly" path="res://examples/naval_battles/abilities/naval_battles_repair.gd" id="5_djxmw"]
+[ext_resource type="Script" uid="uid://day7vlar4oovx" path="res://examples/naval_battles/abilities/naval_battles_take_damage.gd" id="6_djxmw"]
+[ext_resource type="Script" uid="uid://dsvmjq2vf4fgu" path="res://examples/naval_battles/abilities/naval_battles_shoot_left.gd" id="6_lc0wg"]
+[ext_resource type="PackedScene" uid="uid://cb8nf2ob62h1" path="res://examples/naval_battles/ship/ship.tscn" id="6_n1kqn"]
+[ext_resource type="Script" uid="uid://b1t4t7frmm4r1" path="res://examples/naval_battles/abilities/naval_battles_shoot_right.gd" id="7_hrmhu"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_fh4y0"]
+size = Vector3(4.45741, 8.80859, 12.3313)
+
+[sub_resource type="Ability" id="Ability_lc0wg"]
+script = ExtResource("5_djxmw")
+metadata/_custom_type_script = "uid://k5x7flsj40ly"
+
+[sub_resource type="Ability" id="Ability_06bkl"]
+script = ExtResource("6_lc0wg")
+cannon_side = 0
+metadata/_custom_type_script = "uid://dsvmjq2vf4fgu"
+
+[sub_resource type="Ability" id="Ability_02x8f"]
+script = ExtResource("7_hrmhu")
+cannon_side = 1
+metadata/_custom_type_script = "uid://b1t4t7frmm4r1"
+
+[sub_resource type="Ability" id="Ability_hrmhu"]
+script = ExtResource("6_djxmw")
+metadata/_custom_type_script = "uid://day7vlar4oovx"
+
+[node name="SkellySloop" type="RigidBody3D" node_paths=PackedStringArray("ability_container", "ship")]
+script = ExtResource("1_3rx67")
+ability_container = NodePath("AbilityContainer")
+ship = NodePath("Ship")
+metadata/_custom_type_script = "uid://b5jwjb7jbpsfu"
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0389175, 4.9248, -0.22823)
+shape = SubResource("BoxShape3D_fh4y0")
+
+[node name="ShipAi" type="Node" parent="." node_paths=PackedStringArray("ship")]
+script = ExtResource("4_fh4y0")
+ship = NodePath("..")
+metadata/_custom_type_script = "uid://btyijg2do31l0"
+
+[node name="AbilityContainer" type="AbilityContainer" parent="."]
+abilities = Array[Ability]([SubResource("Ability_lc0wg"), SubResource("Ability_06bkl"), SubResource("Ability_02x8f"), SubResource("Ability_hrmhu")])
+
+[node name="Ship" parent="." instance=ExtResource("6_n1kqn")]

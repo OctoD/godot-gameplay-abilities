@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=3 uid="uid://dhsigayfb1y3p"]
 
-[ext_resource type="Script" uid="uid://bn0mfk0o0su5r" path="res://examples/abilities_as_states/world/props/rock/rock.gd" id="1_5nh6x"]
+[ext_resource type="Script" uid="uid://bn0mfk0o0su5r" path="res://examples/naval_battles/world/props/rock/rock.gd" id="1_5nh6x"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_5nh6x"]
 

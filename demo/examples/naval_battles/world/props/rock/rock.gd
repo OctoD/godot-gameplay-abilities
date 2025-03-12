@@ -29,13 +29,7 @@ const ROCKS_ARRAY: Array[PackedScene] = [
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	if rock_scene && !Engine.is_editor_hint():
-		var instance = rock_scene.instantiate()
 		node_3d.add_child(rock_scene.instantiate())
-
-
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta: float) -> void:
-	pass
 
 
 func randomize_rock() -> void:

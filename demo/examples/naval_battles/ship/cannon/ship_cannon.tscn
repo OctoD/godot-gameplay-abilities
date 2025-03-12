@@ -1,0 +1,12 @@
+[gd_scene load_steps=3 format=3 uid="uid://bby6j5jthl2ts"]
+
+[ext_resource type="Script" uid="uid://uf1j3i15t0ot" path="res://examples/naval_battles/ship/cannon/ship_cannon.gd" id="1_cb3g5"]
+[ext_resource type="PackedScene" uid="uid://w3apbx4mytmd" path="res://assets/kenney_pirate-kit/Models/GLB format/cannon-mobile.glb" id="1_r5hri"]
+
+[node name="ShipCannon" type="Node3D"]
+script = ExtResource("1_cb3g5")
+
+[node name="cannon-mobile2" parent="." instance=ExtResource("1_r5hri")]
+
+[node name="Muzzle" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.999015, -0.0443692, 0, 0.0443692, 0.999015, 0, 0.994634, 1.08305)

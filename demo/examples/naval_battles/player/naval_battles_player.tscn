@@ -1,0 +1,53 @@
+[gd_scene load_steps=12 format=3 uid="uid://dqfn27u1o5uru"]
+
+[ext_resource type="Script" uid="uid://bi0vee60sqq38" path="res://examples/naval_battles/player/naval_battles_player.gd" id="1_ykesy"]
+[ext_resource type="Script" uid="uid://k5x7flsj40ly" path="res://examples/naval_battles/abilities/naval_battles_repair.gd" id="2_aucw5"]
+[ext_resource type="Script" uid="uid://dsvmjq2vf4fgu" path="res://examples/naval_battles/abilities/naval_battles_shoot_left.gd" id="3_quuog"]
+[ext_resource type="Script" uid="uid://b1t4t7frmm4r1" path="res://examples/naval_battles/abilities/naval_battles_shoot_right.gd" id="4_bc8ot"]
+[ext_resource type="PackedScene" uid="uid://cb8nf2ob62h1" path="res://examples/naval_battles/ship/ship.tscn" id="4_ws8pb"]
+[ext_resource type="Script" uid="uid://day7vlar4oovx" path="res://examples/naval_battles/abilities/naval_battles_take_damage.gd" id="5_3i0bf"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_bp1s4"]
+size = Vector3(5, 5, 10)
+
+[sub_resource type="Ability" id="Ability_3i0bf"]
+script = ExtResource("2_aucw5")
+metadata/_custom_type_script = "uid://k5x7flsj40ly"
+
+[sub_resource type="Ability" id="Ability_7bup8"]
+script = ExtResource("3_quuog")
+cannon_side = 0
+metadata/_custom_type_script = "uid://0gbxwbbp35k0"
+
+[sub_resource type="Ability" id="Ability_vy6ei"]
+script = ExtResource("4_bc8ot")
+cannon_side = 1
+metadata/_custom_type_script = "uid://b251cy2c5q3ju"
+
+[sub_resource type="Ability" id="Ability_rnbc1"]
+script = ExtResource("5_3i0bf")
+metadata/_custom_type_script = "uid://day7vlar4oovx"
+
+[node name="NavalBattlesPlayer" type="RigidBody3D" node_paths=PackedStringArray("ability_container", "ship")]
+collision_mask = 63
+mass = 15000.0
+script = ExtResource("1_ykesy")
+ability_container = NodePath("AbilityContainer")
+ship = NodePath("Ship")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.34726, 0)
+shape = SubResource("BoxShape3D_bp1s4")
+
+[node name="AbilityContainer" type="AbilityContainer" parent="."]
+abilities = Array[Ability]([SubResource("Ability_3i0bf"), SubResource("Ability_7bup8"), SubResource("Ability_vy6ei"), SubResource("Ability_rnbc1")])
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(-1, -6.96349e-08, 5.28557e-08, 0, 0.604599, 0.79653, -8.74228e-08, 0.79653, -0.604599, 0, 22.6923, -15.9576)
+current = true
+fov = 90.0
+
+[node name="Ship" parent="." instance=ExtResource("4_ws8pb")]
+transform = Transform3D(0.984656, 0.174507, 0, -0.174507, 0.984656, 0, 0, 0, 1, 0, 0, 0)
+oscillation_deg = 3.0
+oscillation_max = 0.2

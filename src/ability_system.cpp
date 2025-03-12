@@ -5,6 +5,10 @@ using namespace octod::gameplay::abilities;
 
 #pragma region macros
 
+#ifndef ABILITY_PARAMETER_IS_NULL_CHECK
+#define ABILITY_PARAMETER_IS_NULL_CHECK(p_parameter) ERR_FAIL_COND_V_MSG(p_parameter.is_null(), ABILITY_PARAMETER_IS_NULL, "The Ability cannot be null.");
+#endif
+
 #ifndef CHECK_IF_SHOULD_BE_CALLED
 #define CHECK_IF_SHOULD_BE_CALLED(p_method_name, p_starting_value)     \
 bool output = p_starting_value;                                    \
@@ -141,7 +145,7 @@ void RuntimeAbility::_bind_methods()
 	ADD_SIGNAL(MethodInfo("revoked"));
 }
 
-void RuntimeAbility::handle_tick(double p_delta)
+void RuntimeAbility::handle_tick(const double p_delta)
 {
 	if (ability == nullptr || container == nullptr)
 	{
@@ -583,13 +587,8 @@ void AbilityContainer::_physics_process(double p_delta)
 
 	for (int i = 0; i < values.size(); i++)
 	{
-		if (Ref<RuntimeAbility> runtime_ability = values[i]; runtime_ability.is_valid() && !runtime_ability.is_null())
+		if (Ref<RuntimeAbility> runtime_ability = values[i]; runtime_ability.is_valid() && !runtime_ability.is_null() && runtime_ability->is_granted())
 		{
-			if (!runtime_ability->is_granted())
-			{
-				continue;
-			}
-
 			runtime_ability->handle_tick(p_delta);
 		}
 	}
@@ -603,11 +602,6 @@ void AbilityContainer::_ready()
 		{
 			add_ability(ability);
 		}
-	}
-
-	if (!Engine::get_singleton()->is_editor_hint())
-	{
-		initial_abilities.clear();
 	}
 }
 
@@ -686,12 +680,8 @@ bool AbilityContainer::has_ability(const Variant &p_variant) const
 {
 	if (p_variant.get_type() == Variant::OBJECT)
 	{
-		if (const Ref<Ability> ability = p_variant; ability.is_valid() && !ability.is_null())
-		{
-			return runtime_abilities.has(ability->get_ability_name());
-		}
-
-		return false;
+		const Ref<Ability> ability = p_variant;
+		return ability.is_valid() && !ability.is_null() && runtime_abilities.has(ability->get_ability_name());
 	}
 
 	if (p_variant.get_type() == Variant::STRING)
@@ -704,42 +694,26 @@ bool AbilityContainer::has_ability(const Variant &p_variant) const
 
 bool AbilityContainer::is_ability_active(const Variant &p_variant) const
 {
-	if (const Ref<RuntimeAbility> ability = get_ability(p_variant); ability.is_valid() && !ability.is_null())
-	{
-		return ability->is_active();
-	}
-
-	return false;
+	const Ref<RuntimeAbility> ability = get_ability(p_variant);
+	return ability.is_valid() && !ability.is_null() && ability->is_active();
 }
 
 bool AbilityContainer::is_ability_blocked(const Variant &p_variant) const
 {
-	if (const Ref<RuntimeAbility> ability = get_ability(p_variant); ability.is_valid() && !ability.is_null())
-	{
-		return ability->is_blocked();
-	}
-
-	return false;
+	const Ref<RuntimeAbility> ability = get_ability(p_variant);
+	return ability.is_valid() && !ability.is_null() && ability->is_blocked();
 }
 
 bool AbilityContainer::is_ability_ended(const Variant &p_variant) const
 {
-	if (Ref<RuntimeAbility> ability = get_ability(p_variant); ability.is_valid() && !ability.is_null())
-	{
-		return ability->is_ended();
-	}
-
-	return false;
+	const Ref<RuntimeAbility> ability = get_ability(p_variant);
+	return ability.is_valid() && !ability.is_null() && ability->is_ended();
 }
 
 bool AbilityContainer::is_ability_granted(const Variant &p_variant) const
 {
-	if (const Ref<RuntimeAbility> ability = get_ability(p_variant); ability.is_valid() && !ability.is_null())
-	{
-		return ability->is_granted();
-	}
-
-	return false;
+	const Ref<RuntimeAbility> ability = get_ability(p_variant);
+	return ability.is_valid() && !ability.is_null() && ability->is_granted();
 }
 
 bool AbilityContainer::remove_ability(const Ref<Ability> &p_ability)

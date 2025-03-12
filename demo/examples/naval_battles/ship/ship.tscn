@@ -1,0 +1,25 @@
+[gd_scene load_steps=5 format=3 uid="uid://cb8nf2ob62h1"]
+
+[ext_resource type="PackedScene" uid="uid://byueger0ojwr6" path="res://assets/kenney_pirate-kit/Models/GLB format/ship-large.glb" id="1_0gull"]
+[ext_resource type="Script" uid="uid://cplcgdn3bc5kl" path="res://examples/naval_battles/ship/ship.gd" id="1_g2oep"]
+[ext_resource type="PackedScene" uid="uid://bym23u42vjcgk" path="res://examples/naval_battles/ship/ship_skin/ship_skin.tscn" id="2_xd0dp"]
+[ext_resource type="PackedScene" uid="uid://bby6j5jthl2ts" path="res://examples/naval_battles/ship/cannon/ship_cannon.tscn" id="3_rnc0j"]
+
+[node name="Ship" type="Node3D"]
+script = ExtResource("1_g2oep")
+oscillation_max = 0.15
+skin_type = 1
+
+[node name="ShipSkin" parent="." instance=ExtResource("2_xd0dp")]
+unique_name_in_owner = true
+
+[node name="ship-large2" parent="." instance=ExtResource("1_0gull")]
+visible = false
+
+[node name="CannonLeft" parent="." instance=ExtResource("3_rnc0j")]
+unique_name_in_owner = true
+transform = Transform3D(-2.62268e-08, 0, 0.6, 0, 0.6, 0, -0.6, 0, -2.62268e-08, 1.83305, 2.15225, -1.82051)
+
+[node name="CannonRight" parent="." instance=ExtResource("3_rnc0j")]
+unique_name_in_owner = true
+transform = Transform3D(0.0522934, 7.39399e-09, -0.597717, 0, 0.6, 7.42223e-09, 0.597717, -6.46889e-10, 0.0522934, -1.72095, 2.15225, -1.82051)

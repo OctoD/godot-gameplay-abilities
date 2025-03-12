@@ -1,0 +1,7 @@
+[gd_scene load_steps=2 format=3 uid="uid://bym23u42vjcgk"]
+
+[ext_resource type="Script" uid="uid://dhbxlvkui52d3" path="res://examples/naval_battles/ship/ship_skin/ship_skin.gd" id="1_mc3lv"]
+
+[node name="ShipSkin" type="Node3D"]
+script = ExtResource("1_mc3lv")
+skin_type = 1

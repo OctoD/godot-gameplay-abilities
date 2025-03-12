@@ -1,7 +1,8 @@
-[gd_scene load_steps=3 format=3 uid="uid://6my7uk0ymjke"]
+[gd_scene load_steps=4 format=3 uid="uid://6my7uk0ymjke"]
 
-[ext_resource type="Script" uid="uid://dvrakog0hb8by" path="res://main.gd" id="1_ig7tw"]
-[ext_resource type="PackedScene" uid="uid://da22ctof8levq" path="res://examples/abilities_as_states/abilities_as_states.tscn" id="2_0xm2m"]
+[ext_resource type="Script" uid="uid://cf47te3a3f74h" path="res://main.gd" id="1_ig7tw"]
+[ext_resource type="PackedScene" uid="uid://da22ctof8levq" path="res://examples/naval_battles/naval_battles.tscn" id="2_0xm2m"]
+[ext_resource type="PackedScene" uid="uid://ds6exarfjv6q7" path="res://examples/abilities_states/abilities_states.tscn" id="3_h2yge"]
 
 [node name="Main" type="VBoxContainer"]
 anchors_preset = 15
@@ -11,7 +12,7 @@ grow_horizontal = 2
 grow_vertical = 2
 alignment = 1
 script = ExtResource("1_ig7tw")
-examples = Array[PackedScene]([ExtResource("2_0xm2m")])
+examples = Array[PackedScene]([ExtResource("2_0xm2m"), ExtResource("3_h2yge")])
 
 [node name="MainMenu" type="CenterContainer" parent="."]
 unique_name_in_owner = true
@@ -26,6 +27,14 @@ layout_mode = 2
 layout_mode = 2
 text = "Godot Gameplay Abilities"
 horizontal_alignment = 1
+
+[node name="ExamplesContainer" type="VBoxContainer" parent="MainMenu/MainMenuContent"]
+layout_mode = 2
+
+[node name="QuitButton" type="Button" parent="MainMenu/MainMenuContent"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Quit"
 
 [node name="ExampleMenu" type="HBoxContainer" parent="."]
 unique_name_in_owner = true

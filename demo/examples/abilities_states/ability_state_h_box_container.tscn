@@ -1,0 +1,19 @@
+[gd_scene load_steps=2 format=3 uid="uid://celbrugx55ha8"]
+
+[ext_resource type="Script" uid="uid://dgh06nsxl31ek" path="res://examples/abilities_states/ability_state_h_box_container.gd" id="1_x7d1a"]
+
+[node name="AbilityStateHBoxContainer" type="HBoxContainer"]
+offset_right = 130.0
+offset_bottom = 23.0
+script = ExtResource("1_x7d1a")
+
+[node name="StateStateLabel" type="Label" parent="."]
+unique_name_in_owner = true
+layout_mode = 2
+text = "x"
+
+[node name="StateNameLabel" type="Label" parent="."]
+unique_name_in_owner = true
+layout_mode = 2
+text = "[[ability name]]"
+horizontal_alignment = 2

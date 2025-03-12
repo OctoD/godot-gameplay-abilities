@@ -1,0 +1,45 @@
+[gd_scene load_steps=5 format=3 uid="uid://ds6exarfjv6q7"]
+
+[ext_resource type="Script" uid="uid://dfa0x18sdyu6o" path="res://examples/abilities_states/abilities_states.gd" id="1_705gc"]
+[ext_resource type="Script" uid="uid://dpc8pqdvlooj0" path="res://examples/abilities_states/abilities/abilities_states_test_ability.gd" id="2_2p100"]
+[ext_resource type="PackedScene" uid="uid://celbrugx55ha8" path="res://examples/abilities_states/ability_state_h_box_container.tscn" id="2_gi80w"]
+
+[sub_resource type="Ability" id="Ability_gi80w"]
+script = ExtResource("2_2p100")
+metadata/_custom_type_script = "uid://dpc8pqdvlooj0"
+
+[node name="AbilitiesStates" type="VBoxContainer"]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_705gc")
+
+[node name="Ability States" type="Label" parent="."]
+layout_mode = 2
+text = "Ability States"
+
+[node name="AbilityStateHBoxContainer" parent="." node_paths=PackedStringArray("ability_container") instance=ExtResource("2_gi80w")]
+layout_mode = 2
+ability_container = NodePath("../AbilityContainer")
+
+[node name="AbilityStateHBoxContainer2" parent="." node_paths=PackedStringArray("ability_container") instance=ExtResource("2_gi80w")]
+layout_mode = 2
+ability_container = NodePath("../AbilityContainer")
+state_to_display = 1
+
+[node name="AbilityStateHBoxContainer3" parent="." node_paths=PackedStringArray("ability_container") instance=ExtResource("2_gi80w")]
+layout_mode = 2
+ability_container = NodePath("../AbilityContainer")
+state_to_display = 2
+
+[node name="AbilityStateHBoxContainer4" parent="." node_paths=PackedStringArray("ability_container") instance=ExtResource("2_gi80w")]
+layout_mode = 2
+ability_container = NodePath("../AbilityContainer")
+state_to_display = 3
+
+[node name="AbilityContainer" type="AbilityContainer" parent="."]
+abilities = Array[Ability]([SubResource("Ability_gi80w")])

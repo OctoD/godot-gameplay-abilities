@@ -11,21 +11,21 @@ using namespace octod::gameplay::abilities;
 
 #ifndef CHECK_IF_SHOULD_BE_CALLED
 #define CHECK_IF_SHOULD_BE_CALLED(p_method_name, p_starting_value)     \
-bool output = p_starting_value;                                    \
-\
-if (GDVIRTUAL_IS_OVERRIDDEN_PTR(ability, p_method_name)) {         \
-GDVIRTUAL_CALL_PTR(ability, p_method_name, container, output); \
-}                                                                  \
-\
-return output;
+	bool output = p_starting_value;                                    \
+                                                                       \
+	if (GDVIRTUAL_IS_OVERRIDDEN_PTR(ability, p_method_name)) {         \
+		GDVIRTUAL_CALL_PTR(ability, p_method_name, container, output); \
+	}                                                                  \
+                                                                       \
+	return output;
 #endif
 
 #ifndef CALL_VIRTUAL_ABILITY_METHOD
 #define CALL_VIRTUAL_ABILITY_METHOD(                                                      \
-	p_check_method_name,                                                              \
-	p_method_name,                                                                    \
-	p_error_type,                                                                     \
-	p_refusal_type)                                                                   \
+		p_check_method_name,                                                              \
+		p_method_name,                                                                    \
+		p_error_type,                                                                     \
+		p_refusal_type)                                                                   \
                                                                                           \
 	if (GDVIRTUAL_IS_OVERRIDDEN_PTR(ability, p_check_method_name)) {                      \
 		bool output = false;                                                              \
@@ -88,8 +88,8 @@ return output;
 			state &= ~ABILITY_STATE_GRANTED; \
 			state |= ABILITY_STATE_NONE;     \
 			break;                           \
-		default:							 \
-			break;							 \
+		default:                             \
+			break;                           \
 	}
 #endif
 
@@ -122,18 +122,30 @@ void RuntimeAbility::_bind_methods()
 	BIND_ENUM_CONSTANT(ABILITY_EVENT_TYPE_ACTIVATED);
 	BIND_ENUM_CONSTANT(ABILITY_EVENT_TYPE_BLOCKED);
 	BIND_ENUM_CONSTANT(ABILITY_EVENT_TYPE_ENDED);
-	BIND_ENUM_CONSTANT(ABILITY_EVENT_TYPE_GRANTED);
-	BIND_ENUM_CONSTANT(ABILITY_EVENT_TYPE_REVOKED);
-	BIND_ENUM_CONSTANT(ABILITY_EVENT_TYPE_REFUSED_TO_ACTIVATE);
-	BIND_ENUM_CONSTANT(ABILITY_EVENT_TYPE_REFUSED_TO_BLOCK);
-	BIND_ENUM_CONSTANT(ABILITY_EVENT_TYPE_REFUSED_TO_END);
-	BIND_ENUM_CONSTANT(ABILITY_EVENT_TYPE_REFUSED_TO_GRANT);
-	BIND_ENUM_CONSTANT(ABILITY_EVENT_TYPE_REFUSED_TO_REVOKE);
 	BIND_ENUM_CONSTANT(ABILITY_EVENT_TYPE_ERROR_ACTIVATING);
 	BIND_ENUM_CONSTANT(ABILITY_EVENT_TYPE_ERROR_BLOCKING);
 	BIND_ENUM_CONSTANT(ABILITY_EVENT_TYPE_ERROR_ENDING);
 	BIND_ENUM_CONSTANT(ABILITY_EVENT_TYPE_ERROR_GRANTING);
 	BIND_ENUM_CONSTANT(ABILITY_EVENT_TYPE_ERROR_REVOKING);
+	BIND_ENUM_CONSTANT(ABILITY_EVENT_TYPE_GRANTED);
+	BIND_ENUM_CONSTANT(ABILITY_EVENT_TYPE_REFUSED_TO_ACTIVATE);
+	BIND_ENUM_CONSTANT(ABILITY_EVENT_TYPE_REFUSED_TO_ACTIVATE_DECIDED_TO_BLOCK);
+	BIND_ENUM_CONSTANT(ABILITY_EVENT_TYPE_REFUSED_TO_ACTIVATE_IS_BLOCKED);
+	BIND_ENUM_CONSTANT(ABILITY_EVENT_TYPE_REFUSED_TO_ACTIVATE_IS_COOLING_DOWN);
+	BIND_ENUM_CONSTANT(ABILITY_EVENT_TYPE_REFUSED_TO_ACTIVATE_IS_DURATION_ACTIVE);
+	BIND_ENUM_CONSTANT(ABILITY_EVENT_TYPE_REFUSED_TO_ACTIVATE_IS_REVOKED);
+	BIND_ENUM_CONSTANT(ABILITY_EVENT_TYPE_REFUSED_TO_BLOCK);
+	BIND_ENUM_CONSTANT(ABILITY_EVENT_TYPE_REFUSED_TO_BLOCK_IS_NOT_ACTIVE);
+	BIND_ENUM_CONSTANT(ABILITY_EVENT_TYPE_REFUSED_TO_BLOCK_IS_NOT_GRANTED);
+	BIND_ENUM_CONSTANT(ABILITY_EVENT_TYPE_REFUSED_TO_END);
+	BIND_ENUM_CONSTANT(ABILITY_EVENT_TYPE_REFUSED_TO_END_IS_BLOCKED);
+	BIND_ENUM_CONSTANT(ABILITY_EVENT_TYPE_REFUSED_TO_END_IS_NOT_ACTIVE);
+	BIND_ENUM_CONSTANT(ABILITY_EVENT_TYPE_REFUSED_TO_END_IS_NOT_GRANTED);
+	BIND_ENUM_CONSTANT(ABILITY_EVENT_TYPE_REFUSED_TO_GRANT);
+	BIND_ENUM_CONSTANT(ABILITY_EVENT_TYPE_REFUSED_TO_GRANT_ALREADY_GRANTED);
+	BIND_ENUM_CONSTANT(ABILITY_EVENT_TYPE_REFUSED_TO_REVOKE);
+	BIND_ENUM_CONSTANT(ABILITY_EVENT_TYPE_REFUSED_TO_REVOKE_ALREADY_REVOKED);
+	BIND_ENUM_CONSTANT(ABILITY_EVENT_TYPE_REVOKED);
 
 	/// binds signals to godot
 	ADD_SIGNAL(MethodInfo("activated"));
@@ -147,95 +159,79 @@ void RuntimeAbility::_bind_methods()
 
 void RuntimeAbility::handle_tick(const double p_delta)
 {
-	if (ability == nullptr || container == nullptr)
-	{
+	if (ability == nullptr || container == nullptr) {
 		return;
 	}
 
-	if (GDVIRTUAL_IS_OVERRIDDEN_PTR(ability, _on_tick))
-	{
+	if (GDVIRTUAL_IS_OVERRIDDEN_PTR(ability, _on_tick)) {
 		GDVIRTUAL_CALL_PTR(ability, _on_tick, p_delta, cooldown_time, container, this);
 		return;
 	}
 
 	/// the ability is ongoing, it will not stop until the duration is over
-	if (is_active() && is_duration_active())
-	{
+	if (is_active() && is_duration_active()) {
 		duration_time += p_delta;
 
-		if (!is_duration_active())
-		{
+		if (!is_duration_active()) {
 			duration_time = 0.0;
 
-			if (should_be_ended() && end() == ABILITY_EVENT_TYPE_ENDED)
-			{
+			if (should_be_ended() && end() == ABILITY_EVENT_TYPE_ENDED) {
 				const double cooldown = get_cooldown();
 
-				if (GDVIRTUAL_IS_OVERRIDDEN_PTR(ability, _can_activate_cooldown))
-				{
+				if (GDVIRTUAL_IS_OVERRIDDEN_PTR(ability, _can_activate_cooldown)) {
 					bool should_activate_cooldown = false;
 
 					GDVIRTUAL_CALL_PTR(ability, _can_activate_cooldown, container, this, should_activate_cooldown);
 
-					if (should_activate_cooldown)
-					{
+					if (should_activate_cooldown) {
 						cooldown_time -= cooldown;
 						emit_signal("cooldown_start");
 					}
-				} else if (!Math::is_zero_approx(cooldown))
-				{
+				} else if (!Math::is_zero_approx(cooldown)) {
 					cooldown_time -= cooldown;
 					emit_signal("cooldown_start");
 				}
 
 				return;
 			}
-		} else
-		{
+		} else {
 			return;
 		}
 	}
 
 	/// check if the ability has an active cooldown
 	/// if the cooldown is active, the ability cannot be activated
-	if (is_active() && is_cooldown_active())
-	{
+	if (is_active() && is_cooldown_active()) {
 		/// increment the cooldown time
 		cooldown_time += p_delta;
 
-		if (!is_cooldown_active())
-		{
+		if (!is_cooldown_active()) {
 			emit_signal("cooldown_end");
 			cooldown_time = 0.0;
-		} else
-		{
+		} else {
 			return;
 		}
 	}
 
 	/// if the ability is ended, it will not be re-activated
-	if (is_ended())
-	{
+	if (is_ended()) {
 		return;
 	}
 
 	/// if the ability is blocked, it will not be re-activated
-	if (should_be_blocked() && block() == ABILITY_EVENT_TYPE_BLOCKED)
-	{
+	if (should_be_blocked() && block() == ABILITY_EVENT_TYPE_BLOCKED) {
 		return;
 	}
 
 	/// if the ability should be ended, it will be ended
-	if (should_be_ended() && end() == ABILITY_EVENT_TYPE_ENDED)
-	{
+	if (should_be_ended() && end() == ABILITY_EVENT_TYPE_ENDED) {
 		duration_time = 0.0;
 		cooldown_time = 0.0;
 		return;
 	}
 
 	/// if the ability should be activated, it will be activated
-	if (should_be_activated())
-	{
+	if (should_be_activated()) {
 		activate();
 	}
 }
@@ -244,50 +240,45 @@ AbilityEventType RuntimeAbility::activate()
 {
 	ENSURE_ABILITY_EXECUTION(ABILITY_EVENT_TYPE_ERROR_ACTIVATING);
 
-	if (should_be_blocked() && block() == ABILITY_EVENT_TYPE_BLOCKED)
-	{
-		return ABILITY_EVENT_TYPE_REFUSED_TO_ACTIVATE;
+	if (should_be_blocked() && block() == ABILITY_EVENT_TYPE_BLOCKED) {
+		return ABILITY_EVENT_TYPE_REFUSED_TO_ACTIVATE_DECIDED_TO_BLOCK;
 	}
 
-	if (is_duration_active())
-	{
-		return ABILITY_EVENT_TYPE_REFUSED_TO_ACTIVATE;
+	if (is_duration_active()) {
+		return ABILITY_EVENT_TYPE_REFUSED_TO_ACTIVATE_IS_DURATION_ACTIVE;
 	}
 
-	if (is_cooldown_active())
-	{
-		return ABILITY_EVENT_TYPE_REFUSED_TO_ACTIVATE;
+	if (is_cooldown_active()) {
+		return ABILITY_EVENT_TYPE_REFUSED_TO_ACTIVATE_IS_COOLING_DOWN;
 	}
 
-	if (IS_STATE(ABILITY_STATE_BLOCKED))
-	{
-		return ABILITY_EVENT_TYPE_REFUSED_TO_ACTIVATE;
+	if (is_revoked()) {
+		return ABILITY_EVENT_TYPE_REFUSED_TO_ACTIVATE_IS_REVOKED;
+	}
+
+	if (IS_STATE(ABILITY_STATE_BLOCKED)) {
+		return ABILITY_EVENT_TYPE_REFUSED_TO_ACTIVATE_IS_BLOCKED;
 	}
 
 	CALL_VIRTUAL_ABILITY_METHOD(_can_be_activated, _on_activate, ABILITY_EVENT_TYPE_ERROR_ACTIVATING, ABILITY_EVENT_TYPE_REFUSED_TO_ACTIVATE);
 
 	SET_STATE(ABILITY_EVENT_TYPE_ACTIVATED);
 
-	if (const double duration = get_duration(); !Math::is_zero_approx(duration))
-	{
+	if (const double duration = get_duration(); !Math::is_zero_approx(duration)) {
 		duration_time -= duration;
-	} else
-	{
+	} else {
 		const double cooldown = get_cooldown();
 
-		if (GDVIRTUAL_IS_OVERRIDDEN_PTR(ability, _can_activate_cooldown))
-		{
+		if (GDVIRTUAL_IS_OVERRIDDEN_PTR(ability, _can_activate_cooldown)) {
 			bool should_activate_cooldown = false;
 
 			GDVIRTUAL_CALL_PTR(ability, _can_activate_cooldown, container, this, should_activate_cooldown);
 
-			if (should_activate_cooldown)
-			{
+			if (should_activate_cooldown) {
 				cooldown_time -= cooldown;
 				emit_signal("cooldown_start");
 			}
-		} else if (!Math::is_zero_approx(cooldown))
-		{
+		} else if (!Math::is_zero_approx(cooldown)) {
 			cooldown_time -= cooldown;
 			emit_signal("cooldown_start");
 		}
@@ -302,9 +293,12 @@ AbilityEventType RuntimeAbility::block()
 {
 	ENSURE_ABILITY_EXECUTION(ABILITY_EVENT_TYPE_ERROR_BLOCKING);
 
-	if (!IS_STATE(ABILITY_STATE_ACTIVE))
-	{
-		return ABILITY_EVENT_TYPE_REFUSED_TO_BLOCK;
+	if (!IS_STATE(ABILITY_STATE_GRANTED)) {
+		return ABILITY_EVENT_TYPE_REFUSED_TO_BLOCK_IS_NOT_GRANTED;
+	}
+
+	if (!IS_STATE(ABILITY_STATE_ACTIVE)) {
+		return ABILITY_EVENT_TYPE_REFUSED_TO_BLOCK_IS_NOT_ACTIVE;
 	}
 
 	CALL_VIRTUAL_ABILITY_METHOD(_can_be_blocked, _on_block, ABILITY_EVENT_TYPE_ERROR_BLOCKING, ABILITY_EVENT_TYPE_REFUSED_TO_BLOCK);
@@ -312,6 +306,7 @@ AbilityEventType RuntimeAbility::block()
 	SET_STATE(ABILITY_EVENT_TYPE_BLOCKED);
 
 	cooldown_time = 0.0;
+	duration_time = 0.0;
 
 	emit_signal("blocked");
 
@@ -322,9 +317,16 @@ AbilityEventType RuntimeAbility::end()
 {
 	ENSURE_ABILITY_EXECUTION(ABILITY_EVENT_TYPE_ERROR_ENDING);
 
-	if (!IS_STATE(ABILITY_STATE_ACTIVE) || IS_STATE(ABILITY_STATE_BLOCKED) || !IS_STATE(ABILITY_STATE_GRANTED))
-	{
-		return ABILITY_EVENT_TYPE_REFUSED_TO_END;
+	if (IS_STATE(ABILITY_STATE_BLOCKED)) {
+		return ABILITY_EVENT_TYPE_REFUSED_TO_END_IS_BLOCKED;
+	}
+
+	if (!IS_STATE(ABILITY_STATE_ACTIVE)) {
+		return ABILITY_EVENT_TYPE_REFUSED_TO_END_IS_NOT_ACTIVE;
+	}
+
+	if (!IS_STATE(ABILITY_STATE_GRANTED)) {
+		return ABILITY_EVENT_TYPE_REFUSED_TO_END_IS_NOT_GRANTED;
 	}
 
 	CALL_VIRTUAL_ABILITY_METHOD(_can_be_ended, _on_end, ABILITY_EVENT_TYPE_ERROR_ENDING, ABILITY_EVENT_TYPE_REFUSED_TO_END);
@@ -352,8 +354,7 @@ double RuntimeAbility::get_cooldown() const
 {
 	double cooldown = 0.0;
 
-	if (GDVIRTUAL_IS_OVERRIDDEN_PTR(ability, _get_cooldown))
-	{
+	if (GDVIRTUAL_IS_OVERRIDDEN_PTR(ability, _get_cooldown)) {
 		GDVIRTUAL_CALL_PTR(ability, _get_cooldown, container, cooldown);
 	}
 
@@ -364,8 +365,7 @@ double RuntimeAbility::get_duration() const
 {
 	double duration = 0.0;
 
-	if (GDVIRTUAL_IS_OVERRIDDEN_PTR(ability, _get_duration))
-	{
+	if (GDVIRTUAL_IS_OVERRIDDEN_PTR(ability, _get_duration)) {
 		GDVIRTUAL_CALL_PTR(ability, _get_duration, container, duration);
 	}
 
@@ -375,6 +375,10 @@ double RuntimeAbility::get_duration() const
 AbilityEventType RuntimeAbility::grant()
 {
 	ENSURE_ABILITY_EXECUTION(ABILITY_EVENT_TYPE_ERROR_GRANTING);
+
+	if (IS_STATE(ABILITY_STATE_GRANTED)) {
+		return ABILITY_EVENT_TYPE_REFUSED_TO_GRANT_ALREADY_GRANTED;
+	}
 
 	CALL_VIRTUAL_ABILITY_METHOD(_can_be_granted, _on_grant, ABILITY_EVENT_TYPE_ERROR_GRANTING, ABILITY_EVENT_TYPE_REFUSED_TO_GRANT);
 
@@ -397,27 +401,35 @@ bool RuntimeAbility::is_blocked() const
 
 bool RuntimeAbility::is_cooldown_active() const
 {
-	return !Math::is_zero_approx(cooldown_time) && cooldown_time < 0.0;
+	return !Math::is_zero_approx(cooldown_time) && !Math::is_zero_approx(get_cooldown());
 }
 
 bool RuntimeAbility::is_duration_active() const
 {
-	return !Math::is_zero_approx(duration_time) && duration_time < 0.0;
+	return !Math::is_zero_approx(duration_time) && !Math::is_zero_approx(get_duration());
 }
 
 bool RuntimeAbility::is_ended() const
 {
-	return IS_STATE(ABILITY_STATE_NONE) || !IS_STATE(ABILITY_STATE_ACTIVE) || IS_STATE(ABILITY_STATE_BLOCKED);
+	return IS_STATE(ABILITY_STATE_NONE) || !IS_STATE(ABILITY_STATE_ACTIVE) || !IS_STATE(ABILITY_STATE_BLOCKED);
 }
 
 bool RuntimeAbility::is_granted() const
 {
 	return IS_STATE(ABILITY_STATE_GRANTED);
 }
+bool RuntimeAbility::is_revoked() const
+{
+	return !IS_STATE(ABILITY_STATE_GRANTED);
+}
 
 AbilityEventType RuntimeAbility::revoke()
 {
 	ENSURE_ABILITY_EXECUTION(ABILITY_EVENT_TYPE_ERROR_REVOKING);
+
+	if (!IS_STATE(ABILITY_STATE_GRANTED)) {
+		return ABILITY_EVENT_TYPE_REFUSED_TO_REVOKE_ALREADY_REVOKED;
+	}
 
 	CALL_VIRTUAL_ABILITY_METHOD(_can_be_revoked, _on_revoke, ABILITY_EVENT_TYPE_ERROR_REVOKING, ABILITY_EVENT_TYPE_REFUSED_TO_REVOKE);
 
@@ -482,6 +494,7 @@ void AbilityContainer::_bind_methods()
 
 	/// binds virtual methods to godot
 	GDVIRTUAL_BIND(_build_runtime_ability, "ability_resource");
+	GDVIRTUAL_BIND(_process, "delta");
 	GDVIRTUAL_BIND(_try_activate, "ability_or_ability_name");
 	GDVIRTUAL_BIND(_try_block, "ability_or_ability_name");
 	GDVIRTUAL_BIND(_try_end, "ability_or_ability_name");
@@ -500,26 +513,9 @@ void AbilityContainer::_bind_methods()
 	/// binding properties to godot
 	ADD_PROPERTY(PropertyInfo(Variant::ARRAY, "abilities", PROPERTY_HINT_RESOURCE_TYPE, "24/17:Ability"), "set_initial_abilities", "get_initial_abilities");
 
-	/// binds enum constants to godot
-	BIND_ENUM_CONSTANT(ABILITY_NOT_FOUND);
-	BIND_ENUM_CONSTANT(ABILITY_ADDED);
-	BIND_ENUM_CONSTANT(ABILITY_REMOVED);
-	BIND_ENUM_CONSTANT(ABILITY_ACTIVATED);
-	BIND_ENUM_CONSTANT(ABILITY_BLOCKED);
-	BIND_ENUM_CONSTANT(ABILITY_ENDED);
-	BIND_ENUM_CONSTANT(ABILITY_GRANTED);
-	BIND_ENUM_CONSTANT(ABILITY_REVOKED);
-	BIND_ENUM_CONSTANT(ABILITY_ERROR_ACTIVATING);
-	BIND_ENUM_CONSTANT(ABILITY_ERROR_BLOCKING);
-	BIND_ENUM_CONSTANT(ABILITY_ERROR_ENDING);
-	BIND_ENUM_CONSTANT(ABILITY_ERROR_GRANTING);
-	BIND_ENUM_CONSTANT(ABILITY_ERROR_REVOKING);
-	BIND_ENUM_CONSTANT(ABILITY_REFUSED_TO_ACTIVATE);
-	BIND_ENUM_CONSTANT(ABILITY_REFUSED_TO_BLOCK);
-	BIND_ENUM_CONSTANT(ABILITY_REFUSED_TO_END);
-	BIND_ENUM_CONSTANT(ABILITY_REFUSED_TO_GRANT);
-	BIND_ENUM_CONSTANT(ABILITY_REFUSED_TO_REVOKE);
-	BIND_ENUM_CONSTANT(ABILITY_PARAMETER_IS_NULL);
+	/// Binds enum constants
+	BIND_ENUM_CONSTANT(ABILITY_NOT_FOUND)
+	BIND_ENUM_CONSTANT(ABILITY_PARAMETER_IS_NULL)
 
 	/// binds signals to godot
 	ADD_SIGNAL(MethodInfo("ability_activated", PropertyInfo(Variant::OBJECT, "ability", PROPERTY_HINT_RESOURCE_TYPE, "Ability")));
@@ -535,15 +531,38 @@ void AbilityContainer::_bind_methods()
 
 Ref<RuntimeAbility> AbilityContainer::build_runtime_ability(const Ref<Ability> &p_ability) const
 {
-	if (GDVIRTUAL_IS_OVERRIDDEN(_build_runtime_ability))
-	{
-		if (Ref<RuntimeAbility> runtime_ability; GDVIRTUAL_CALL(_build_runtime_ability, p_ability, runtime_ability))
-		{
+	if (GDVIRTUAL_IS_OVERRIDDEN(_build_runtime_ability)) {
+		if (Ref<RuntimeAbility> runtime_ability; GDVIRTUAL_CALL(_build_runtime_ability, p_ability, runtime_ability)) {
 			return runtime_ability;
 		}
 	}
 
 	return {};
+}
+
+void AbilityContainer::_notification(const int p_what)
+{
+	if (p_what == NOTIFICATION_READY) {
+		for (int i = 0; i < initial_abilities.size(); i++) {
+			if (Ref<Ability> ability = initial_abilities[i]; ability.is_valid() && !ability.is_null()) {
+				add_ability(ability);
+			}
+		}
+
+		set_physics_process(true);
+	}
+
+	if (p_what == NOTIFICATION_PROCESS) {
+		TypedArray<RuntimeAbility> values = runtime_abilities.values();
+
+		for (int i = 0; i < values.size(); i++) {
+			if (Ref<RuntimeAbility> runtime_ability = values[i]; runtime_ability.is_valid() && !runtime_ability.is_null() && runtime_ability->is_granted()) {
+				runtime_ability->handle_tick(get_process_delta_time());
+			}
+		}
+
+		GDVIRTUAL_CALL(_process, get_physics_process_delta_time());
+	}
 }
 
 void AbilityContainer::_on_active_ability(const Ref<RuntimeAbility> &p_runtime_ability)
@@ -581,37 +600,12 @@ void AbilityContainer::_on_cooldown_start(const Ref<RuntimeAbility> &p_runtime_a
 	emit_signal("cooldown_start", p_runtime_ability->get_ability());
 }
 
-void AbilityContainer::_physics_process(double p_delta)
-{
-	TypedArray<RuntimeAbility> values = runtime_abilities.values();
-
-	for (int i = 0; i < values.size(); i++)
-	{
-		if (Ref<RuntimeAbility> runtime_ability = values[i]; runtime_ability.is_valid() && !runtime_ability.is_null() && runtime_ability->is_granted())
-		{
-			runtime_ability->handle_tick(p_delta);
-		}
-	}
-}
-
-void AbilityContainer::_ready()
-{
-	for (int i = 0; i < initial_abilities.size(); i++)
-	{
-		if (Ref<Ability> ability = initial_abilities[i]; ability.is_valid() && !ability.is_null())
-		{
-			add_ability(ability);
-		}
-	}
-}
-
 bool AbilityContainer::add_ability(const Ref<Ability> &p_ability)
 {
 	ERR_FAIL_COND_V_MSG(p_ability.is_null(), false, "The Ability cannot be null.");
 	ERR_FAIL_COND_V_MSG(!p_ability.is_valid(), false, "The Ability Ref cannot be invalid.");
 
-	if (!has_ability(p_ability))
-	{
+	if (!has_ability(p_ability)) {
 		const Ref runtime_ability = memnew(RuntimeAbility);
 
 		runtime_ability->set_ability(p_ability);
@@ -629,8 +623,7 @@ bool AbilityContainer::add_ability(const Ref<Ability> &p_ability)
 
 		emit_signal("ability_added", p_ability);
 
-		if (try_grant(p_ability) == ABILITY_GRANTED && runtime_ability->should_be_activated() && try_activate(p_ability) == ABILITY_ACTIVATED)
-		{
+		if (try_grant(p_ability) == ABILITY_EVENT_TYPE_GRANTED && runtime_ability->should_be_activated() && try_activate(p_ability) == ABILITY_EVENT_TYPE_ACTIVATED) {
 			return true;
 		}
 	}
@@ -640,10 +633,8 @@ bool AbilityContainer::add_ability(const Ref<Ability> &p_ability)
 
 Ref<RuntimeAbility> AbilityContainer::get_ability(const Variant &p_variant) const
 {
-	if (p_variant.get_type() == Variant::OBJECT)
-	{
-		if (const Ref<Ability> ability = p_variant; ability.is_valid() && !ability.is_null())
-		{
+	if (p_variant.get_type() == Variant::OBJECT) {
+		if (const Ref<Ability> ability = p_variant; ability.is_valid() && !ability.is_null()) {
 			return runtime_abilities[ability->get_ability_name()];
 		}
 	}
@@ -665,10 +656,8 @@ Ref<RuntimeAbility> AbilityContainer::find_ability(const Callable &p_predicate) 
 {
 	TypedArray<RuntimeAbility> values = runtime_abilities.values();
 
-	for (int i = 0; i < values.size(); i++)
-	{
-		if (Ref<RuntimeAbility> runtime_ability = values[i]; runtime_ability.is_valid() && !runtime_ability.is_null() && p_predicate.call(runtime_ability, i))
-		{
+	for (int i = 0; i < values.size(); i++) {
+		if (Ref<RuntimeAbility> runtime_ability = values[i]; runtime_ability.is_valid() && !runtime_ability.is_null() && p_predicate.call(runtime_ability, i)) {
 			return runtime_ability;
 		}
 	}
@@ -678,14 +667,12 @@ Ref<RuntimeAbility> AbilityContainer::find_ability(const Callable &p_predicate) 
 
 bool AbilityContainer::has_ability(const Variant &p_variant) const
 {
-	if (p_variant.get_type() == Variant::OBJECT)
-	{
+	if (p_variant.get_type() == Variant::OBJECT) {
 		const Ref<Ability> ability = p_variant;
 		return ability.is_valid() && !ability.is_null() && runtime_abilities.has(ability->get_ability_name());
 	}
 
-	if (p_variant.get_type() == Variant::STRING)
-	{
+	if (p_variant.get_type() == Variant::STRING) {
 		return runtime_abilities.has(p_variant);
 	}
 
@@ -718,12 +705,10 @@ bool AbilityContainer::is_ability_granted(const Variant &p_variant) const
 
 bool AbilityContainer::remove_ability(const Ref<Ability> &p_ability)
 {
-	if (has_ability(p_ability))
-	{
+	if (has_ability(p_ability)) {
 		const Ref<RuntimeAbility> p_runtime_ability = runtime_abilities[p_ability->get_ability_name()];
 
-		if (p_runtime_ability->is_active())
-		{
+		if (p_runtime_ability->is_active()) {
 			p_runtime_ability->end();
 		}
 
@@ -743,13 +728,11 @@ void AbilityContainer::set_initial_abilities(const TypedArray<Ability> &p_abilit
 	initial_abilities = p_abilities;
 }
 
-AbilityContainerEventType AbilityContainer::try_activate(const Variant &p_ability_or_ability_name) const
+AbilityEventType AbilityContainer::try_activate(const Variant &p_ability_or_ability_name) const
 {
-	if (GDVIRTUAL_IS_OVERRIDDEN(_try_activate))
-	{
-		if (int event_type = ABILITY_NOT_FOUND; GDVIRTUAL_CALL(_try_activate, p_ability_or_ability_name, event_type))
-		{
-			return static_cast<AbilityContainerEventType>(event_type);
+	if (GDVIRTUAL_IS_OVERRIDDEN(_try_activate)) {
+		if (int event_type = ABILITY_NOT_FOUND; GDVIRTUAL_CALL(_try_activate, p_ability_or_ability_name, event_type)) {
+			return static_cast<AbilityEventType>(event_type);
 		}
 	}
 
@@ -757,23 +740,14 @@ AbilityContainerEventType AbilityContainer::try_activate(const Variant &p_abilit
 
 	ABILITY_PARAMETER_IS_NULL_CHECK(runtime_ability);
 
-	const AbilityEventType event_type = runtime_ability->activate();
-
-	if (event_type == ABILITY_EVENT_TYPE_ACTIVATED)
-	{
-		return ABILITY_ACTIVATED;
-	}
-
-	return event_type == ABILITY_EVENT_TYPE_REFUSED_TO_ACTIVATE ? ABILITY_REFUSED_TO_ACTIVATE : ABILITY_ERROR_ACTIVATING;
+	return runtime_ability->activate();
 }
 
-AbilityContainerEventType AbilityContainer::try_block(const Variant &p_ability_or_ability_name) const
+AbilityEventType AbilityContainer::try_block(const Variant &p_ability_or_ability_name) const
 {
-	if (GDVIRTUAL_IS_OVERRIDDEN(_try_block))
-	{
-		if (int event_type = ABILITY_NOT_FOUND; GDVIRTUAL_CALL(_try_block, p_ability_or_ability_name, event_type))
-		{
-			return static_cast<AbilityContainerEventType>(event_type);
+	if (GDVIRTUAL_IS_OVERRIDDEN(_try_block)) {
+		if (int event_type = ABILITY_NOT_FOUND; GDVIRTUAL_CALL(_try_block, p_ability_or_ability_name, event_type)) {
+			return static_cast<AbilityEventType>(event_type);
 		}
 	}
 
@@ -781,23 +755,14 @@ AbilityContainerEventType AbilityContainer::try_block(const Variant &p_ability_o
 
 	ABILITY_PARAMETER_IS_NULL_CHECK(runtime_ability);
 
-	const AbilityEventType event_type = runtime_ability->block();
-
-	if (event_type == ABILITY_EVENT_TYPE_BLOCKED)
-	{
-		return ABILITY_BLOCKED;
-	}
-
-	return event_type == ABILITY_EVENT_TYPE_REFUSED_TO_BLOCK ? ABILITY_REFUSED_TO_BLOCK : ABILITY_ERROR_BLOCKING;
+	return runtime_ability->block();
 }
 
-AbilityContainerEventType AbilityContainer::try_end(const Variant &p_ability_or_ability_name) const
+AbilityEventType AbilityContainer::try_end(const Variant &p_ability_or_ability_name) const
 {
-	if (GDVIRTUAL_IS_OVERRIDDEN(_try_end))
-	{
-		if (int event_type = ABILITY_NOT_FOUND; GDVIRTUAL_CALL(_try_end, p_ability_or_ability_name, event_type))
-		{
-			return static_cast<AbilityContainerEventType>(event_type);
+	if (GDVIRTUAL_IS_OVERRIDDEN(_try_end)) {
+		if (int event_type = ABILITY_NOT_FOUND; GDVIRTUAL_CALL(_try_end, p_ability_or_ability_name, event_type)) {
+			return static_cast<AbilityEventType>(event_type);
 		}
 	}
 
@@ -805,23 +770,14 @@ AbilityContainerEventType AbilityContainer::try_end(const Variant &p_ability_or_
 
 	ABILITY_PARAMETER_IS_NULL_CHECK(runtime_ability);
 
-	const AbilityEventType event_type = runtime_ability->end();
-
-	if (event_type == ABILITY_EVENT_TYPE_ENDED)
-	{
-		return ABILITY_ENDED;
-	}
-
-	return event_type == ABILITY_EVENT_TYPE_REFUSED_TO_END ? ABILITY_REFUSED_TO_END : ABILITY_ERROR_ENDING;
+	return runtime_ability->end();
 }
 
-AbilityContainerEventType AbilityContainer::try_grant(const Variant &p_ability_or_ability_name) const
+AbilityEventType AbilityContainer::try_grant(const Variant &p_ability_or_ability_name) const
 {
-	if (GDVIRTUAL_IS_OVERRIDDEN(_try_grant))
-	{
-		if (int event_type = ABILITY_NOT_FOUND; GDVIRTUAL_CALL(_try_grant, p_ability_or_ability_name, event_type))
-		{
-			return static_cast<AbilityContainerEventType>(event_type);
+	if (GDVIRTUAL_IS_OVERRIDDEN(_try_grant)) {
+		if (int event_type = ABILITY_NOT_FOUND; GDVIRTUAL_CALL(_try_grant, p_ability_or_ability_name, event_type)) {
+			return static_cast<AbilityEventType>(event_type);
 		}
 	}
 
@@ -829,23 +785,14 @@ AbilityContainerEventType AbilityContainer::try_grant(const Variant &p_ability_o
 
 	ABILITY_PARAMETER_IS_NULL_CHECK(runtime_ability);
 
-	const AbilityEventType event_type = runtime_ability->grant();
-
-	if (event_type == ABILITY_EVENT_TYPE_GRANTED)
-	{
-		return ABILITY_GRANTED;
-	}
-
-	return event_type == ABILITY_EVENT_TYPE_REFUSED_TO_GRANT ? ABILITY_REFUSED_TO_GRANT : ABILITY_ERROR_GRANTING;
+	return runtime_ability->grant();
 }
 
-AbilityContainerEventType AbilityContainer::try_revoke(const Variant &p_ability_or_ability_name) const
+AbilityEventType AbilityContainer::try_revoke(const Variant &p_ability_or_ability_name) const
 {
-	if (GDVIRTUAL_IS_OVERRIDDEN(_try_revoke))
-	{
-		if (int event_type = ABILITY_NOT_FOUND; GDVIRTUAL_CALL(_try_revoke, p_ability_or_ability_name, event_type))
-		{
-			return static_cast<AbilityContainerEventType>(event_type);
+	if (GDVIRTUAL_IS_OVERRIDDEN(_try_revoke)) {
+		if (int event_type = ABILITY_NOT_FOUND; GDVIRTUAL_CALL(_try_revoke, p_ability_or_ability_name, event_type)) {
+			return static_cast<AbilityEventType>(event_type);
 		}
 	}
 
@@ -853,14 +800,7 @@ AbilityContainerEventType AbilityContainer::try_revoke(const Variant &p_ability_
 
 	ABILITY_PARAMETER_IS_NULL_CHECK(runtime_ability);
 
-	const AbilityEventType event_type = runtime_ability->revoke();
-
-	if (event_type == ABILITY_EVENT_TYPE_REVOKED)
-	{
-		return ABILITY_REVOKED;
-	}
-
-	return event_type == ABILITY_EVENT_TYPE_REFUSED_TO_REVOKE ? ABILITY_REFUSED_TO_REVOKE : ABILITY_ERROR_REVOKING;
+	return runtime_ability->revoke();
 }
 
 #pragma endregion

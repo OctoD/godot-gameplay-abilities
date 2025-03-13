@@ -16,30 +16,54 @@ anchor_right = 0.5
 anchor_bottom = 0.5
 grow_horizontal = 2
 grow_vertical = 2
+theme_override_constants/separation = 16
+alignment = 1
 script = ExtResource("1_705gc")
+
+[node name="AbilityContainer" type="AbilityContainer" parent="."]
+abilities = Array[Ability]([SubResource("Ability_gi80w")])
+unique_name_in_owner = true
 
 [node name="Ability States" type="Label" parent="."]
 layout_mode = 2
 text = "Ability States"
 
-[node name="AbilityStateHBoxContainer" parent="." node_paths=PackedStringArray("ability_container") instance=ExtResource("2_gi80w")]
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
 layout_mode = 2
-ability_container = NodePath("../AbilityContainer")
+theme_override_constants/separation = 8
 
-[node name="AbilityStateHBoxContainer2" parent="." node_paths=PackedStringArray("ability_container") instance=ExtResource("2_gi80w")]
+[node name="AbilityStateHBoxContainer" parent="VBoxContainer" node_paths=PackedStringArray("ability_container") instance=ExtResource("2_gi80w")]
 layout_mode = 2
-ability_container = NodePath("../AbilityContainer")
+ability_container = NodePath("../../AbilityContainer")
+
+[node name="AbilityStateHBoxContainer2" parent="VBoxContainer" node_paths=PackedStringArray("ability_container") instance=ExtResource("2_gi80w")]
+layout_mode = 2
+ability_container = NodePath("../../AbilityContainer")
 state_to_display = 1
 
-[node name="AbilityStateHBoxContainer3" parent="." node_paths=PackedStringArray("ability_container") instance=ExtResource("2_gi80w")]
+[node name="AbilityStateHBoxContainer3" parent="VBoxContainer" node_paths=PackedStringArray("ability_container") instance=ExtResource("2_gi80w")]
 layout_mode = 2
-ability_container = NodePath("../AbilityContainer")
+ability_container = NodePath("../../AbilityContainer")
 state_to_display = 2
 
-[node name="AbilityStateHBoxContainer4" parent="." node_paths=PackedStringArray("ability_container") instance=ExtResource("2_gi80w")]
+[node name="AbilityStateHBoxContainer4" parent="VBoxContainer" node_paths=PackedStringArray("ability_container") instance=ExtResource("2_gi80w")]
 layout_mode = 2
-ability_container = NodePath("../AbilityContainer")
+ability_container = NodePath("../../AbilityContainer")
 state_to_display = 3
 
-[node name="AbilityContainer" type="AbilityContainer" parent="."]
-abilities = Array[Ability]([SubResource("Ability_gi80w")])
+[node name="HBoxContainer" type="HBoxContainer" parent="."]
+layout_mode = 2
+alignment = 1
+
+[node name="ActivateButton" type="Button" parent="HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Activate/Cancel"
+
+[node name="GrantButton" type="Button" parent="HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Grant/Revoke"
+
+[node name="AbilityCooldownSpinBox" type="SpinBox" parent="HBoxContainer"]
+layout_mode = 2

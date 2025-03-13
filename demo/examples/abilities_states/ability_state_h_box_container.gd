@@ -28,12 +28,13 @@ func _get_state_label(state: int) -> String:
 
 
 func _ready() -> void:
-	ability_container.ability_activated.connect(make_handler(state_to_display))
-	ability_container.ability_blocked.connect(make_handler(state_to_display))
-	ability_container.ability_granted.connect(make_handler(state_to_display))
-	ability_container.ability_revoked.connect(make_handler(state_to_display))
-	ability_container.ability_ended.connect(make_handler(state_to_display))
-	_set_state_value(_get_state_label(state_to_display), false)
+	if ability_container:
+		ability_container.ability_activated.connect(make_handler(state_to_display))
+		ability_container.ability_blocked.connect(make_handler(state_to_display))
+		ability_container.ability_granted.connect(make_handler(state_to_display))
+		ability_container.ability_revoked.connect(make_handler(state_to_display))
+		ability_container.ability_ended.connect(make_handler(state_to_display))
+		_set_state_value(_get_state_label(state_to_display), false)
 
 
 func _set_state_value(state_name: String, state_value: bool) -> void:

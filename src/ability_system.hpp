@@ -18,29 +18,54 @@ namespace octod::gameplay::abilities
 	/// @brief Let's have fun with bitmasks to handle the ability internal state.
 	enum AbilityState : unsigned int
 	{
-		ABILITY_STATE_NONE = 1 << 0,
-		ABILITY_STATE_ACTIVE = 1 << 1,
-		ABILITY_STATE_BLOCKED = 1 << 2,
-		ABILITY_STATE_GRANTED = 1 << 3,
+		ABILITY_STATE_NONE,
+		ABILITY_STATE_ACTIVE,
+		ABILITY_STATE_BLOCKED,
+		ABILITY_STATE_GRANTED,
 	};
 
 	enum AbilityEventType : unsigned int
 	{
+		/// success events
 		ABILITY_EVENT_TYPE_ACTIVATED,
 		ABILITY_EVENT_TYPE_BLOCKED,
 		ABILITY_EVENT_TYPE_ENDED,
 		ABILITY_EVENT_TYPE_GRANTED,
 		ABILITY_EVENT_TYPE_REVOKED,
+
+		/// refusal events
 		ABILITY_EVENT_TYPE_REFUSED_TO_ACTIVATE,
+		ABILITY_EVENT_TYPE_REFUSED_TO_ACTIVATE_DECIDED_TO_BLOCK,
+		ABILITY_EVENT_TYPE_REFUSED_TO_ACTIVATE_IS_BLOCKED,
+		ABILITY_EVENT_TYPE_REFUSED_TO_ACTIVATE_IS_COOLING_DOWN,
+		ABILITY_EVENT_TYPE_REFUSED_TO_ACTIVATE_IS_DURATION_ACTIVE,
+		ABILITY_EVENT_TYPE_REFUSED_TO_ACTIVATE_IS_REVOKED,
+
 		ABILITY_EVENT_TYPE_REFUSED_TO_BLOCK,
+		ABILITY_EVENT_TYPE_REFUSED_TO_BLOCK_IS_NOT_ACTIVE,
+		ABILITY_EVENT_TYPE_REFUSED_TO_BLOCK_IS_NOT_GRANTED,
+
 		ABILITY_EVENT_TYPE_REFUSED_TO_END,
+		ABILITY_EVENT_TYPE_REFUSED_TO_END_IS_BLOCKED,
+		ABILITY_EVENT_TYPE_REFUSED_TO_END_IS_NOT_ACTIVE,
+		ABILITY_EVENT_TYPE_REFUSED_TO_END_IS_NOT_GRANTED,
+
 		ABILITY_EVENT_TYPE_REFUSED_TO_GRANT,
+		ABILITY_EVENT_TYPE_REFUSED_TO_GRANT_ALREADY_GRANTED,
+
 		ABILITY_EVENT_TYPE_REFUSED_TO_REVOKE,
+		ABILITY_EVENT_TYPE_REFUSED_TO_REVOKE_ALREADY_REVOKED,
+
+		/// error events
 		ABILITY_EVENT_TYPE_ERROR_ACTIVATING,
 		ABILITY_EVENT_TYPE_ERROR_BLOCKING,
 		ABILITY_EVENT_TYPE_ERROR_ENDING,
 		ABILITY_EVENT_TYPE_ERROR_GRANTING,
 		ABILITY_EVENT_TYPE_ERROR_REVOKING,
+
+		/// more bad errors, these are related to the container itself.
+		ABILITY_NOT_FOUND,
+		ABILITY_PARAMETER_IS_NULL
 	};
 
 	/// @brief Represents an ability that at runtime.
@@ -50,25 +75,6 @@ namespace octod::gameplay::abilities
 
 		/// @brief Marks the ability state. Using a bitmask to store the state.
 		int state = ABILITY_STATE_NONE;
-
-	protected:
-		friend class AbilityContainer;
-
-		/// @brief Binds the methods to godot.
-		static void _bind_methods();
-		/// @brief The ability resource.
-		Ref<Ability> ability;
-		/// @brief The ability container which contains, owns and runs the ability.
-		AbilityContainer *container;
-		/// @brief Activates the ability every x seconds.
-		double activate_every = 0.0;
-		/// @brief Handles the tick.
-		/// @param p_delta The delta time.
-		void handle_tick(double p_delta);
-		/// @brief The last tick time. Used by duration.
-		double duration_time = 0.0;
-		/// @brief The last tick time. Used by cooldown.
-		double cooldown_time = 0.0;
 
 	public:
 		/// @brief Activates the ability.
@@ -109,11 +115,14 @@ namespace octod::gameplay::abilities
 		/// @brief Returns true if the ability is granted.
 		/// @return True if the ability is granted, false otherwise.
 		[[nodiscard]] bool is_granted() const;
+		/// @brief Returns true if the ability is revoked.
+		/// @return True if the ability is revoked, false otherwise.
+		[[nodiscard]] bool is_revoked() const;
 		/// @brief Revokes the ability.
 		AbilityEventType revoke();
 		/// @brief Sets the ability.
 		/// @param p_ability The ability.
-		void set_ability(const Ref<Ability>& p_ability);
+		void set_ability(const Ref<Ability> &p_ability);
 		/// @brief Sets the ability container.
 		/// @param p_container The ability container.
 		void set_container(AbilityContainer *p_container);
@@ -126,33 +135,30 @@ namespace octod::gameplay::abilities
 		/// @brief Returns true if the ability should be ended.
 		/// @return True if the ability should be ended, false otherwise.
 		[[nodiscard]] bool should_be_ended() const;
+
+	protected:
+		friend class AbilityContainer;
+
+		/// @brief Binds the methods to godot.
+		static void _bind_methods();
+		/// @brief The ability resource.
+		Ref<Ability> ability;
+		/// @brief The ability container which contains, owns and runs the ability.
+		AbilityContainer *container;
+		/// @brief Activates the ability every x seconds.
+		double activate_every = 0.0;
+		/// @brief The last tick time. Used by duration.
+		double duration_time = 0.0;
+		/// @brief The last tick time. Used by cooldown.
+		double cooldown_time = 0.0;
+
+		/// @brief Handles the tick.
+		/// @param p_delta The delta time.
+		void handle_tick(double p_delta);
 	};
 
 #pragma endregion
 #pragma region AbilityContainer
-
-	enum AbilityContainerEventType : unsigned int
-	{
-		ABILITY_NOT_FOUND,
-		ABILITY_ADDED,
-		ABILITY_REMOVED,
-		ABILITY_ACTIVATED,
-		ABILITY_BLOCKED,
-		ABILITY_ENDED,
-		ABILITY_GRANTED,
-		ABILITY_REVOKED,
-		ABILITY_ERROR_ACTIVATING,
-		ABILITY_ERROR_BLOCKING,
-		ABILITY_ERROR_ENDING,
-		ABILITY_ERROR_GRANTING,
-		ABILITY_ERROR_REVOKING,
-		ABILITY_REFUSED_TO_ACTIVATE,
-		ABILITY_REFUSED_TO_BLOCK,
-		ABILITY_REFUSED_TO_END,
-		ABILITY_REFUSED_TO_GRANT,
-		ABILITY_REFUSED_TO_REVOKE,
-		ABILITY_PARAMETER_IS_NULL,
-	};
 
 	/// @brief Represents a container of abilities.
 	class AbilityContainer : public Node
@@ -166,8 +172,10 @@ namespace octod::gameplay::abilities
 		Dictionary runtime_abilities = Dictionary();
 		TypedArray<Ability> initial_abilities = TypedArray<Ability>();
 
-		[[nodiscard]] Ref<RuntimeAbility> build_runtime_ability(const Ref<Ability> &p_ability)const;
+		[[nodiscard]] Ref<RuntimeAbility> build_runtime_ability(const Ref<Ability> &p_ability) const;
 
+		/// @brief Called when the node receives a notification.
+		void _notification(int p_what);
 		/// @brief Handles the active ability signal.
 		/// @param p_runtime_ability The runtime ability.
 		void _on_active_ability(const Ref<RuntimeAbility> &p_runtime_ability);
@@ -193,6 +201,8 @@ namespace octod::gameplay::abilities
 	public:
 		/// @brief Returns an instance of a RuntimeAbility. Override this method if you want to use an extended class of RuntimeAbility.
 		GDVIRTUAL1RC(Ref<RuntimeAbility>, _build_runtime_ability, Ref<Resource>); // NOLINT(*-unnecessary-value-param)
+		/// @brief The virtual method which handles the _process
+		GDVIRTUAL1(_process, double); // NOLINT(*-unnecessary-value-param)
 		/// @brief The virtual method called to activate an ability.
 		GDVIRTUAL1RC(int, _try_activate, Variant); // NOLINT(*-unnecessary-value-param)
 		/// @brief The virtual method called to block an ability.
@@ -203,12 +213,6 @@ namespace octod::gameplay::abilities
 		GDVIRTUAL1RC(int, _try_grant, Variant); // NOLINT(*-unnecessary-value-param)
 		/// @brief The virtual method called to revoke an ability.
 		GDVIRTUAL1RC(int, _try_revoke, Variant); // NOLINT(*-unnecessary-value-param)
-
-		/// @brief Overrides the physics process.
-		/// @param p_delta The delta time.
-		void _physics_process(double p_delta) override;
-		/// @brief Overrides the ready method.
-		void _ready() override;
 
 		/// @brief Adds an ability to the container.
 		/// @param p_ability The ability to add.
@@ -258,22 +262,22 @@ namespace octod::gameplay::abilities
 		/// @brief Activates an ability in the container.
 		/// @param p_ability_or_ability_name The ability to activate.
 		/// @return True if the ability was activated, false otherwise.
-		[[nodiscard]] AbilityContainerEventType try_activate(const Variant &p_ability_or_ability_name) const;
+		[[nodiscard]] AbilityEventType try_activate(const Variant &p_ability_or_ability_name) const;
 		/// @brief Blocks an ability in the container.
 		/// @param p_ability_or_ability_name The ability to block.
 		/// @return True if the ability was blocked, false otherwise.
-		[[nodiscard]] AbilityContainerEventType try_block(const Variant &p_ability_or_ability_name) const;
+		[[nodiscard]] AbilityEventType try_block(const Variant &p_ability_or_ability_name) const;
 		/// @brief Ends an ability in the container.
 		/// @param p_ability_or_ability_name The ability to end.
 		/// @return True if the ability was ended, false otherwise.
-		[[nodiscard]] AbilityContainerEventType try_end(const Variant &p_ability_or_ability_name) const;
+		[[nodiscard]] AbilityEventType try_end(const Variant &p_ability_or_ability_name) const;
 		/// @brief Grants an ability to the container.
 		/// @param p_ability_or_ability_name The ability to grant.
-		[[nodiscard]] AbilityContainerEventType try_grant(const Variant &p_ability_or_ability_name) const;
+		[[nodiscard]] AbilityEventType try_grant(const Variant &p_ability_or_ability_name) const;
 		/// @brief Revokes an ability from the container.
 		/// @param p_ability_or_ability_name The ability to revoke.
 		/// @return True if the ability was revoked, false otherwise.
-		[[nodiscard]] AbilityContainerEventType try_revoke(const Variant &p_ability_or_ability_name) const;
+		[[nodiscard]] AbilityEventType try_revoke(const Variant &p_ability_or_ability_name) const;
 	};
 
 #pragma endregion
@@ -340,9 +344,8 @@ namespace octod::gameplay::abilities
 	};
 
 #pragma endregion
-} //namespace ggas
+} //namespace octod::gameplay::abilities
 
-VARIANT_ENUM_CAST(octod::gameplay::abilities::AbilityContainerEventType);
 VARIANT_ENUM_CAST(octod::gameplay::abilities::AbilityEventType);
 
 #endif

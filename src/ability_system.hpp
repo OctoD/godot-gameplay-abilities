@@ -18,53 +18,95 @@ namespace octod::gameplay::abilities
 	/// @brief Let's have fun with bitmasks to handle the ability internal state.
 	enum AbilityState : unsigned int
 	{
-		ABILITY_STATE_NONE,
-		ABILITY_STATE_ACTIVE,
-		ABILITY_STATE_BLOCKED,
-		ABILITY_STATE_GRANTED,
+		/// @brief Represents the ability being in no state.
+		ABILITY_STATE_NONE = 1 << 0,
+		/// @brief Represents the ability being active.
+		ABILITY_STATE_ACTIVE = 1 << 1,
+		/// @brief Represents the ability being blocked.
+		ABILITY_STATE_BLOCKED = 1 << 2,
+		/// @brief Represents the ability being granted.
+		ABILITY_STATE_GRANTED = 1 << 3,
 	};
 
 	enum AbilityEventType : unsigned int
 	{
 		/// success events
+		/// @brief Represents the ability being activated.
 		ABILITY_EVENT_TYPE_ACTIVATED,
+		/// @brief Represents the ability being blocked.
 		ABILITY_EVENT_TYPE_BLOCKED,
+		/// @brief Represents the ability being ended.
 		ABILITY_EVENT_TYPE_ENDED,
+		/// @brief Represents the ability being granted.
 		ABILITY_EVENT_TYPE_GRANTED,
+		/// @brief Represents the ability being revoked.
 		ABILITY_EVENT_TYPE_REVOKED,
+		/// @brief Represents the ability being unblocked.
+		ABILITY_EVENT_TYPE_UNBLOCKED,
 
 		/// refusal events
+		/// @brief Represents the ability being refused to activate.
 		ABILITY_EVENT_TYPE_REFUSED_TO_ACTIVATE,
+		/// @brief Represents the ability being refused to activate because the ability itself decided to block itself.
 		ABILITY_EVENT_TYPE_REFUSED_TO_ACTIVATE_DECIDED_TO_BLOCK,
+		/// @brief Represents the ability being refused to activate because it is blocked.
 		ABILITY_EVENT_TYPE_REFUSED_TO_ACTIVATE_IS_BLOCKED,
+		/// @brief Represents the ability being refused to activate because it is cooling down.
 		ABILITY_EVENT_TYPE_REFUSED_TO_ACTIVATE_IS_COOLING_DOWN,
+		/// @brief Represents the ability being refused to activate because the duration is active.
 		ABILITY_EVENT_TYPE_REFUSED_TO_ACTIVATE_IS_DURATION_ACTIVE,
+		/// @brief Represents the ability being refused to activate because it is revoked.
 		ABILITY_EVENT_TYPE_REFUSED_TO_ACTIVATE_IS_REVOKED,
 
+		/// @brief Represents the ability being refused to block.
 		ABILITY_EVENT_TYPE_REFUSED_TO_BLOCK,
-		ABILITY_EVENT_TYPE_REFUSED_TO_BLOCK_IS_NOT_ACTIVE,
+		/// @brief Represents the ability being refused to block because it is not granted.
 		ABILITY_EVENT_TYPE_REFUSED_TO_BLOCK_IS_NOT_GRANTED,
 
+		/// @brief Represents the ability being refused to end.
 		ABILITY_EVENT_TYPE_REFUSED_TO_END,
+		/// @brief Represents the ability being refused to end because it is blocked.
 		ABILITY_EVENT_TYPE_REFUSED_TO_END_IS_BLOCKED,
+		/// @brief Represents the ability being refused to end because it is not active.
 		ABILITY_EVENT_TYPE_REFUSED_TO_END_IS_NOT_ACTIVE,
+		/// @brief Represents the ability being refused to end because it is not granted.
 		ABILITY_EVENT_TYPE_REFUSED_TO_END_IS_NOT_GRANTED,
 
+		/// @brief Represents the ability being refused to grant.
 		ABILITY_EVENT_TYPE_REFUSED_TO_GRANT,
+		/// @brief Represents the ability being refused to grant because it is already granted.
 		ABILITY_EVENT_TYPE_REFUSED_TO_GRANT_ALREADY_GRANTED,
 
+		/// @brief Represents the ability being refused to revoke.
 		ABILITY_EVENT_TYPE_REFUSED_TO_REVOKE,
+		/// @brief Represents the ability being refused to revoke because it is already revoked.
 		ABILITY_EVENT_TYPE_REFUSED_TO_REVOKE_ALREADY_REVOKED,
 
+		/// @brief Represents the ability being refused to unblock.
+		ABILITY_EVENT_TYPE_REFUSED_TO_UNBLOCK,
+		/// @brief Represents the ability being refused to unblock because it is not blocked.
+		ABILITY_EVENT_TYPE_REFUSED_TO_UNBLOCK_IS_NOT_BLOCKED,
+		/// @brief Represents the ability being refused to unblock because it should be blocked.
+		ABILITY_EVENT_TYPE_REFUSED_TO_UNBLOCK_SHOULD_BE_BLOCKED,
+
 		/// error events
+		/// @brief Represents an error activating the ability.
 		ABILITY_EVENT_TYPE_ERROR_ACTIVATING,
+		/// @brief Represents an error blocking the ability.
 		ABILITY_EVENT_TYPE_ERROR_BLOCKING,
+		/// @brief Represents an error ending the ability.
 		ABILITY_EVENT_TYPE_ERROR_ENDING,
+		/// @brief Represents an error granting the ability.
 		ABILITY_EVENT_TYPE_ERROR_GRANTING,
+		/// @brief Represents an error revoking the ability.
 		ABILITY_EVENT_TYPE_ERROR_REVOKING,
+		/// @brief Represents an error unblocking the ability.
+		ABILITY_EVENT_TYPE_ERROR_UNBLOCKING,
 
 		/// more bad errors, these are related to the container itself.
+		/// @brief Returned when the ability container did not find the ability.
 		ABILITY_NOT_FOUND,
+		/// @brief Returned when the ability parameter is null on some method.
 		ABILITY_PARAMETER_IS_NULL
 	};
 
@@ -135,6 +177,8 @@ namespace octod::gameplay::abilities
 		/// @brief Returns true if the ability should be ended.
 		/// @return True if the ability should be ended, false otherwise.
 		[[nodiscard]] bool should_be_ended() const;
+		/// @brief Unblocks the ability.
+		[[nodiscard]] AbilityEventType unblock();
 
 	protected:
 		friend class AbilityContainer;
@@ -175,6 +219,7 @@ namespace octod::gameplay::abilities
 		[[nodiscard]] Ref<RuntimeAbility> build_runtime_ability(const Ref<Ability> &p_ability) const;
 
 		/// @brief Called when the node receives a notification.
+		// ReSharper disable once CppHidingFunction
 		void _notification(int p_what);
 		/// @brief Handles the active ability signal.
 		/// @param p_runtime_ability The runtime ability.
@@ -197,6 +242,9 @@ namespace octod::gameplay::abilities
 		/// @brief Handles the cooldown start signal.
 		/// @param p_runtime_ability The runtime ability.
 		void _on_cooldown_start(const Ref<RuntimeAbility> &p_runtime_ability);
+		/// @brief Handles the ability unblock signal.
+		/// @param p_runtime_ability The runtime ability.
+		void _on_unblocked(const Ref<RuntimeAbility> &p_runtime_ability);
 
 	public:
 		/// @brief Returns an instance of a RuntimeAbility. Override this method if you want to use an extended class of RuntimeAbility.
@@ -213,6 +261,8 @@ namespace octod::gameplay::abilities
 		GDVIRTUAL1RC(int, _try_grant, Variant); // NOLINT(*-unnecessary-value-param)
 		/// @brief The virtual method called to revoke an ability.
 		GDVIRTUAL1RC(int, _try_revoke, Variant); // NOLINT(*-unnecessary-value-param)
+		/// @brief The virtual method called to try to unblock an ability.
+		GDVIRTUAL1RC(int, _try_unblock, Variant); // NOLINT(*-unnecessary-value-param)
 
 		/// @brief Adds an ability to the container.
 		/// @param p_ability The ability to add.
@@ -261,23 +311,27 @@ namespace octod::gameplay::abilities
 		void set_initial_abilities(const TypedArray<Ability> &p_abilities);
 		/// @brief Activates an ability in the container.
 		/// @param p_ability_or_ability_name The ability to activate.
-		/// @return True if the ability was activated, false otherwise.
+		/// @return The resulting AbilityEventType.
 		[[nodiscard]] AbilityEventType try_activate(const Variant &p_ability_or_ability_name) const;
 		/// @brief Blocks an ability in the container.
 		/// @param p_ability_or_ability_name The ability to block.
-		/// @return True if the ability was blocked, false otherwise.
+		/// @return The resulting AbilityEventType.
 		[[nodiscard]] AbilityEventType try_block(const Variant &p_ability_or_ability_name) const;
 		/// @brief Ends an ability in the container.
 		/// @param p_ability_or_ability_name The ability to end.
-		/// @return True if the ability was ended, false otherwise.
+		/// @return The resulting AbilityEventType.
 		[[nodiscard]] AbilityEventType try_end(const Variant &p_ability_or_ability_name) const;
 		/// @brief Grants an ability to the container.
 		/// @param p_ability_or_ability_name The ability to grant.
 		[[nodiscard]] AbilityEventType try_grant(const Variant &p_ability_or_ability_name) const;
 		/// @brief Revokes an ability from the container.
 		/// @param p_ability_or_ability_name The ability to revoke.
-		/// @return True if the ability was revoked, false otherwise.
+		/// @return The resulting AbilityEventType.
 		[[nodiscard]] AbilityEventType try_revoke(const Variant &p_ability_or_ability_name) const;
+		/// @brief Unblocks an ability in the container.
+		/// @param p_ability_or_ability_name The ability to unblock.
+		/// @return The resulting AbilityEventType.
+		[[nodiscard]] AbilityEventType try_unblock(const Variant &p_ability_or_ability_name) const;
 	};
 
 #pragma endregion

@@ -88,6 +88,9 @@ using namespace octod::gameplay::abilities;
 			state &= ~ABILITY_STATE_GRANTED; \
 			state |= ABILITY_STATE_NONE;     \
 			break;                           \
+		case ABILITY_EVENT_TYPE_UNBLOCKED:   \
+			state &= ~ABILITY_STATE_BLOCKED; \
+			break;                           \
 		default:                             \
 			break;                           \
 	}
@@ -135,7 +138,6 @@ void RuntimeAbility::_bind_methods()
 	BIND_ENUM_CONSTANT(ABILITY_EVENT_TYPE_REFUSED_TO_ACTIVATE_IS_DURATION_ACTIVE);
 	BIND_ENUM_CONSTANT(ABILITY_EVENT_TYPE_REFUSED_TO_ACTIVATE_IS_REVOKED);
 	BIND_ENUM_CONSTANT(ABILITY_EVENT_TYPE_REFUSED_TO_BLOCK);
-	BIND_ENUM_CONSTANT(ABILITY_EVENT_TYPE_REFUSED_TO_BLOCK_IS_NOT_ACTIVE);
 	BIND_ENUM_CONSTANT(ABILITY_EVENT_TYPE_REFUSED_TO_BLOCK_IS_NOT_GRANTED);
 	BIND_ENUM_CONSTANT(ABILITY_EVENT_TYPE_REFUSED_TO_END);
 	BIND_ENUM_CONSTANT(ABILITY_EVENT_TYPE_REFUSED_TO_END_IS_BLOCKED);
@@ -155,6 +157,7 @@ void RuntimeAbility::_bind_methods()
 	ADD_SIGNAL(MethodInfo("ended"));
 	ADD_SIGNAL(MethodInfo("granted"));
 	ADD_SIGNAL(MethodInfo("revoked"));
+	ADD_SIGNAL(MethodInfo("unblocked"));
 }
 
 void RuntimeAbility::handle_tick(const double p_delta)
@@ -165,6 +168,15 @@ void RuntimeAbility::handle_tick(const double p_delta)
 
 	if (GDVIRTUAL_IS_OVERRIDDEN_PTR(ability, _on_tick)) {
 		GDVIRTUAL_CALL_PTR(ability, _on_tick, p_delta, cooldown_time, container, this);
+		return;
+	}
+
+	if (is_blocked() && !should_be_blocked()) {
+		SET_STATE(ABILITY_EVENT_TYPE_UNBLOCKED)
+	}
+
+	/// if the ability is blocked, it will not be re-activated
+	if (should_be_blocked() && block() == ABILITY_EVENT_TYPE_BLOCKED) {
 		return;
 	}
 
@@ -215,11 +227,6 @@ void RuntimeAbility::handle_tick(const double p_delta)
 
 	/// if the ability is ended, it will not be re-activated
 	if (is_ended()) {
-		return;
-	}
-
-	/// if the ability is blocked, it will not be re-activated
-	if (should_be_blocked() && block() == ABILITY_EVENT_TYPE_BLOCKED) {
 		return;
 	}
 
@@ -295,10 +302,6 @@ AbilityEventType RuntimeAbility::block()
 
 	if (!IS_STATE(ABILITY_STATE_GRANTED)) {
 		return ABILITY_EVENT_TYPE_REFUSED_TO_BLOCK_IS_NOT_GRANTED;
-	}
-
-	if (!IS_STATE(ABILITY_STATE_ACTIVE)) {
-		return ABILITY_EVENT_TYPE_REFUSED_TO_BLOCK_IS_NOT_ACTIVE;
 	}
 
 	CALL_VIRTUAL_ABILITY_METHOD(_can_be_blocked, _on_block, ABILITY_EVENT_TYPE_ERROR_BLOCKING, ABILITY_EVENT_TYPE_REFUSED_TO_BLOCK);
@@ -435,6 +438,9 @@ AbilityEventType RuntimeAbility::revoke()
 
 	SET_STATE(ABILITY_EVENT_TYPE_REVOKED);
 
+	cooldown_time = 0.0;
+	duration_time = 0.0;
+
 	emit_signal("revoked");
 
 	return ABILITY_EVENT_TYPE_REVOKED;
@@ -465,6 +471,33 @@ bool RuntimeAbility::should_be_blocked() const
 bool RuntimeAbility::should_be_ended() const
 {
 	CHECK_IF_SHOULD_BE_CALLED(_should_be_ended, true);
+}
+
+AbilityEventType RuntimeAbility::unblock()
+{
+	ENSURE_ABILITY_EXECUTION(ABILITY_EVENT_TYPE_ERROR_UNBLOCKING);
+
+	if (!IS_STATE(ABILITY_STATE_BLOCKED)) {
+		return ABILITY_EVENT_TYPE_REFUSED_TO_UNBLOCK_IS_NOT_BLOCKED;
+	}
+
+	if (GDVIRTUAL_IS_OVERRIDDEN_PTR(ability, _should_be_blocked)) {
+		bool should_be_blocked = false;
+
+		if (!GDVIRTUAL_CALL_PTR(ability, _should_be_blocked, container, should_be_blocked)) {
+			return ABILITY_EVENT_TYPE_ERROR_UNBLOCKING;
+		}
+
+		if (should_be_blocked) {
+			return ABILITY_EVENT_TYPE_REFUSED_TO_UNBLOCK_SHOULD_BE_BLOCKED;
+		}
+	}
+
+	SET_STATE(ABILITY_EVENT_TYPE_UNBLOCKED)
+
+	emit_signal("unblocked");
+
+	return ABILITY_EVENT_TYPE_UNBLOCKED;
 }
 
 #pragma endregion
@@ -500,6 +533,7 @@ void AbilityContainer::_bind_methods()
 	GDVIRTUAL_BIND(_try_end, "ability_or_ability_name");
 	GDVIRTUAL_BIND(_try_grant, "ability_or_ability_name");
 	GDVIRTUAL_BIND(_try_revoke, "ability_or_ability_name");
+	GDVIRTUAL_BIND(_try_unblock, "ability_or_ability_name");
 
 	/// Registering signals handlers
 	ClassDB::bind_method(D_METHOD("_on_active_ability", "runtime_ability"), &AbilityContainer::_on_active_ability);
@@ -525,6 +559,7 @@ void AbilityContainer::_bind_methods()
 	ADD_SIGNAL(MethodInfo("ability_granted", PropertyInfo(Variant::OBJECT, "ability", PROPERTY_HINT_RESOURCE_TYPE, "Ability")));
 	ADD_SIGNAL(MethodInfo("ability_removed", PropertyInfo(Variant::OBJECT, "ability", PROPERTY_HINT_RESOURCE_TYPE, "Ability")));
 	ADD_SIGNAL(MethodInfo("ability_revoked", PropertyInfo(Variant::OBJECT, "ability", PROPERTY_HINT_RESOURCE_TYPE, "Ability")));
+	ADD_SIGNAL(MethodInfo("ability_unblocked", PropertyInfo(Variant::OBJECT, "ability", PROPERTY_HINT_RESOURCE_TYPE, "Ability")));
 	ADD_SIGNAL(MethodInfo("cooldown_end", PropertyInfo(Variant::OBJECT, "ability", PROPERTY_HINT_RESOURCE_TYPE, "Ability")));
 	ADD_SIGNAL(MethodInfo("cooldown_start", PropertyInfo(Variant::OBJECT, "ability", PROPERTY_HINT_RESOURCE_TYPE, "Ability")));
 }
@@ -549,7 +584,7 @@ void AbilityContainer::_notification(const int p_what)
 			}
 		}
 
-		set_physics_process(true);
+		set_process(true);
 	}
 
 	if (p_what == NOTIFICATION_PROCESS) {
@@ -561,7 +596,7 @@ void AbilityContainer::_notification(const int p_what)
 			}
 		}
 
-		GDVIRTUAL_CALL(_process, get_physics_process_delta_time());
+		GDVIRTUAL_CALL(_process, get_process_delta_time());
 	}
 }
 
@@ -600,6 +635,11 @@ void AbilityContainer::_on_cooldown_start(const Ref<RuntimeAbility> &p_runtime_a
 	emit_signal("cooldown_start", p_runtime_ability->get_ability());
 }
 
+void AbilityContainer::_on_unblocked(const Ref<RuntimeAbility> &p_runtime_ability)
+{
+	emit_signal("ability_unblocked", p_runtime_ability->get_ability());
+}
+
 bool AbilityContainer::add_ability(const Ref<Ability> &p_ability)
 {
 	ERR_FAIL_COND_V_MSG(p_ability.is_null(), false, "The Ability cannot be null.");
@@ -620,6 +660,7 @@ bool AbilityContainer::add_ability(const Ref<Ability> &p_ability)
 		runtime_ability->connect("revoked", Callable::create(this, "_on_revoked_ability").bind(runtime_ability));
 		runtime_ability->connect("cooldown_end", Callable::create(this, "_on_cooldown_end").bind(runtime_ability));
 		runtime_ability->connect("cooldown_start", Callable::create(this, "_on_cooldown_start").bind(runtime_ability));
+		runtime_ability->connect("unblocked", Callable::create(this, "_on_unblocked").bind(runtime_ability));
 
 		emit_signal("ability_added", p_ability);
 
@@ -734,6 +775,8 @@ AbilityEventType AbilityContainer::try_activate(const Variant &p_ability_or_abil
 		if (int event_type = ABILITY_NOT_FOUND; GDVIRTUAL_CALL(_try_activate, p_ability_or_ability_name, event_type)) {
 			return static_cast<AbilityEventType>(event_type);
 		}
+
+		return ABILITY_EVENT_TYPE_ERROR_ACTIVATING;
 	}
 
 	const Ref<RuntimeAbility> runtime_ability = get_ability(p_ability_or_ability_name);
@@ -749,6 +792,8 @@ AbilityEventType AbilityContainer::try_block(const Variant &p_ability_or_ability
 		if (int event_type = ABILITY_NOT_FOUND; GDVIRTUAL_CALL(_try_block, p_ability_or_ability_name, event_type)) {
 			return static_cast<AbilityEventType>(event_type);
 		}
+
+		return ABILITY_EVENT_TYPE_ERROR_BLOCKING;
 	}
 
 	const Ref<RuntimeAbility> runtime_ability = get_ability(p_ability_or_ability_name);
@@ -764,6 +809,8 @@ AbilityEventType AbilityContainer::try_end(const Variant &p_ability_or_ability_n
 		if (int event_type = ABILITY_NOT_FOUND; GDVIRTUAL_CALL(_try_end, p_ability_or_ability_name, event_type)) {
 			return static_cast<AbilityEventType>(event_type);
 		}
+
+		return ABILITY_EVENT_TYPE_ERROR_ENDING;
 	}
 
 	const Ref<RuntimeAbility> runtime_ability = get_ability(p_ability_or_ability_name);
@@ -779,6 +826,8 @@ AbilityEventType AbilityContainer::try_grant(const Variant &p_ability_or_ability
 		if (int event_type = ABILITY_NOT_FOUND; GDVIRTUAL_CALL(_try_grant, p_ability_or_ability_name, event_type)) {
 			return static_cast<AbilityEventType>(event_type);
 		}
+
+		return ABILITY_EVENT_TYPE_ERROR_GRANTING;
 	}
 
 	const Ref<RuntimeAbility> runtime_ability = get_ability(p_ability_or_ability_name);
@@ -794,6 +843,8 @@ AbilityEventType AbilityContainer::try_revoke(const Variant &p_ability_or_abilit
 		if (int event_type = ABILITY_NOT_FOUND; GDVIRTUAL_CALL(_try_revoke, p_ability_or_ability_name, event_type)) {
 			return static_cast<AbilityEventType>(event_type);
 		}
+
+		return ABILITY_EVENT_TYPE_ERROR_REVOKING;
 	}
 
 	const Ref<RuntimeAbility> runtime_ability = get_ability(p_ability_or_ability_name);
@@ -801,6 +852,23 @@ AbilityEventType AbilityContainer::try_revoke(const Variant &p_ability_or_abilit
 	ABILITY_PARAMETER_IS_NULL_CHECK(runtime_ability);
 
 	return runtime_ability->revoke();
+}
+
+AbilityEventType AbilityContainer::try_unblock(const Variant &p_ability_or_ability_name) const
+{
+	if (GDVIRTUAL_IS_OVERRIDDEN(_try_unblock)) {
+		if (int event_type = ABILITY_NOT_FOUND; GDVIRTUAL_CALL(_try_unblock, p_ability_or_ability_name, event_type)) {
+			return static_cast<AbilityEventType>(event_type);
+		}
+
+		return ABILITY_EVENT_TYPE_ERROR_UNBLOCKING;
+	}
+
+	const Ref<RuntimeAbility> runtime_ability = get_ability(p_ability_or_ability_name);
+
+	ABILITY_PARAMETER_IS_NULL_CHECK(runtime_ability);
+
+	return runtime_ability->unblock();
 }
 
 #pragma endregion

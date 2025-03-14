@@ -58,12 +58,17 @@ alignment = 1
 [node name="ActivateButton" type="Button" parent="HBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
-text = "Activate/Cancel"
+text = "Activate ability"
+
+[node name="BlockButton" type="Button" parent="HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Block ability"
 
 [node name="GrantButton" type="Button" parent="HBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
-text = "Grant/Revoke"
+text = "Revoke ability"
 
 [node name="AbilityCooldownSpinBox" type="SpinBox" parent="HBoxContainer"]
 layout_mode = 2

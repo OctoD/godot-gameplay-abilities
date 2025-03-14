@@ -34,7 +34,8 @@ func _ready() -> void:
 		ability_container.ability_granted.connect(make_handler(state_to_display))
 		ability_container.ability_revoked.connect(make_handler(state_to_display))
 		ability_container.ability_ended.connect(make_handler(state_to_display))
-		_set_state_value(_get_state_label(state_to_display), false)
+		
+		make_handler(state_to_display).call(ability_container.get_ability(AbilitiesStatesTestAbility.ABILITY_NAME).get_ability())
 
 
 func _set_state_value(state_name: String, state_value: bool) -> void:

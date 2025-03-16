@@ -33,6 +33,8 @@ namespace octod::gameplay::abilities
 		/// success events
 		/// @brief Represents the ability being activated.
 		ABILITY_EVENT_TYPE_ACTIVATED,
+		ABILITY_EVENT_TYPE_ACTIVATED_COOLDOWN_STARTED,
+		ABILITY_EVENT_TYPE_ACTIVATED_DURATION_STARTED,
 		/// @brief Represents the ability being blocked.
 		ABILITY_EVENT_TYPE_BLOCKED,
 		/// @brief Represents the ability being ended.
@@ -199,6 +201,12 @@ namespace octod::gameplay::abilities
 		/// @brief Handles the tick.
 		/// @param p_delta The delta time.
 		void handle_tick(double p_delta);
+
+		/// @brief Triggers the ability cooldown.
+		bool trigger_cooldown();
+
+		/// @brief Triggers the ability duration.
+		bool trigger_duration();
 	};
 
 #pragma endregion
@@ -281,7 +289,7 @@ namespace octod::gameplay::abilities
 		/// @brief Gets an ability.
 		/// @param p_variant The ability to get.
 		/// @return The ability.
-		[[nodiscard]] Ref<RuntimeAbility> get_ability(const Variant &p_variant) const;
+		[[nodiscard]] Ref<RuntimeAbility> get_runtime_ability(const Variant &p_variant) const;
 		/// @brief Checks if the container has an ability.
 		/// @param p_variant The ability to check.
 		/// @return True if the container has the ability, false otherwise.
@@ -294,6 +302,10 @@ namespace octod::gameplay::abilities
 		/// @param p_variant The ability to check.
 		/// @return True if the ability is blocked, false otherwise.
 		[[nodiscard]] bool is_ability_blocked(const Variant &p_variant) const;
+		/// @brief Checks if the ability cooldown is active.
+		/// @param p_variant The ability to check.
+		/// @return True if the ability cooldown is active, false otherwise.
+		[[nodiscard]] bool is_ability_cooldown_active(const Variant &p_variant) const;
 		/// @brief Checks if the ability is ended.
 		/// @param p_variant The ability to check.
 		/// @return True if the ability is ended, false otherwise.

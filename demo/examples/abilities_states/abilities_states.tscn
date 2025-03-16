@@ -32,23 +32,23 @@ text = "Ability States"
 layout_mode = 2
 theme_override_constants/separation = 8
 
-[node name="AbilityStateHBoxContainer" parent="VBoxContainer" node_paths=PackedStringArray("ability_container") instance=ExtResource("2_gi80w")]
+[node name="ActivatedAbilityStateHBoxContainer" parent="VBoxContainer" instance=ExtResource("2_gi80w")]
+unique_name_in_owner = true
 layout_mode = 2
-ability_container = NodePath("../../AbilityContainer")
 
-[node name="AbilityStateHBoxContainer2" parent="VBoxContainer" node_paths=PackedStringArray("ability_container") instance=ExtResource("2_gi80w")]
+[node name="BlockedAbilityStateHBoxContainer" parent="VBoxContainer" instance=ExtResource("2_gi80w")]
+unique_name_in_owner = true
 layout_mode = 2
-ability_container = NodePath("../../AbilityContainer")
 state_to_display = 1
 
-[node name="AbilityStateHBoxContainer3" parent="VBoxContainer" node_paths=PackedStringArray("ability_container") instance=ExtResource("2_gi80w")]
+[node name="GrantedAbilityStateHBoxContainer" parent="VBoxContainer" instance=ExtResource("2_gi80w")]
+unique_name_in_owner = true
 layout_mode = 2
-ability_container = NodePath("../../AbilityContainer")
 state_to_display = 2
 
-[node name="AbilityStateHBoxContainer4" parent="VBoxContainer" node_paths=PackedStringArray("ability_container") instance=ExtResource("2_gi80w")]
+[node name="CooldownAbilityStateHBoxContainer" parent="VBoxContainer" instance=ExtResource("2_gi80w")]
+unique_name_in_owner = true
 layout_mode = 2
-ability_container = NodePath("../../AbilityContainer")
 state_to_display = 3
 
 [node name="HBoxContainer" type="HBoxContainer" parent="."]

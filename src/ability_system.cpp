@@ -62,33 +62,33 @@ using namespace octod::gameplay::abilities;
 #define SET_STATE(p_state)                   \
 	switch (p_state) {                       \
 		case ABILITY_EVENT_TYPE_ACTIVATED:   \
-			state &= ~ABILITY_STATE_BLOCKED; \
-			state &= ~ABILITY_STATE_NONE;    \
+			state &= ~ABILITY_STATE_IDLE;    \
 			state |= ABILITY_STATE_ACTIVE;   \
 			break;                           \
 		case ABILITY_EVENT_TYPE_BLOCKED:     \
 			state &= ~ABILITY_STATE_ACTIVE;  \
-			state &= ~ABILITY_STATE_NONE;    \
+			state &= ~ABILITY_STATE_IDLE;    \
 			state |= ABILITY_STATE_BLOCKED;  \
 			break;                           \
 		case ABILITY_EVENT_TYPE_ENDED:       \
 			state &= ~ABILITY_STATE_ACTIVE;  \
-			state |= ABILITY_STATE_NONE;     \
+			state |= ABILITY_STATE_IDLE;     \
 			break;                           \
 		case ABILITY_EVENT_TYPE_GRANTED:     \
 			state &= ~ABILITY_STATE_ACTIVE;  \
 			state &= ~ABILITY_STATE_BLOCKED; \
-			state &= ~ABILITY_STATE_NONE;    \
+			state |= ABILITY_STATE_IDLE;     \
 			state |= ABILITY_STATE_GRANTED;  \
 			break;                           \
 		case ABILITY_EVENT_TYPE_REVOKED:     \
 			state &= ~ABILITY_STATE_ACTIVE;  \
 			state &= ~ABILITY_STATE_BLOCKED; \
 			state &= ~ABILITY_STATE_GRANTED; \
-			state |= ABILITY_STATE_NONE;     \
+			state &= ~ABILITY_STATE_IDLE;    \
 			break;                           \
 		case ABILITY_EVENT_TYPE_UNBLOCKED:   \
 			state &= ~ABILITY_STATE_BLOCKED; \
+			state &= ~ABILITY_STATE_IDLE;    \
 			break;                           \
 		default:                             \
 			break;                           \
@@ -188,7 +188,7 @@ void RuntimeAbility::handle_tick(const double p_delta)
 		duration_time -= p_delta;
 
 		if (!is_duration_active()) {
-			trigger_duration();
+			trigger_cooldown();
 		}
 
 		return;
@@ -200,9 +200,8 @@ void RuntimeAbility::handle_tick(const double p_delta)
 	}
 
 	/// if the ability should be ended, it will be ended
-	if (should_be_ended() && end() == ABILITY_EVENT_TYPE_ENDED) {
-		duration_time = 0.0;
-		cooldown_time = 0.0;
+	if (should_be_ended()) {
+		end();
 	}
 
 	if (!should_be_activated()) {
@@ -243,6 +242,33 @@ bool RuntimeAbility::trigger_duration()
 	}
 
 	return false;
+}
+
+void RuntimeAbility::try_reset_cooldown()
+{
+	bool should_reset_cooldown = true;
+
+	if (GDVIRTUAL_IS_OVERRIDDEN_PTR(ability, _should_reset_cooldown)) {
+		GDVIRTUAL_CALL_PTR(ability, _should_reset_cooldown, container, should_reset_cooldown);
+	}
+
+	if (should_reset_cooldown) {
+		cooldown_time = 0.0;
+		emit_signal("cooldown_end");
+	}
+}
+
+void RuntimeAbility::try_reset_duration()
+{
+	bool should_reset_duration = true;
+
+	if (GDVIRTUAL_IS_OVERRIDDEN_PTR(ability, _should_reset_duration)) {
+		GDVIRTUAL_CALL_PTR(ability, _should_reset_duration, container, should_reset_duration);
+	}
+
+	if (should_reset_duration) {
+		duration_time = 0.0;
+	}
 }
 
 AbilityEventType RuntimeAbility::activate()
@@ -298,26 +324,10 @@ AbilityEventType RuntimeAbility::block()
 
 	SET_STATE(ABILITY_EVENT_TYPE_BLOCKED);
 
-	bool should_reset_cooldown = true;
-	bool should_reset_duration = true;
-
-	if (GDVIRTUAL_IS_OVERRIDDEN_PTR(ability, _should_reset_cooldown_on_block)) {
-		GDVIRTUAL_CALL_PTR(ability, _should_reset_cooldown_on_block, container, should_reset_cooldown);
-	}
-
-	if (GDVIRTUAL_IS_OVERRIDDEN_PTR(ability, _should_reset_duration_on_block)) {
-		GDVIRTUAL_CALL_PTR(ability, _should_reset_duration_on_block, container, should_reset_duration);
-	}
-
-	if (should_reset_cooldown) {
-		cooldown_time = 0.0;
-	}
-
-	if (should_reset_duration) {
-		duration_time = 0.0;
-	}
-
 	emit_signal("blocked");
+
+	try_reset_cooldown();
+	try_reset_duration();
 
 	return ABILITY_EVENT_TYPE_BLOCKED;
 }
@@ -344,8 +354,8 @@ AbilityEventType RuntimeAbility::end()
 
 	emit_signal("ended");
 
-	cooldown_time = 0.0;
-	duration_time = 0.0;
+	try_reset_cooldown();
+	try_reset_duration();
 
 	return ABILITY_EVENT_TYPE_ENDED;
 }
@@ -421,7 +431,7 @@ bool RuntimeAbility::is_duration_active() const
 
 bool RuntimeAbility::is_ended() const
 {
-	return !IS_STATE(ABILITY_STATE_ACTIVE) && !IS_STATE(ABILITY_STATE_BLOCKED);
+	return !IS_STATE(ABILITY_STATE_ACTIVE) && !IS_STATE(ABILITY_STATE_BLOCKED) && IS_STATE(ABILITY_STATE_GRANTED);
 }
 
 bool RuntimeAbility::is_granted() const
@@ -445,6 +455,10 @@ AbilityEventType RuntimeAbility::revoke()
 
 	SET_STATE(ABILITY_EVENT_TYPE_REVOKED);
 
+	if (!Math::is_zero_approx(get_cooldown())) {
+		emit_signal("cooldown_end");
+	}
+
 	cooldown_time = 0.0;
 	duration_time = 0.0;
 
@@ -456,7 +470,7 @@ AbilityEventType RuntimeAbility::revoke()
 void RuntimeAbility::set_ability(const Ref<Ability> &p_ability)
 {
 	ability = p_ability;
-	state = ABILITY_STATE_NONE;
+	state = ABILITY_STATE_IDLE;
 }
 
 void RuntimeAbility::set_container(AbilityContainer *p_container)
@@ -918,8 +932,8 @@ void Ability::_bind_methods()
 	GDVIRTUAL_BIND(_should_be_activated, "ability_container");
 	GDVIRTUAL_BIND(_should_be_blocked, "ability_container");
 	GDVIRTUAL_BIND(_should_be_ended, "ability_container");
-	GDVIRTUAL_BIND(_should_reset_cooldown_on_block, "ability_container");
-	GDVIRTUAL_BIND(_should_reset_duration_on_block, "ability_container");
+	GDVIRTUAL_BIND(_should_reset_cooldown, "ability_container");
+	GDVIRTUAL_BIND(_should_reset_duration, "ability_container");
 }
 
 StringName Ability::get_ability_name() const

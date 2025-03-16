@@ -19,7 +19,7 @@ namespace octod::gameplay::abilities
 	enum AbilityState : unsigned int
 	{
 		/// @brief Represents the ability being in no state.
-		ABILITY_STATE_NONE = 1 << 0,
+		ABILITY_STATE_IDLE = 1 << 0,
 		/// @brief Represents the ability being active.
 		ABILITY_STATE_ACTIVE = 1 << 1,
 		/// @brief Represents the ability being blocked.
@@ -118,7 +118,7 @@ namespace octod::gameplay::abilities
 		GDCLASS(RuntimeAbility, RefCounted);
 
 		/// @brief Marks the ability state. Using a bitmask to store the state.
-		int state = ABILITY_STATE_NONE;
+		int state = ABILITY_STATE_IDLE;
 
 	public:
 		/// @brief Activates the ability.
@@ -207,6 +207,12 @@ namespace octod::gameplay::abilities
 
 		/// @brief Triggers the ability duration.
 		bool trigger_duration();
+
+		/// @brief Tries to reset the ability cooldown.
+		void try_reset_cooldown();
+
+		/// @brief Tries to reset the ability duration.
+		void try_reset_duration();
 	};
 
 #pragma endregion
@@ -402,9 +408,9 @@ namespace octod::gameplay::abilities
 		/// @brief Called when the ability container checks if the ability should be granted.
 		GDVIRTUAL1RC(bool, _should_be_ended, AbilityContainer *);
 		/// @brief Called when the ability container checks if the ability cooldown should be reset when blocked.
-		GDVIRTUAL1RC(bool, _should_reset_cooldown_on_block, AbilityContainer *);
+		GDVIRTUAL1RC(bool, _should_reset_cooldown, AbilityContainer *);
 		/// @brief Called when the ability container checks if the ability duration should be reset when blocked.
-		GDVIRTUAL1RC(bool, _should_reset_duration_on_block, AbilityContainer *);
+		GDVIRTUAL1RC(bool, _should_reset_duration, AbilityContainer *);
 
 		/// @brief Gets the ability name.
 		/// @return The ability name.

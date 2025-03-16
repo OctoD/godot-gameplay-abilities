@@ -39,34 +39,27 @@ func _ready() -> void:
 		var ability: RuntimeAbility = get_ability()
 		
 		if ability.is_active():
-			if ability_container.try_end(ability.get_ability()) == RuntimeAbility.ABILITY_EVENT_TYPE_ENDED:
-				activate_button.text = "Activate ability"
+			ability_container.try_end(ability.get_ability())
 		else:
-			if ability_container.try_activate(ability.get_ability()) == RuntimeAbility.ABILITY_EVENT_TYPE_ACTIVATED:
-				activate_button.text = "End ability"
+			ability_container.try_activate(ability.get_ability())
 	)
 	
 	block_button.pressed.connect(func ():
 		var ability: RuntimeAbility = get_ability()
 
 		if ability.is_blocked():
-			if ability_container.try_unblock(ability.get_ability()) == RuntimeAbility.ABILITY_EVENT_TYPE_UNBLOCKED:
-				block_button.text = "Block ability"
+			ability_container.try_unblock(ability.get_ability())
 		else:
 			ability_container.try_block(ability.get_ability())
-			if ability_container.try_block(ability.get_ability()) == RuntimeAbility.ABILITY_EVENT_TYPE_BLOCKED:
-				block_button.text = "Unblock ability"
 	)
 
 	grant_button.pressed.connect(func ():
 		var ability: RuntimeAbility = get_ability()
 
 		if ability.is_granted():
-			if ability_container.try_revoke(ability.get_ability()) == RuntimeAbility.ABILITY_EVENT_TYPE_REVOKED:
-				grant_button.text = "Grant ability"
+			ability_container.try_revoke(ability.get_ability())
 		else:
-			if ability_container.try_grant(ability.get_ability()) == RuntimeAbility.ABILITY_EVENT_TYPE_GRANTED:
-				grant_button.text = "Revoke ability"
+			ability_container.try_grant(ability.get_ability())
 	)
 
 
@@ -93,6 +86,21 @@ ability_container.is_ability_cooldown_active(ability)	:{4}
 			})
 			)
 		
+		if ability_container.is_ability_active(ability):
+			activate_button.text = "End ability"
+		else:
+			activate_button.text = "Activate ability"
+			
+		if ability_container.is_ability_blocked(ability):
+			block_button.text = "Unblock ability"
+		else:
+			block_button.text = "Block ability"
+			
+		if ability_container.is_ability_granted(ability):
+			grant_button.text = "Revoke ability"
+		else:
+			grant_button.text = "Grant ability"
+			
 		activated_ability_state_h_box_container.value 	= ability_container.is_ability_active(ability)
 		blocked_ability_state_h_box_container.value 	= ability_container.is_ability_blocked(ability)
 		granted_ability_state_h_box_container.value 	= ability_container.is_ability_granted(ability)

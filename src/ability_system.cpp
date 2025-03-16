@@ -209,7 +209,7 @@ void RuntimeAbility::handle_tick(const double p_delta)
 		return;
 	}
 
-	/// if the ability should be activated, it will be re-activated
+	/// if the ability should be activated, it will be re-activated. This is ideal for continuous abilities.
 	activate();
 }
 
@@ -298,8 +298,24 @@ AbilityEventType RuntimeAbility::block()
 
 	SET_STATE(ABILITY_EVENT_TYPE_BLOCKED);
 
-	cooldown_time = 0.0;
-	duration_time = 0.0;
+	bool should_reset_cooldown = true;
+	bool should_reset_duration = true;
+
+	if (GDVIRTUAL_IS_OVERRIDDEN_PTR(ability, _should_reset_cooldown_on_block)) {
+		GDVIRTUAL_CALL_PTR(ability, _should_reset_cooldown_on_block, container, should_reset_cooldown);
+	}
+
+	if (GDVIRTUAL_IS_OVERRIDDEN_PTR(ability, _should_reset_duration_on_block)) {
+		GDVIRTUAL_CALL_PTR(ability, _should_reset_duration_on_block, container, should_reset_duration);
+	}
+
+	if (should_reset_cooldown) {
+		cooldown_time = 0.0;
+	}
+
+	if (should_reset_duration) {
+		duration_time = 0.0;
+	}
 
 	emit_signal("blocked");
 
@@ -405,7 +421,7 @@ bool RuntimeAbility::is_duration_active() const
 
 bool RuntimeAbility::is_ended() const
 {
-	return !IS_STATE(ABILITY_STATE_ACTIVE) || !IS_STATE(ABILITY_STATE_BLOCKED);
+	return !IS_STATE(ABILITY_STATE_ACTIVE) && !IS_STATE(ABILITY_STATE_BLOCKED);
 }
 
 bool RuntimeAbility::is_granted() const
@@ -536,7 +552,7 @@ void AbilityContainer::_bind_methods()
 	ClassDB::bind_method(D_METHOD("_on_revoked_ability", "runtime_ability"), &AbilityContainer::_on_revoked_ability);
 	ClassDB::bind_method(D_METHOD("_on_cooldown_end", "runtime_ability"), &AbilityContainer::_on_cooldown_end);
 	ClassDB::bind_method(D_METHOD("_on_cooldown_start", "runtime_ability"), &AbilityContainer::_on_cooldown_start);
-	ClassDB::bind_method(D_METHOD("_on_unblocked", "runtime_ability"), &AbilityContainer::_on_unblocked);
+	ClassDB::bind_method(D_METHOD("_on_unblocked_ability", "runtime_ability"), &AbilityContainer::_on_unblocked_ability);
 
 	/// binding properties to godot
 	ADD_PROPERTY(PropertyInfo(Variant::ARRAY, "abilities", PROPERTY_HINT_RESOURCE_TYPE, "24/17:Ability"), "set_initial_abilities", "get_initial_abilities");
@@ -629,7 +645,7 @@ void AbilityContainer::_on_cooldown_start(const Ref<RuntimeAbility> &p_runtime_a
 	emit_signal("cooldown_start", p_runtime_ability->get_ability());
 }
 
-void AbilityContainer::_on_unblocked(const Ref<RuntimeAbility> &p_runtime_ability)
+void AbilityContainer::_on_unblocked_ability(const Ref<RuntimeAbility> &p_runtime_ability)
 {
 	emit_signal("ability_unblocked", p_runtime_ability->get_ability());
 }
@@ -654,7 +670,7 @@ bool AbilityContainer::add_ability(const Ref<Ability> &p_ability)
 		runtime_ability->connect("revoked", Callable::create(this, "_on_revoked_ability").bind(runtime_ability));
 		runtime_ability->connect("cooldown_end", Callable::create(this, "_on_cooldown_end").bind(runtime_ability));
 		runtime_ability->connect("cooldown_start", Callable::create(this, "_on_cooldown_start").bind(runtime_ability));
-		runtime_ability->connect("unblocked", Callable::create(this, "_on_unblocked").bind(runtime_ability));
+		runtime_ability->connect("unblocked", Callable::create(this, "_on_unblocked_ability").bind(runtime_ability));
 
 		emit_signal("ability_added", p_ability);
 
@@ -902,6 +918,8 @@ void Ability::_bind_methods()
 	GDVIRTUAL_BIND(_should_be_activated, "ability_container");
 	GDVIRTUAL_BIND(_should_be_blocked, "ability_container");
 	GDVIRTUAL_BIND(_should_be_ended, "ability_container");
+	GDVIRTUAL_BIND(_should_reset_cooldown_on_block, "ability_container");
+	GDVIRTUAL_BIND(_should_reset_duration_on_block, "ability_container");
 }
 
 StringName Ability::get_ability_name() const

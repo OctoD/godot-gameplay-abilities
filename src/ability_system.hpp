@@ -252,7 +252,7 @@ namespace octod::gameplay::abilities
 		void _on_cooldown_start(const Ref<RuntimeAbility> &p_runtime_ability);
 		/// @brief Handles the ability unblock signal.
 		/// @param p_runtime_ability The runtime ability.
-		void _on_unblocked(const Ref<RuntimeAbility> &p_runtime_ability);
+		void _on_unblocked_ability(const Ref<RuntimeAbility> &p_runtime_ability);
 
 	public:
 		/// @brief Returns an instance of a RuntimeAbility. Override this method if you want to use an extended class of RuntimeAbility.
@@ -392,6 +392,7 @@ namespace octod::gameplay::abilities
 		/// @param The ability container.
 		GDVIRTUAL2(_on_revoke, AbilityContainer *, RuntimeAbility *);
 		/// @brief Called when the ability is ticked.
+		/// @note If you override this method you will have to deal by hand with automatic blocking/unblocking, cooldown and duration etc.
 		/// @param The ability container.
 		GDVIRTUAL4(_on_tick, double, double, AbilityContainer *, RuntimeAbility *);
 		/// @brief Called when the ability container checks if the ability should be activated.
@@ -400,6 +401,10 @@ namespace octod::gameplay::abilities
 		GDVIRTUAL1RC(bool, _should_be_blocked, AbilityContainer *);
 		/// @brief Called when the ability container checks if the ability should be granted.
 		GDVIRTUAL1RC(bool, _should_be_ended, AbilityContainer *);
+		/// @brief Called when the ability container checks if the ability cooldown should be reset when blocked.
+		GDVIRTUAL1RC(bool, _should_reset_cooldown_on_block, AbilityContainer *);
+		/// @brief Called when the ability container checks if the ability duration should be reset when blocked.
+		GDVIRTUAL1RC(bool, _should_reset_duration_on_block, AbilityContainer *);
 
 		/// @brief Gets the ability name.
 		/// @return The ability name.

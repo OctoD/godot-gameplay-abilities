@@ -347,8 +347,9 @@ AbilityContainer *RuntimeAbility::get_container() const
 double RuntimeAbility::get_cooldown() const
 {
 	if (GDVIRTUAL_IS_OVERRIDDEN_PTR(ability, _get_cooldown)) {
-		double cooldown = 0.0;
-		GDVIRTUAL_CALL_PTR(ability, _get_cooldown, container, cooldown);
+		if (double cooldown = 0.0; GDVIRTUAL_CALL_PTR(ability, _get_cooldown, container, cooldown)) {
+			return cooldown;
+		}
 	}
 
 	return 0.0;
@@ -357,8 +358,9 @@ double RuntimeAbility::get_cooldown() const
 double RuntimeAbility::get_duration() const
 {
 	if (GDVIRTUAL_IS_OVERRIDDEN_PTR(ability, _get_duration)) {
-		double duration = 0.0;
-		GDVIRTUAL_CALL_PTR(ability, _get_duration, container, duration);
+		if (double duration = 0.0; GDVIRTUAL_CALL_PTR(ability, _get_duration, container, duration)) {
+			return duration;
+		}
 	}
 
 	return 0.0;

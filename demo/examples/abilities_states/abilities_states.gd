@@ -2,23 +2,19 @@ extends VBoxContainer
 
 
 @onready var ability_container: AbilityContainer = %AbilityContainer
-@onready var ability_cooldown_spin_box: SpinBox = $HBoxContainer/AbilityCooldownSpinBox
 @onready var activate_button: Button = %ActivateButton
 @onready var block_button: Button = %BlockButton
 @onready var grant_button: Button = %GrantButton
+@onready var ability_cooldown_spin_box: SpinBox = %AbilityCooldownSpinBox
+@onready var duration_spin_box: SpinBox = %DurationSpinBox
 
 @onready var activated_ability_state_h_box_container: HBoxContainer = %ActivatedAbilityStateHBoxContainer
 @onready var blocked_ability_state_h_box_container: HBoxContainer = %BlockedAbilityStateHBoxContainer
 @onready var granted_ability_state_h_box_container: HBoxContainer = %GrantedAbilityStateHBoxContainer
 @onready var cooldown_ability_state_h_box_container: HBoxContainer = %CooldownAbilityStateHBoxContainer
-
-
-@export var ability_cooldown 	:= 0.0:
-	get:
-		return ability_cooldown_spin_box.value
-	set(value):
-		if value != null:
-			ability_cooldown_spin_box.value = value
+@onready var end_button: Button = %EndButton
+@onready var unblock_button: Button = %UnblockButton
+@onready var revoke_button: Button = %RevokeButton
 
 
 func _ready() -> void:
@@ -31,40 +27,20 @@ func _ready() -> void:
 	ability_container.cooldown_end.connect(handle_state_changed("cooldown_end"))
 	ability_container.cooldown_start.connect(handle_state_changed("cooldown_start"))
 	
-	ability_cooldown_spin_box.value = ability_cooldown
+	ability_cooldown_spin_box.value = 0.0
 	
-	handle_state_changed().call(get_ability().get_ability())
+	handle_state_changed().call(get_ability())
 	
-	activate_button.pressed.connect(func ():
-		var ability: RuntimeAbility = get_ability()
-		
-		if ability.is_active():
-			ability_container.try_end(ability.get_ability())
-		else:
-			ability_container.try_activate(ability.get_ability())
-	)
-	
-	block_button.pressed.connect(func ():
-		var ability: RuntimeAbility = get_ability()
-
-		if ability.is_blocked():
-			ability_container.try_unblock(ability.get_ability())
-		else:
-			ability_container.try_block(ability.get_ability())
-	)
-
-	grant_button.pressed.connect(func ():
-		var ability: RuntimeAbility = get_ability()
-
-		if ability.is_granted():
-			ability_container.try_revoke(ability.get_ability())
-		else:
-			ability_container.try_grant(ability.get_ability())
-	)
+	activate_button.pressed.connect(ability_container.try_activate.bind(get_ability()))
+	block_button.pressed.connect(ability_container.try_block.bind(get_ability()))
+	grant_button.pressed.connect(ability_container.try_grant.bind(get_ability()))
+	end_button.pressed.connect(ability_container.try_end.bind(get_ability()))
+	unblock_button.pressed.connect(ability_container.try_unblock.bind(get_ability()))
+	revoke_button.pressed.connect(ability_container.try_revoke.bind(get_ability()))
 
 
-func get_ability() -> RuntimeAbility:
-	return ability_container.get_ability(AbilitiesStatesTestAbility.ABILITY_NAME)
+func get_ability() -> Ability:
+	return ability_container.get_runtime_ability(AbilitiesStatesTestAbility.ABILITY_NAME).get_ability()
 	
 	
 func handle_state_changed(signal_name: String = "") -> Callable:
@@ -85,21 +61,6 @@ ability_container.is_ability_cooldown_active(ability)	:{4}
 				4: ability_container.is_ability_cooldown_active(ability),
 			})
 			)
-		
-		if ability_container.is_ability_active(ability):
-			activate_button.text = "End ability"
-		else:
-			activate_button.text = "Activate ability"
-			
-		if ability_container.is_ability_blocked(ability):
-			block_button.text = "Unblock ability"
-		else:
-			block_button.text = "Block ability"
-			
-		if ability_container.is_ability_granted(ability):
-			grant_button.text = "Revoke ability"
-		else:
-			grant_button.text = "Grant ability"
 			
 		activated_ability_state_h_box_container.value 	= ability_container.is_ability_active(ability)
 		blocked_ability_state_h_box_container.value 	= ability_container.is_ability_blocked(ability)

@@ -1,6 +1,6 @@
 [gd_scene load_steps=4 format=3 uid="uid://6my7uk0ymjke"]
 
-[ext_resource type="Script" uid="uid://cf47te3a3f74h" path="res://main.gd" id="1_ig7tw"]
+[ext_resource type="Script" uid="uid://dvrakog0hb8by" path="res://main.gd" id="1_ig7tw"]
 [ext_resource type="PackedScene" uid="uid://da22ctof8levq" path="res://examples/naval_battles/naval_battles.tscn" id="2_0xm2m"]
 [ext_resource type="PackedScene" uid="uid://ds6exarfjv6q7" path="res://examples/abilities_states/abilities_states.tscn" id="3_h2yge"]
 

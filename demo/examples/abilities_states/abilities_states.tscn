@@ -1,7 +1,7 @@
 [gd_scene load_steps=5 format=3 uid="uid://ds6exarfjv6q7"]
 
-[ext_resource type="Script" uid="uid://dfa0x18sdyu6o" path="res://examples/abilities_states/abilities_states.gd" id="1_705gc"]
-[ext_resource type="Script" uid="uid://dpc8pqdvlooj0" path="res://examples/abilities_states/abilities/abilities_states_test_ability.gd" id="2_2p100"]
+[ext_resource type="Script" uid="uid://ckp13ffbue64x" path="res://examples/abilities_states/abilities_states.gd" id="1_705gc"]
+[ext_resource type="Script" uid="uid://t5kk40w2pd7x" path="res://examples/abilities_states/abilities/abilities_states_test_ability.gd" id="2_2p100"]
 [ext_resource type="PackedScene" uid="uid://celbrugx55ha8" path="res://examples/abilities_states/ability_state_h_box_container.tscn" id="2_gi80w"]
 
 [sub_resource type="Ability" id="Ability_gi80w"]
@@ -16,30 +16,107 @@ anchor_right = 0.5
 anchor_bottom = 0.5
 grow_horizontal = 2
 grow_vertical = 2
+theme_override_constants/separation = 16
+alignment = 1
 script = ExtResource("1_705gc")
+
+[node name="AbilityContainer" type="AbilityContainer" parent="."]
+abilities = Array[Ability]([SubResource("Ability_gi80w")])
+unique_name_in_owner = true
 
 [node name="Ability States" type="Label" parent="."]
 layout_mode = 2
 text = "Ability States"
 
-[node name="AbilityStateHBoxContainer" parent="." node_paths=PackedStringArray("ability_container") instance=ExtResource("2_gi80w")]
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
 layout_mode = 2
-ability_container = NodePath("../AbilityContainer")
+theme_override_constants/separation = 8
 
-[node name="AbilityStateHBoxContainer2" parent="." node_paths=PackedStringArray("ability_container") instance=ExtResource("2_gi80w")]
+[node name="ActivatedAbilityStateHBoxContainer" parent="VBoxContainer" instance=ExtResource("2_gi80w")]
+unique_name_in_owner = true
 layout_mode = 2
-ability_container = NodePath("../AbilityContainer")
+
+[node name="BlockedAbilityStateHBoxContainer" parent="VBoxContainer" instance=ExtResource("2_gi80w")]
+unique_name_in_owner = true
+layout_mode = 2
 state_to_display = 1
 
-[node name="AbilityStateHBoxContainer3" parent="." node_paths=PackedStringArray("ability_container") instance=ExtResource("2_gi80w")]
+[node name="GrantedAbilityStateHBoxContainer" parent="VBoxContainer" instance=ExtResource("2_gi80w")]
+unique_name_in_owner = true
 layout_mode = 2
-ability_container = NodePath("../AbilityContainer")
 state_to_display = 2
 
-[node name="AbilityStateHBoxContainer4" parent="." node_paths=PackedStringArray("ability_container") instance=ExtResource("2_gi80w")]
+[node name="CooldownAbilityStateHBoxContainer" parent="VBoxContainer" instance=ExtResource("2_gi80w")]
+unique_name_in_owner = true
 layout_mode = 2
-ability_container = NodePath("../AbilityContainer")
 state_to_display = 3
 
-[node name="AbilityContainer" type="AbilityContainer" parent="."]
-abilities = Array[Ability]([SubResource("Ability_gi80w")])
+[node name="HBoxContainer" type="HBoxContainer" parent="."]
+layout_mode = 2
+alignment = 1
+
+[node name="ActivateButton" type="Button" parent="HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Activate ability"
+
+[node name="BlockButton" type="Button" parent="HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Block ability"
+
+[node name="GrantButton" type="Button" parent="HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Grant ability"
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="."]
+layout_mode = 2
+alignment = 1
+
+[node name="EndButton" type="Button" parent="HBoxContainer2"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+text = "End ability"
+
+[node name="UnblockButton" type="Button" parent="HBoxContainer2"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Unblock ability"
+
+[node name="RevokeButton" type="Button" parent="HBoxContainer2"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Revoke ability"
+
+[node name="HBoxContainer3" type="HBoxContainer" parent="."]
+layout_mode = 2
+theme_override_constants/separation = 32
+
+[node name="VBoxContainer" type="VBoxContainer" parent="HBoxContainer3"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="HBoxContainer3/VBoxContainer"]
+layout_mode = 2
+text = "Cooldown (in seconds)"
+
+[node name="AbilityCooldownSpinBox" type="SpinBox" parent="HBoxContainer3/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="VBoxContainer2" type="VBoxContainer" parent="HBoxContainer3"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="HBoxContainer3/VBoxContainer2"]
+layout_mode = 2
+text = "Duration (in seconds)"
+
+[node name="DurationSpinBox" type="SpinBox" parent="HBoxContainer3/VBoxContainer2"]
+unique_name_in_owner = true
+layout_mode = 2

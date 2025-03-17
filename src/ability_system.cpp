@@ -125,9 +125,11 @@ void RuntimeAbility::_bind_methods()
 	ClassDB::bind_method(D_METHOD("is_duration_active"), &RuntimeAbility::is_duration_active);
 	ClassDB::bind_method(D_METHOD("is_ended"), &RuntimeAbility::is_ended);
 	ClassDB::bind_method(D_METHOD("is_granted"), &RuntimeAbility::is_granted);
+	ClassDB::bind_method(D_METHOD("is_revoked"), &RuntimeAbility::is_revoked);
 	ClassDB::bind_method(D_METHOD("revoke"), &RuntimeAbility::revoke);
 	ClassDB::bind_method(D_METHOD("set_ability", "ability"), &RuntimeAbility::set_ability);
 	ClassDB::bind_method(D_METHOD("set_container", "container"), &RuntimeAbility::set_container);
+	ClassDB::bind_method(D_METHOD("unblock"), &RuntimeAbility::unblock);
 
 	/// binds enum constants to godot
 	BIND_ENUM_CONSTANT(ABILITY_EVENT_TYPE_ACTIVATED);

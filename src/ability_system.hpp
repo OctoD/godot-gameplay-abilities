@@ -20,6 +20,8 @@ namespace octod::gameplay::abilities
 	{
 		/// @brief Represents the ability being in no state.
 		ABILITY_STATE_IDLE = 1 << 0,
+		/// @brief Represents the ability being cooling down.
+		ABILITY_STATE_COOLING_DOWN = 1 << 1,
 		/// @brief Represents the ability being active.
 		ABILITY_STATE_ACTIVE = 1 << 2,
 		/// @brief Represents the ability being blocked.
@@ -71,6 +73,8 @@ namespace octod::gameplay::abilities
 		ABILITY_EVENT_TYPE_REFUSED_TO_END_IS_BLOCKED,
 		/// @brief Represents the ability being refused to end because it is not active.
 		ABILITY_EVENT_TYPE_REFUSED_TO_END_IS_NOT_ACTIVE,
+		/// @brief Represents the ability being refused to end because it is cooling down.
+		ABILITY_EVENT_TYPE_REFUSED_TO_END_IS_COOLING_DOWN,
 		/// @brief Represents the ability being refused to end because it is not granted.
 		ABILITY_EVENT_TYPE_REFUSED_TO_END_IS_NOT_GRANTED,
 

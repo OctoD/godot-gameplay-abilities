@@ -65,24 +65,32 @@ using namespace octod::gameplay::abilities;
 			state &= ~ABILITY_STATE_IDLE;    \
 			state |= ABILITY_STATE_ACTIVE;   \
 			break;							 \
+		case ABILITY_EVENT_TYPE_ACTIVATED_COOLDOWN_STARTED:   \
+			state &= ~ABILITY_STATE_ACTIVE;    \
+			state |= ABILITY_STATE_COOLING_DOWN;   \
+			break;							 \
 		case ABILITY_EVENT_TYPE_BLOCKED:     \
 			state &= ~ABILITY_STATE_ACTIVE;  \
+			state &= ~ABILITY_STATE_COOLING_DOWN;  \
 			state &= ~ABILITY_STATE_IDLE;    \
 			state |= ABILITY_STATE_BLOCKED;  \
 			break;                           \
 		case ABILITY_EVENT_TYPE_ENDED:       \
 			state &= ~ABILITY_STATE_ACTIVE;  \
+			state &= ~ABILITY_STATE_COOLING_DOWN;  \
 			state |= ABILITY_STATE_IDLE;     \
 			break;                           \
 		case ABILITY_EVENT_TYPE_GRANTED:     \
 			state &= ~ABILITY_STATE_ACTIVE;  \
 			state &= ~ABILITY_STATE_BLOCKED; \
+			state &= ~ABILITY_STATE_COOLING_DOWN; \
 			state |= ABILITY_STATE_IDLE;     \
 			state |= ABILITY_STATE_GRANTED;  \
 			break;                           \
 		case ABILITY_EVENT_TYPE_REVOKED:     \
 			state &= ~ABILITY_STATE_ACTIVE;  \
 			state &= ~ABILITY_STATE_BLOCKED; \
+			state &= ~ABILITY_STATE_COOLING_DOWN; \
 			state &= ~ABILITY_STATE_GRANTED; \
 			state &= ~ABILITY_STATE_IDLE;    \
 			break;                           \
@@ -143,6 +151,7 @@ void RuntimeAbility::_bind_methods()
 	BIND_ENUM_CONSTANT(ABILITY_EVENT_TYPE_REFUSED_TO_BLOCK_IS_NOT_GRANTED);
 	BIND_ENUM_CONSTANT(ABILITY_EVENT_TYPE_REFUSED_TO_END);
 	BIND_ENUM_CONSTANT(ABILITY_EVENT_TYPE_REFUSED_TO_END_IS_BLOCKED);
+	BIND_ENUM_CONSTANT(ABILITY_EVENT_TYPE_REFUSED_TO_END_IS_COOLING_DOWN);
 	BIND_ENUM_CONSTANT(ABILITY_EVENT_TYPE_REFUSED_TO_END_IS_NOT_ACTIVE);
 	BIND_ENUM_CONSTANT(ABILITY_EVENT_TYPE_REFUSED_TO_END_IS_NOT_GRANTED);
 	BIND_ENUM_CONSTANT(ABILITY_EVENT_TYPE_REFUSED_TO_GRANT);
@@ -196,7 +205,7 @@ void RuntimeAbility::handle_tick(const double p_delta)
 		return;
 	}
 
-	if (is_active() && is_cooldown_active())
+	if (IS_STATE(ABILITY_STATE_COOLING_DOWN) && is_cooldown_active())
 	{
 		cooldown_time -= p_delta;
 		return;
@@ -236,7 +245,7 @@ bool RuntimeAbility::trigger_cooldown()
 			cooldown_time = cooldown;
 		}
 
-		// SET_STATE(ABILITY_EVENT_TYPE_ENDED)
+		SET_STATE(ABILITY_EVENT_TYPE_ACTIVATED_COOLDOWN_STARTED)
 
 		emit_signal("cooldown_start");
 		return true;
@@ -369,9 +378,14 @@ AbilityEventType RuntimeAbility::end()
 		return ABILITY_EVENT_TYPE_REFUSED_TO_END_IS_BLOCKED;
 	}
 
-	if (!IS_STATE(ABILITY_STATE_ACTIVE))
+	if (!IS_STATE(ABILITY_STATE_ACTIVE) && !IS_STATE(ABILITY_STATE_COOLING_DOWN))
 	{
-		return ABILITY_EVENT_TYPE_REFUSED_TO_END_IS_NOT_ACTIVE;
+		return ABILITY_EVENT_TYPE_REFUSED_TO_END_IS_COOLING_DOWN;
+	}
+
+	if (IS_STATE(ABILITY_STATE_COOLING_DOWN) && !Math::is_zero_approx(cooldown_time))
+	{
+		return ABILITY_EVENT_TYPE_REFUSED_TO_END;
 	}
 
 	if (!IS_STATE(ABILITY_STATE_GRANTED))

@@ -18,7 +18,7 @@
 
 ## Using the GitHub repository
 
-1. Download the latest version of the addon from the [releases page](https://github.com/OctoD/godot-gameplay-abilities/releases).
+1. Download the latest version of the addon from the [release page](https://github.com/OctoD/godot-gameplay-abilities/releases).
 2. Extract the contents of the zip file into your project's `addons` folder.
 3. Enjoy!
 
@@ -47,7 +47,9 @@ This system relies on three things:
 - `AbilityContainer`: A container that holds abilities. It can be attached to any node in the scene.
 - `RuntimeAbility`: The runtime representation of an ability. It is created when an ability is added to an `AbilityContainer`.
 
-Each ability, in order to be used, must be granted first. 
+Each ability,
+to be used,
+must be granted first. 
 
 The grant can occur automatically if the overridden method `_can_be_granted` returns true or if it is not overridden, or it can be done manually by calling the `try_grant` method of the `AbilityContainer`.
 
@@ -85,15 +87,15 @@ func _can_be_blocked(ability_container: AbilityContainer, runtime_ability: Runti
 
 # Determines if the ability can be granted
 func _can_be_granted(ability_container: AbilityContainer, runtime_ability: RuntimeAbility) -> bool:
-    pass
+    return true
 
 # Determines if the ability can be revoked
 func _can_be_revoked(ability_container: AbilityContainer, runtime_ability: RuntimeAbility) -> bool:
-    pass
+    return false
 
 # Determines if the ability can be ended
 func _can_be_ended(ability_container: AbilityContainer, runtime_ability: RuntimeAbility) -> bool:
-    pass
+    return true
 
 # Gets the cooldown duration of the ability
 _get_cooldown(ability_container: AbilityContainer) -> float:

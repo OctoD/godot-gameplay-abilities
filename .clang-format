@@ -84,9 +84,9 @@ ConstructorInitializerAllOnOneLineOrOnePerLine: true
 # IfMacros:
 #   - KJ_IF_MAYBE
 # IncludeBlocks:   Preserve
-IndentBraces: true
-IndentClasses: true
-IndentNamespaces: true
+#IndentBraces: true
+#IndentClasses: true
+#IndentNamespaces: true
 IncludeCategories:
   - Regex:           '".*"'
     Priority:        1

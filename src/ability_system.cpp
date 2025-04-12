@@ -302,10 +302,6 @@ AbilityEventType RuntimeAbility::activate()
 {
 	ENSURE_ABILITY_EXECUTION(ABILITY_EVENT_TYPE_ERROR_ACTIVATING);
 
-	WARN_PRINT(IS_STATE(ABILITY_STATE_BLOCKED) ? "blocked" : "not blocked");
-
-	WARN_PRINT(String::num(state));
-
 	if (is_revoked())
 	{
 		return ABILITY_EVENT_TYPE_REFUSED_TO_ACTIVATE_IS_REVOKED;

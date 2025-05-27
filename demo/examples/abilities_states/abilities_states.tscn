@@ -1,7 +1,7 @@
 [gd_scene load_steps=5 format=3 uid="uid://ds6exarfjv6q7"]
 
-[ext_resource type="Script" uid="uid://ckp13ffbue64x" path="res://examples/abilities_states/abilities_states.gd" id="1_705gc"]
-[ext_resource type="Script" uid="uid://t5kk40w2pd7x" path="res://examples/abilities_states/abilities/abilities_states_test_ability.gd" id="2_2p100"]
+[ext_resource type="Script" uid="uid://dfa0x18sdyu6o" path="res://examples/abilities_states/abilities_states.gd" id="1_705gc"]
+[ext_resource type="Script" uid="uid://dpc8pqdvlooj0" path="res://examples/abilities_states/abilities/abilities_states_test_ability.gd" id="2_2p100"]
 [ext_resource type="PackedScene" uid="uid://celbrugx55ha8" path="res://examples/abilities_states/ability_state_h_box_container.tscn" id="2_gi80w"]
 
 [sub_resource type="Ability" id="Ability_gi80w"]

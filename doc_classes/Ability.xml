@@ -116,8 +116,9 @@
 			<param index="2" name="ability_container" type="AbilityContainer" />
 			<param index="3" name="runtime_ability" type="RuntimeAbility" />
 			<description>
-				Called when the ability is ticked. This will be called every frame and will replace the [RuntimeAbility] tick method entirely.
-			</description>
+				Called when the ability is ticked.This will be called every frame and will replace the [RuntimeAbility] tick method entirely.
+                [b]Warning:[/b] Overriding this method disables all default state management logic:Automatic cooldown/duration handling (no time decrement for [code]cooldown_time[/code] or [code]duration_time[/code], no signal emissions like [signal cooldown_start]), blocked/active/ended state transitions (no auto-calls to [method block], [method activate], or [method end]), and state flag updates (e.g., [constant ABILITY_STATE_ACTIVE]).You [b]must[/b] manually implement timing logic, state changes, and signal emissions.
+            </description>
 		</method>
 		<method name="_should_be_activated" qualifiers="virtual const">
 			<return type="bool" />

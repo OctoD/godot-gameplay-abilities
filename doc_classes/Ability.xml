@@ -12,7 +12,7 @@
 			<param index="0" name="ability_container" type="AbilityContainer" />
 			<param index="1" name="runtime_ability" type="RuntimeAbility" />
 			<description>
-				Called when the ability container checks if the ability cooldown can be activated and the method is overriden.If not overridden, the ability cooldown is activated by default(equivalent to returning [code]true[/code]).
+				Called when the ability container checks if the ability cooldown can be activated and the method is overridden.If not overridden, the ability cooldown is activated by default(equivalent to returning [code]true[/code]).
 			</description>
 		</method>
 		<method name="_can_be_activated" qualifiers="virtual const">
@@ -20,7 +20,7 @@
 			<param index="0" name="ability_container" type="AbilityContainer" />
 			<param index="1" name="runtime_ability" type="RuntimeAbility" />
 			<description>
-				Called when the ability container checks if the ability can be activated and the method is overriden.If not overridden, the request is refused by default (equivalent to returning [code]false[/code]).
+				Called when the ability container checks if the ability can be activated and the method is overridden.If not overridden, the request is refused by default (equivalent to returning [code]false[/code]).
 			</description>
 		</method>
 		<method name="_can_be_blocked" qualifiers="virtual const">
@@ -28,7 +28,7 @@
 			<param index="0" name="ability_container" type="AbilityContainer" />
 			<param index="1" name="runtime_ability" type="RuntimeAbility" />
 			<description>
-				Called when the ability container checks if the ability can be blocked and the method is overriden.If not overridden, the request is refused by default (equivalent to returning [code]false[/code]).
+				Called when the ability container checks if the ability can be blocked and the method is overridden.If not overridden, the request is refused by default (equivalent to returning [code]false[/code]).
 			</description>
 		</method>
 		<method name="_can_be_ended" qualifiers="virtual const">
@@ -36,7 +36,7 @@
 			<param index="0" name="ability_container" type="AbilityContainer" />
 			<param index="1" name="runtime_ability" type="RuntimeAbility" />
 			<description>
-				Called when the ability container checks if the ability can be cancelled and the method is overriden.If not overridden, the request is refused by default (equivalent to returning [code]false[/code]).
+				Called when the ability container checks if the ability can be cancelled and the method is overridden.If not overridden, the request is refused by default (equivalent to returning [code]false[/code]).
 			</description>
 		</method>
 		<method name="_can_be_granted" qualifiers="virtual const">
@@ -44,7 +44,7 @@
 			<param index="0" name="ability_container" type="AbilityContainer" />
 			<param index="1" name="runtime_ability" type="RuntimeAbility" />
 			<description>
-				Called when the ability container checks if the ability can be ended and the method is overriden.If not overridden, the request is refused by default (equivalent to returning [code]false[/code]).
+				Called when the ability container checks if the ability can be ended and the method is overridden.If not overridden, the request is refused by default (equivalent to returning [code]false[/code]).
 			</description>
 		</method>
 		<method name="_can_be_revoked" qualifiers="virtual const">
@@ -52,7 +52,7 @@
 			<param index="0" name="ability_container" type="AbilityContainer" />
 			<param index="1" name="runtime_ability" type="RuntimeAbility" />
 			<description>
-				Called when the ability container checks if the ability can be granted and the method is overriden.If not overridden, the request is refused by default (equivalent to returning [code]false[/code]).
+				Called when the ability container checks if the ability can be granted and the method is overridden.If not overridden, the request is refused by default (equivalent to returning [code]false[/code]).
 			</description>
 		</method>
 		<method name="_get_cooldown" qualifiers="virtual const">

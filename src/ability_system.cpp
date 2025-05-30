@@ -210,6 +210,11 @@ void RuntimeAbility::handle_tick(const double p_delta)
 	if (IS_STATE(ABILITY_STATE_COOLING_DOWN) && is_cooldown_active())
 	{
 		cooldown_time = Math::clamp(cooldown_time - p_delta, 0.0, get_cooldown());
+
+		if (!is_cooldown_active()) {
+			emit_signal("cooldown_end");
+		}
+
 		return;
 	}
 

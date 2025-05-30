@@ -197,7 +197,7 @@ void RuntimeAbility::handle_tick(const double p_delta)
 
 	if (is_active() && is_duration_active())
 	{
-		duration_time -= p_delta;
+		duration_time = Math::clamp(duration_time - p_delta, 0.0, get_duration());
 
 		if (!is_duration_active())
 		{
@@ -209,7 +209,7 @@ void RuntimeAbility::handle_tick(const double p_delta)
 
 	if (IS_STATE(ABILITY_STATE_COOLING_DOWN) && is_cooldown_active())
 	{
-		cooldown_time -= p_delta;
+		cooldown_time = Math::clamp(cooldown_time - p_delta, 0.0, get_cooldown());
 		return;
 	}
 
@@ -605,7 +605,7 @@ void AbilityContainer::_bind_methods()
 
 	/// binds virtual methods to godot
 	GDVIRTUAL_BIND(_build_runtime_ability, "ability_resource");
-	GDVIRTUAL_BIND(_process, "delta");
+	GDVIRTUAL_BIND(_physics_process, "delta");
 	GDVIRTUAL_BIND(_try_activate, "ability_or_ability_name");
 	GDVIRTUAL_BIND(_try_block, "ability_or_ability_name");
 	GDVIRTUAL_BIND(_try_end, "ability_or_ability_name");
@@ -673,17 +673,18 @@ void AbilityContainer::_notification(const int p_what)
 
 	if (p_what == NOTIFICATION_PHYSICS_PROCESS)
 	{
+		const double time = get_physics_process_delta_time();
 		TypedArray<RuntimeAbility> values = runtime_abilities.values();
 
 		for (int i = 0; i < values.size(); i++)
 		{
 			if (Ref<RuntimeAbility> runtime_ability = values[i]; runtime_ability.is_valid() && !runtime_ability.is_null() && runtime_ability->is_granted())
 			{
-				runtime_ability->handle_tick(get_physics_process_delta_time());
+				runtime_ability->handle_tick(time);
 			}
 		}
 
-		GDVIRTUAL_CALL(_process, get_physics_process_delta_time());
+		GDVIRTUAL_CALL(_physics_process, time);
 	}
 }
 

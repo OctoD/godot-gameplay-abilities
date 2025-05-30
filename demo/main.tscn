@@ -1,6 +1,6 @@
 [gd_scene load_steps=4 format=3 uid="uid://6my7uk0ymjke"]
 
-[ext_resource type="Script" uid="uid://dvrakog0hb8by" path="res://main.gd" id="1_ig7tw"]
+[ext_resource type="Script" uid="uid://cs65uellp7t40" path="res://main.gd" id="1_ig7tw"]
 [ext_resource type="PackedScene" uid="uid://da22ctof8levq" path="res://examples/naval_battles/naval_battles.tscn" id="2_0xm2m"]
 [ext_resource type="PackedScene" uid="uid://ds6exarfjv6q7" path="res://examples/abilities_states/abilities_states.tscn" id="3_h2yge"]
 
@@ -53,5 +53,5 @@ stretch = true
 [node name="ExampleSubViewport" type="SubViewport" parent="SubViewportContainer"]
 unique_name_in_owner = true
 handle_input_locally = false
-size = Vector2i(1152, 305)
+size = Vector2i(2, 2)
 render_target_update_mode = 4

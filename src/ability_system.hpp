@@ -131,8 +131,6 @@ namespace octod::gameplay::abilities
 		Ref<Ability> ability;
 		/// @brief The ability container which contains, owns and runs the ability.
 		AbilityContainer *container;
-		/// @brief Activates the ability every x seconds.
-		double activate_every = 0.0;
 		/// @brief The last tick time. Used by duration.
 		double duration_time = 0.0;
 		/// @brief The last tick time. Used by cooldown.
@@ -301,8 +299,8 @@ namespace octod::gameplay::abilities
 	public:
 		/// @brief Returns an instance of a RuntimeAbility. Override this method if you want to use an extended class of RuntimeAbility.
 		GDVIRTUAL1RC(Ref<RuntimeAbility>, _build_runtime_ability, Ref<Resource>); // NOLINT(*-unnecessary-value-param)
-		/// @brief The virtual method which handles the _process
-		GDVIRTUAL1(_process, double); // NOLINT(*-unnecessary-value-param)
+		/// @brief The virtual method which handles the _physics_process
+		GDVIRTUAL1(_physics_process, double); // NOLINT(*-unnecessary-value-param)
 		/// @brief The virtual method called to activate an ability.
 		GDVIRTUAL1RC(int, _try_activate, Variant); // NOLINT(*-unnecessary-value-param)
 		/// @brief The virtual method called to block an ability.

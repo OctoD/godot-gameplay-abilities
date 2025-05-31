@@ -55,6 +55,8 @@ The grant can occur automatically if the overridden method `_can_be_granted` ret
 
 A granted ability can be revoked by calling the `try_revoke` method of the `AbilityContainer`.
 
+You can refer to [USAGE](USAGE.md) for more detailed information.
+
 ## Creating an ability
 
 An ability is nothing more than a scripted `Resource` that extends the `Ability` class. You can create a new ability by creating a new script and extending the `Ability` class:

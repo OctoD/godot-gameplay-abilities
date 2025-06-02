@@ -357,8 +357,8 @@ func _should_be_ended(_ability_container: AbilityContainer) -> bool:
 #endregion
 
 #region Methods for cautious use
-# Overriding the _on_tick method will cause the cooldown and duration mechanisms to fail, as well as the per-frame _should_* method checks
 # Override this method with caution
+# Overriding this method transfers full control of ticking behavior to the implementer, bypassing the ability system's duration/cooldown handling and resulting in no calls to the per-frame `_should_*` method checks.
 #func _on_tick(delta: float, cooldown_time: float, ability_container: AbilityContainer, runtime_ability: RuntimeAbility) -> void:
     #pass
 #endregion

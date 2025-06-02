@@ -118,7 +118,7 @@
 			<description>
 				Called when the ability is ticked.This will be called every frame and will replace the [RuntimeAbility] tick method entirely.[br]
                 [b]Warning:[/b][br]
-                Overriding this method will cause the duration and cooldown handling mechanisms of the ability system to fail, as well as the per-frame `_should_*` method checks.
+                Overriding this method transfers full control of ticking behavior to the implementer, bypassing the ability system's duration/cooldown handling and resulting in no calls to the per-frame `_should_*` method checks.
 		</method>
 		<method name="_should_be_activated" qualifiers="virtual const">
 			<return type="bool" />

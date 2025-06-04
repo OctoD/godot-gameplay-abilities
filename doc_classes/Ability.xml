@@ -12,7 +12,7 @@
 			<param index="0" name="ability_container" type="AbilityContainer" />
 			<param index="1" name="runtime_ability" type="RuntimeAbility" />
 			<description>
-				Called when the ability container checks if the ability cooldown can be activated and the method is overriden.
+				Called when the ability container checks if the ability cooldown can be activated and the method is overridden.The default behavior is equivalent to returning [code]true[/code].
 			</description>
 		</method>
 		<method name="_can_be_activated" qualifiers="virtual const">
@@ -20,7 +20,7 @@
 			<param index="0" name="ability_container" type="AbilityContainer" />
 			<param index="1" name="runtime_ability" type="RuntimeAbility" />
 			<description>
-				Called when the ability container checks if the ability can be activated and the method is overriden.
+				Called when the ability container checks if the ability can be activated and the method is overridden.The default behavior is equivalent to returning [code]true[/code].
 			</description>
 		</method>
 		<method name="_can_be_blocked" qualifiers="virtual const">
@@ -28,7 +28,7 @@
 			<param index="0" name="ability_container" type="AbilityContainer" />
 			<param index="1" name="runtime_ability" type="RuntimeAbility" />
 			<description>
-				Called when the ability container checks if the ability can be blocked and the method is overriden.
+				Called when the ability container checks if the ability can be blocked and the method is overridden.The default behavior is equivalent to returning [code]true[/code].
 			</description>
 		</method>
 		<method name="_can_be_ended" qualifiers="virtual const">
@@ -36,7 +36,7 @@
 			<param index="0" name="ability_container" type="AbilityContainer" />
 			<param index="1" name="runtime_ability" type="RuntimeAbility" />
 			<description>
-				Called when the ability container checks if the ability can be cancelled and the method is overriden.
+				Called when the ability container checks if the ability can be cancelled and the method is overridden.The default behavior is equivalent to returning [code]true[/code].
 			</description>
 		</method>
 		<method name="_can_be_granted" qualifiers="virtual const">
@@ -44,7 +44,7 @@
 			<param index="0" name="ability_container" type="AbilityContainer" />
 			<param index="1" name="runtime_ability" type="RuntimeAbility" />
 			<description>
-				Called when the ability container checks if the ability can be ended and the method is overriden.
+				Called when the ability container checks if the ability can be ended and the method is overridden.The default behavior is equivalent to returning [code]true[/code].
 			</description>
 		</method>
 		<method name="_can_be_revoked" qualifiers="virtual const">
@@ -52,21 +52,21 @@
 			<param index="0" name="ability_container" type="AbilityContainer" />
 			<param index="1" name="runtime_ability" type="RuntimeAbility" />
 			<description>
-				Called when the ability container checks if the ability can be granted and the method is overriden.
+				Called when the ability container checks if the ability can be granted and the method is overridden.The default behavior is equivalent to returning [code]true[/code].
 			</description>
 		</method>
 		<method name="_get_cooldown" qualifiers="virtual const">
 			<return type="float" />
 			<param index="0" name="ability_container" type="AbilityContainer" />
 			<description>
-				Gets the ability cooldown.
+				Gets the ability cooldown.Default return [code]0.0[/code].
 			</description>
 		</method>
 		<method name="_get_duration" qualifiers="virtual const">
 			<return type="float" />
 			<param index="0" name="ability_container" type="AbilityContainer" />
 			<description>
-				Gets the ability duration.
+				Gets the ability duration.Default return [code]0.0[/code].
 			</description>
 		</method>
 		<method name="_on_activate" qualifiers="virtual">
@@ -116,28 +116,29 @@
 			<param index="2" name="ability_container" type="AbilityContainer" />
 			<param index="3" name="runtime_ability" type="RuntimeAbility" />
 			<description>
-				Called when the ability is ticked. This will be called every frame and will replace the [RuntimeAbility] tick method entirely.
-			</description>
+				Called when the ability is ticked.This will be called every frame and will replace the [RuntimeAbility] tick method entirely.[br]
+                [b]Warning:[/b][br]
+                Overriding this method transfers full control of ticking behavior to the implementer, bypassing the ability system's duration/cooldown handling and resulting in no calls to the per-frame `_should_*` method checks.
 		</method>
 		<method name="_should_be_activated" qualifiers="virtual const">
 			<return type="bool" />
 			<param index="0" name="ability_container" type="AbilityContainer" />
 			<description>
-				Called when the ability container checks if the ability should be activated.
+				Called when the ability container checks if the ability should be activated.Default return [code]false[/code].
 			</description>
 		</method>
 		<method name="_should_be_blocked" qualifiers="virtual const">
 			<return type="bool" />
 			<param index="0" name="ability_container" type="AbilityContainer" />
 			<description>
-				Called when the ability container checks if the ability should be blocked.
+				Called when the ability container checks if the ability should be blocked.Default return [code]false[/code].
 			</description>
 		</method>
 		<method name="_should_be_ended" qualifiers="virtual const">
 			<return type="bool" />
 			<param index="0" name="ability_container" type="AbilityContainer" />
 			<description>
-				Called when the ability container checks if the ability should be granted.
+				Called when the ability container checks if the ability should be granted.Default return [code]true[/code].
 			</description>
 		</method>
 	</methods>

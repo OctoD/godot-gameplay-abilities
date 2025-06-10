@@ -57,7 +57,7 @@
 				[br]
 				This method calls automatically:
 				- [code]try_grant(ability)[/code].
-				- [code]try_activate(ability)[/code] if the ability is granted.
+				- [code]try_activate(ability)[/code] if the ability is granted and the ability should be activated(reference [method Ability._should_be_activated])
 			</description>
 		</method>
 		<method name="find_ability" qualifiers="const">

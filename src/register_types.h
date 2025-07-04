@@ -1,3 +1,13 @@
+/**************************************************************************/
+/*  register_types.h                                                      */
+/**************************************************************************/
+/*                         This file is part of:                          */
+/*                        Godot Gameplay Systems                          */
+/*              https://github.com/OctoD/godot-gameplay-systems           */
+/**************************************************************************/
+/* Read the license file in this repo.						              */
+/**************************************************************************/
+
 #ifndef OCTOD_GAMEPLAY_ABILITIES_REGISTER_TYPES_H
 #define OCTOD_GAMEPLAY_ABILITIES_REGISTER_TYPES_H
 

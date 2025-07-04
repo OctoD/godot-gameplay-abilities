@@ -1,3 +1,13 @@
+/**************************************************************************/
+/*  ability_system.hpp                                                    */
+/**************************************************************************/
+/*                         This file is part of:                          */
+/*                        Godot Gameplay Systems                          */
+/*              https://github.com/OctoD/godot-gameplay-systems           */
+/**************************************************************************/
+/* Read the license file in this repo.						              */
+/**************************************************************************/
+
 #ifndef OCTOD_GAMEPLAY_ABILITIES_ABILITY_SYSTEM_HPP
 #define OCTOD_GAMEPLAY_ABILITIES_ABILITY_SYSTEM_HPP
 
@@ -131,6 +141,8 @@ namespace octod::gameplay::abilities
 		Ref<Ability> ability;
 		/// @brief The ability container which contains, owns and runs the ability.
 		AbilityContainer *container;
+		/// @brief Some arbitrary data stored on this ability.
+		Variant data;
 		/// @brief The last tick time. Used by duration.
 		double duration_time = 0.0;
 		/// @brief The last tick time. Used by cooldown.
@@ -157,6 +169,10 @@ namespace octod::gameplay::abilities
 		/// @brief Gets the ability cooldown.
 		/// @return The ability cooldown.
 		[[nodiscard]] double get_cooldown() const;
+
+		/// @brief Gets the ability's data.
+		/// @return The ability's data
+		[[nodiscard]] Variant get_data() const;
 
 		/// @brief Gets the ability duration.
 		/// @return The ability duration.
@@ -203,6 +219,10 @@ namespace octod::gameplay::abilities
 		/// @brief Sets the ability container.
 		/// @param p_container The ability container.
 		void set_container(AbilityContainer *p_container);
+
+		/// @brief Sets the ability's data.
+		/// @param p_data the ability's data.
+		void set_data(const Variant &p_data);
 
 		/// @brief Returns true if the ability should be activated.
 		/// @return True if the ability should be activated, false otherwise.
@@ -407,6 +427,7 @@ namespace octod::gameplay::abilities
 	};
 
 #pragma endregion
+
 #pragma region Ability
 
 	// ReSharper disable once CppClassCanBeFinal

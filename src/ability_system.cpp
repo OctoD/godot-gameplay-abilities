@@ -660,6 +660,12 @@ bool AbilityContainer::add_ability(const Ref<Ability> &p_ability)
 
 		runtime_abilities[p_ability->get_ability_name()] = runtime_ability;
 
+		if (GDVIRTUAL_IS_OVERRIDDEN_PTR(p_ability, _get_initial_data)) {
+			if (Variant data = {}; GDVIRTUAL_CALL_PTR(p_ability, _get_initial_data, this, data)) {
+				runtime_ability->set_data(data);
+			}
+		}
+
 		runtime_ability->connect("activated", Callable::create(this, "_on_active_ability").bind(runtime_ability));
 		runtime_ability->connect("blocked", Callable::create(this, "_on_blocked_ability").bind(runtime_ability));
 		runtime_ability->connect("ended", Callable::create(this, "_on_ended_ability").bind(runtime_ability));

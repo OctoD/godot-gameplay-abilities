@@ -11,6 +11,8 @@
 #ifndef OCTOD_GAMEPLAY_ABILITIES_ABILITY_SYSTEM_HPP
 #define OCTOD_GAMEPLAY_ABILITIES_ABILITY_SYSTEM_HPP
 
+#include "ability_system.hpp"
+
 #include <godot_cpp/classes/node.hpp>
 #include <godot_cpp/classes/resource.hpp>
 #include <godot_cpp/core/binder_common.hpp>
@@ -455,6 +457,8 @@ namespace octod::gameplay::abilities
 		GDVIRTUAL1RC(double, _get_cooldown, AbilityContainer *);
 		/// @brief Gets the ability duration.
 		GDVIRTUAL1RC(double, _get_duration, AbilityContainer *);
+		/// @brief Gets the ability's initial data.
+		GDVIRTUAL1RC(Variant, _get_initial_data, AbilityContainer *);
 		/// @brief Called when the ability is activated.
 		/// @param The ability container.
 		GDVIRTUAL2(_on_activate, AbilityContainer *, RuntimeAbility *);

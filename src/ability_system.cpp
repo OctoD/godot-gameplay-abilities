@@ -979,6 +979,7 @@ void Ability::_bind_methods()
 	GDVIRTUAL_BIND(_can_be_revoked, "ability_container", "runtime_ability");
 	GDVIRTUAL_BIND(_get_cooldown, "ability_container");
 	GDVIRTUAL_BIND(_get_duration, "ability_container");
+	GDVIRTUAL_BIND(_get_initial_data, "ability_container");
 	GDVIRTUAL_BIND(_on_activate, "ability_container", "runtime_ability");
 	GDVIRTUAL_BIND(_on_block, "ability_container", "runtime_ability");
 	GDVIRTUAL_BIND(_on_end, "ability_container", "runtime_ability");

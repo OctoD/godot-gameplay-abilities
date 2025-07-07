@@ -585,7 +585,7 @@ void AbilityContainer::_notification(const int p_what)
 {
 	if (p_what == NOTIFICATION_READY) {
 		for (int i = 0; i < initial_abilities.size(); i++) {
-			if (Ref<Ability> ability = initial_abilities[i]; ability.is_valid() && !ability.is_null()) {
+			if (Ref<Ability> ability = initial_abilities[i]; ability.is_valid()) {
 				add_ability(ability);
 			}
 		}
@@ -598,7 +598,7 @@ void AbilityContainer::_notification(const int p_what)
 		TypedArray<RuntimeAbility> values = runtime_abilities.values();
 
 		for (int i = 0; i < values.size(); i++) {
-			if (Ref<RuntimeAbility> runtime_ability = values[i]; runtime_ability.is_valid() && !runtime_ability.is_null() && runtime_ability->is_granted()) {
+			if (Ref<RuntimeAbility> runtime_ability = values[i]; runtime_ability.is_valid() && runtime_ability->is_granted()) {
 				runtime_ability->handle_tick(time);
 			}
 		}
@@ -650,7 +650,6 @@ void AbilityContainer::_on_unblocked_ability(const Ref<RuntimeAbility> &p_runtim
 bool AbilityContainer::add_ability(const Ref<Ability> &p_ability)
 {
 	ERR_FAIL_COND_V_MSG(p_ability.is_null(), false, "The Ability cannot be null.");
-	ERR_FAIL_COND_V_MSG(!p_ability.is_valid(), false, "The Ability Ref cannot be invalid.");
 
 	if (!has_ability(p_ability)) {
 		const Ref runtime_ability = memnew(RuntimeAbility);
@@ -688,7 +687,7 @@ bool AbilityContainer::add_ability(const Ref<Ability> &p_ability)
 Ref<RuntimeAbility> AbilityContainer::get_runtime_ability(const Variant &p_variant) const
 {
 	if (p_variant.get_type() == Variant::OBJECT) {
-		if (const Ref<Ability> ability = p_variant; ability.is_valid() && !ability.is_null()) {
+		if (const Ref<Ability> ability = p_variant; ability.is_valid()) {
 			return runtime_abilities[ability->get_ability_name()];
 		}
 	}
@@ -711,7 +710,7 @@ Ref<RuntimeAbility> AbilityContainer::find_ability(const Callable &p_predicate) 
 	TypedArray<RuntimeAbility> values = runtime_abilities.values();
 
 	for (int i = 0; i < values.size(); i++) {
-		if (Ref<RuntimeAbility> runtime_ability = values[i]; runtime_ability.is_valid() && !runtime_ability.is_null() && p_predicate.call(runtime_ability, i)) {
+		if (Ref<RuntimeAbility> runtime_ability = values[i]; runtime_ability.is_valid() && p_predicate.call(runtime_ability, i)) {
 			return runtime_ability;
 		}
 	}
@@ -723,7 +722,7 @@ bool AbilityContainer::has_ability(const Variant &p_variant) const
 {
 	if (p_variant.get_type() == Variant::OBJECT) {
 		const Ref<Ability> ability = p_variant;
-		return ability.is_valid() && !ability.is_null() && runtime_abilities.has(ability->get_ability_name());
+		return ability.is_valid() && runtime_abilities.has(ability->get_ability_name());
 	}
 
 	if (p_variant.get_type() == Variant::STRING) {
@@ -736,31 +735,31 @@ bool AbilityContainer::has_ability(const Variant &p_variant) const
 bool AbilityContainer::is_ability_active(const Variant &p_variant) const
 {
 	const Ref<RuntimeAbility> runtime_ability = get_runtime_ability(p_variant);
-	return runtime_ability.is_valid() && !runtime_ability.is_null() && runtime_ability->is_active();
+	return runtime_ability.is_valid() && runtime_ability->is_active();
 }
 
 bool AbilityContainer::is_ability_blocked(const Variant &p_variant) const
 {
 	const Ref<RuntimeAbility> runtime_ability = get_runtime_ability(p_variant);
-	return runtime_ability.is_valid() && !runtime_ability.is_null() && runtime_ability->is_blocked();
+	return runtime_ability.is_valid() && runtime_ability->is_blocked();
 }
 
 bool AbilityContainer::is_ability_cooldown_active(const Variant &p_variant) const
 {
 	const Ref<RuntimeAbility> runtime_ability = get_runtime_ability(p_variant);
-	return runtime_ability.is_valid() && !runtime_ability.is_null() && runtime_ability->is_cooldown_active();
+	return runtime_ability.is_valid() && runtime_ability->is_cooldown_active();
 }
 
 bool AbilityContainer::is_ability_ended(const Variant &p_variant) const
 {
 	const Ref<RuntimeAbility> runtime_ability = get_runtime_ability(p_variant);
-	return runtime_ability.is_valid() && !runtime_ability.is_null() && runtime_ability->is_ended();
+	return runtime_ability.is_valid() && runtime_ability->is_ended();
 }
 
 bool AbilityContainer::is_ability_granted(const Variant &p_variant) const
 {
 	const Ref<RuntimeAbility> runtime_ability = get_runtime_ability(p_variant);
-	return runtime_ability.is_valid() && !runtime_ability.is_null() && runtime_ability->is_granted();
+	return runtime_ability.is_valid() && runtime_ability->is_granted();
 }
 
 bool AbilityContainer::remove_ability(const Ref<Ability> &p_ability)

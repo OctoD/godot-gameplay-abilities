@@ -304,6 +304,26 @@ namespace octod::gameplay::abilities
 		/// @return The ability
 		[[nodiscard]] Ref<RuntimeAbility> find_ability(const Callable &p_predicate) const;
 
+		/// @brief Gets all active abilities
+		/// @return The abilities
+		[[nodiscard]] TypedArray<RuntimeAbility> get_all_active_abilities() const;
+
+		/// @brief Gets all blocked abilities
+		/// @return The abilities
+		[[nodiscard]] TypedArray<RuntimeAbility> get_all_blocked_abilities() const;
+
+		/// @brief Gets all abilities that have a cooldown active
+		/// @return The abilities
+		[[nodiscard]] TypedArray<RuntimeAbility> get_all_cooling_down_abilities() const;
+
+		/// @brief Gets all granted abilities
+		/// @return The abilities
+		[[nodiscard]] TypedArray<RuntimeAbility> get_all_granted_abilities() const;
+
+		/// @brief Gets all revoked abilities
+		/// @return The abilities
+		[[nodiscard]] TypedArray<RuntimeAbility> get_all_revoked_abilities() const;
+
 		/// @brief Gets the runtime abilities.
 		/// @return The runtime abilities.
 		[[nodiscard]] TypedArray<RuntimeAbility> get_runtime_abilities() const;
@@ -321,6 +341,26 @@ namespace octod::gameplay::abilities
 		/// @param p_variant The ability to check.
 		/// @return True if the container has the ability, false otherwise.
 		[[nodiscard]] bool has_ability(const Variant &p_variant) const;
+
+		/// @brief Checks if there are some active abilities.
+		/// @return True if some were found, false otherwise.
+		[[nodiscard]] bool has_some_active_abilities() const;
+
+		/// @brief Checks if there are some active abilities.
+		/// @return True if some were found, false otherwise.
+		[[nodiscard]] bool has_some_blocked_abilities() const;
+
+		/// @brief Checks if there are some active abilities.
+		/// @return True if some were found, false otherwise.
+		[[nodiscard]] bool has_some_cooling_down_abilities() const;
+
+		/// @brief Checks if there are some active abilities.
+		/// @return True if some were found, false otherwise.
+		[[nodiscard]] bool has_some_granted_abilities() const;
+
+		/// @brief Checks if there are some active abilities.
+		/// @return True if some were found, false otherwise.
+		[[nodiscard]] bool has_some_revoked_abilities() const;
 
 		/// @brief Checks if the ability is active.
 		/// @param p_variant The ability to check.

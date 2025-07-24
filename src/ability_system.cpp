@@ -678,6 +678,126 @@ Ref<RuntimeAbility> AbilityContainer::find_ability(const Callable &p_predicate) 
 	return {};
 }
 
+TypedArray<RuntimeAbility> AbilityContainer::get_all_active_abilities() const
+{
+	TypedArray<RuntimeAbility> out;
+
+	for (int i = 0; i < runtime_abilities.size(); i++) {
+		if (Ref<RuntimeAbility> runtime_ability = runtime_abilities[i]; runtime_ability.is_valid() && runtime_ability->is_active()) {
+			out.push_back(runtime_ability);
+		}
+	}
+
+	return out;
+}
+
+TypedArray<RuntimeAbility> AbilityContainer::get_all_blocked_abilities() const
+{
+	TypedArray<RuntimeAbility> out;
+
+	for (int i = 0; i < runtime_abilities.size(); i++) {
+		if (Ref<RuntimeAbility> runtime_ability = runtime_abilities[i]; runtime_ability.is_valid() && runtime_ability->is_blocked()) {
+			out.push_back(runtime_ability);
+		}
+	}
+
+	return out;
+}
+
+TypedArray<RuntimeAbility> AbilityContainer::get_all_cooling_down_abilities() const
+{
+	TypedArray<RuntimeAbility> out;
+
+	for (int i = 0; i < runtime_abilities.size(); i++) {
+		if (Ref<RuntimeAbility> runtime_ability = runtime_abilities[i]; runtime_ability.is_valid() && runtime_ability->is_cooldown_active()) {
+			out.push_back(runtime_ability);
+		}
+	}
+
+	return out;
+}
+
+TypedArray<RuntimeAbility> AbilityContainer::get_all_granted_abilities() const
+{
+	TypedArray<RuntimeAbility> out;
+
+	for (int i = 0; i < runtime_abilities.size(); i++) {
+		if (Ref<RuntimeAbility> runtime_ability = runtime_abilities[i]; runtime_ability.is_valid() && runtime_ability->is_granted()) {
+			out.push_back(runtime_ability);
+		}
+	}
+
+	return out;
+}
+
+TypedArray<RuntimeAbility> AbilityContainer::get_all_revoked_abilities() const
+{
+	TypedArray<RuntimeAbility> out;
+
+	for (int i = 0; i < runtime_abilities.size(); i++) {
+		if (Ref<RuntimeAbility> runtime_ability = runtime_abilities[i]; runtime_ability.is_valid() && runtime_ability->is_revoked()) {
+			out.push_back(runtime_ability);
+		}
+	}
+
+	return out;
+}
+
+bool AbilityContainer::has_some_active_abilities() const
+{
+	for (int i = 0; i < runtime_abilities.size(); i++) {
+		if (Ref<RuntimeAbility> runtime_ability = runtime_abilities[i]; runtime_ability.is_valid() && runtime_ability->is_active()) {
+			return true;
+		}
+	}
+
+	return false;
+}
+
+bool AbilityContainer::has_some_blocked_abilities() const
+{
+	for (int i = 0; i < runtime_abilities.size(); i++) {
+		if (Ref<RuntimeAbility> runtime_ability = runtime_abilities[i]; runtime_ability.is_valid() && runtime_ability->is_blocked()) {
+			return true;
+		}
+	}
+
+	return false;
+}
+
+bool AbilityContainer::has_some_cooling_down_abilities() const
+{
+	for (int i = 0; i < runtime_abilities.size(); i++) {
+		if (Ref<RuntimeAbility> runtime_ability = runtime_abilities[i]; runtime_ability.is_valid() && runtime_ability->is_cooldown_active()) {
+			return true;
+		}
+	}
+
+	return false;
+}
+
+bool AbilityContainer::has_some_granted_abilities() const
+{
+	for (int i = 0; i < runtime_abilities.size(); i++) {
+		if (Ref<RuntimeAbility> runtime_ability = runtime_abilities[i]; runtime_ability.is_valid() && runtime_ability->is_granted()) {
+			return true;
+		}
+	}
+
+	return false;
+}
+
+bool AbilityContainer::has_some_revoked_abilities() const
+{
+	for (int i = 0; i < runtime_abilities.size(); i++) {
+		if (Ref<RuntimeAbility> runtime_ability = runtime_abilities[i]; runtime_ability.is_valid() && runtime_ability->is_revoked()) {
+			return true;
+		}
+	}
+
+	return false;
+}
+
 bool AbilityContainer::has_ability(const Variant &p_variant) const
 {
 	if (p_variant.get_type() == Variant::OBJECT) {
@@ -854,6 +974,11 @@ void AbilityContainer::_bind_methods()
 	/// binds methods to godot
 	ClassDB::bind_method(D_METHOD("add_ability", "ability"), &AbilityContainer::add_ability);
 	ClassDB::bind_method(D_METHOD("find_ability", "predicate"), &AbilityContainer::find_ability);
+	ClassDB::bind_method(D_METHOD("get_all_active_abilities"), &AbilityContainer::get_all_active_abilities);
+	ClassDB::bind_method(D_METHOD("get_all_blocked_abilities"), &AbilityContainer::get_all_blocked_abilities);
+	ClassDB::bind_method(D_METHOD("get_all_cooling_down_abilities"), &AbilityContainer::get_all_cooling_down_abilities);
+	ClassDB::bind_method(D_METHOD("get_all_granted_abilities"), &AbilityContainer::get_all_granted_abilities);
+	ClassDB::bind_method(D_METHOD("get_all_revoked_abilities"), &AbilityContainer::get_all_revoked_abilities);
 	ClassDB::bind_method(D_METHOD("get_initial_abilities"), &AbilityContainer::get_initial_abilities);
 	ClassDB::bind_method(D_METHOD("get_runtime_ability", "ability_name_or_instance"), &AbilityContainer::get_runtime_ability);
 	ClassDB::bind_method(D_METHOD("get_runtime_abilities"), &AbilityContainer::get_runtime_abilities);
@@ -863,6 +988,11 @@ void AbilityContainer::_bind_methods()
 	ClassDB::bind_method(D_METHOD("is_ability_cooldown_active", "ability_name_or_instance"), &AbilityContainer::is_ability_cooldown_active);
 	ClassDB::bind_method(D_METHOD("is_ability_ended", "ability_name_or_instance"), &AbilityContainer::is_ability_ended);
 	ClassDB::bind_method(D_METHOD("is_ability_granted", "ability_name_or_instance"), &AbilityContainer::is_ability_granted);
+	ClassDB::bind_method(D_METHOD("has_some_active_abilities"), &AbilityContainer::has_some_active_abilities);
+	ClassDB::bind_method(D_METHOD("has_some_blocked_abilities"), &AbilityContainer::has_some_blocked_abilities);
+	ClassDB::bind_method(D_METHOD("has_some_cooling_down_abilities"), &AbilityContainer::has_some_cooling_down_abilities);
+	ClassDB::bind_method(D_METHOD("has_some_granted_abilities"), &AbilityContainer::has_some_granted_abilities);
+	ClassDB::bind_method(D_METHOD("has_some_revoked_abilities"), &AbilityContainer::has_some_revoked_abilities);
 	ClassDB::bind_method(D_METHOD("remove_ability", "ability"), &AbilityContainer::remove_ability);
 	ClassDB::bind_method(D_METHOD("set_initial_abilities", "abilities"), &AbilityContainer::set_initial_abilities);
 	ClassDB::bind_method(D_METHOD("try_activate", "ability_or_ability_name"), &AbilityContainer::try_activate);

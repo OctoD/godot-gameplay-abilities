@@ -276,48 +276,6 @@ namespace octod::gameplay::abilities
 		Dictionary runtime_abilities = Dictionary();
 		TypedArray<Ability> initial_abilities = TypedArray<Ability>();
 
-	protected:
-		/// @brief Binds the methods to godot.
-		static void _bind_methods();
-
-		[[nodiscard]] Ref<RuntimeAbility> build_runtime_ability(const Ref<Ability> &p_ability) const;
-
-		/// @brief Called when the node receives a notification.
-		// ReSharper disable once CppHidingFunction
-		void _notification(int p_what);
-
-		/// @brief Handles the active ability signal.
-		/// @param p_runtime_ability The runtime ability.
-		void _on_active_ability(const Ref<RuntimeAbility> &p_runtime_ability);
-
-		/// @brief Handles the blocked ability signal.
-		/// @param p_runtime_ability The runtime ability.
-		void _on_blocked_ability(const Ref<RuntimeAbility> &p_runtime_ability);
-
-		/// @brief Handles the ended ability signal.
-		/// @param p_runtime_ability The runtime ability.
-		void _on_ended_ability(const Ref<RuntimeAbility> &p_runtime_ability);
-
-		/// @brief Handles the granted ability signal.
-		/// @param p_runtime_ability The runtime ability.
-		void _on_granted_ability(const Ref<RuntimeAbility> &p_runtime_ability);
-
-		/// @brief Handles the revoked ability signal.
-		/// @param p_runtime_ability The runtime ability.
-		void _on_revoked_ability(const Ref<RuntimeAbility> &p_runtime_ability);
-
-		/// @brief Handles the cooldown end signal.
-		/// @param p_runtime_ability The runtime ability.
-		void _on_cooldown_end(const Ref<RuntimeAbility> &p_runtime_ability);
-
-		/// @brief Handles the cooldown start signal.
-		/// @param p_runtime_ability The runtime ability.
-		void _on_cooldown_start(const Ref<RuntimeAbility> &p_runtime_ability);
-
-		/// @brief Handles the ability unblock signal.
-		/// @param p_runtime_ability The runtime ability.
-		void _on_unblocked_ability(const Ref<RuntimeAbility> &p_runtime_ability);
-
 	public:
 		/// @brief Returns an instance of a RuntimeAbility. Override this method if you want to use an extended class of RuntimeAbility.
 		GDVIRTUAL1RC(Ref<RuntimeAbility>, _build_runtime_ability, Ref<Resource>); // NOLINT(*-unnecessary-value-param)
@@ -426,6 +384,48 @@ namespace octod::gameplay::abilities
 		/// @param p_ability_or_ability_name The ability to unblock.
 		/// @return The resulting AbilityEventType.
 		[[nodiscard]] AbilityEventType try_unblock(const Variant &p_ability_or_ability_name) const;
+
+	protected:
+		/// @brief Binds the methods to godot.
+		static void _bind_methods();
+
+		[[nodiscard]] Ref<RuntimeAbility> build_runtime_ability(const Ref<Ability> &p_ability) const;
+
+		/// @brief Called when the node receives a notification.
+		// ReSharper disable once CppHidingFunction
+		void _notification(int p_what);
+
+		/// @brief Handles the active ability signal.
+		/// @param p_runtime_ability The runtime ability.
+		void _on_active_ability(const Ref<RuntimeAbility> &p_runtime_ability);
+
+		/// @brief Handles the blocked ability signal.
+		/// @param p_runtime_ability The runtime ability.
+		void _on_blocked_ability(const Ref<RuntimeAbility> &p_runtime_ability);
+
+		/// @brief Handles the ended ability signal.
+		/// @param p_runtime_ability The runtime ability.
+		void _on_ended_ability(const Ref<RuntimeAbility> &p_runtime_ability);
+
+		/// @brief Handles the granted ability signal.
+		/// @param p_runtime_ability The runtime ability.
+		void _on_granted_ability(const Ref<RuntimeAbility> &p_runtime_ability);
+
+		/// @brief Handles the revoked ability signal.
+		/// @param p_runtime_ability The runtime ability.
+		void _on_revoked_ability(const Ref<RuntimeAbility> &p_runtime_ability);
+
+		/// @brief Handles the cooldown end signal.
+		/// @param p_runtime_ability The runtime ability.
+		void _on_cooldown_end(const Ref<RuntimeAbility> &p_runtime_ability);
+
+		/// @brief Handles the cooldown start signal.
+		/// @param p_runtime_ability The runtime ability.
+		void _on_cooldown_start(const Ref<RuntimeAbility> &p_runtime_ability);
+
+		/// @brief Handles the ability unblock signal.
+		/// @param p_runtime_ability The runtime ability.
+		void _on_unblocked_ability(const Ref<RuntimeAbility> &p_runtime_ability);
 	};
 
 #pragma endregion

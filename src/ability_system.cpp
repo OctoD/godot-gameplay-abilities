@@ -607,46 +607,6 @@ void AbilityContainer::_notification(const int p_what)
 	}
 }
 
-void AbilityContainer::_on_active_ability(const Ref<RuntimeAbility> &p_runtime_ability)
-{
-	emit_signal("ability_activated", p_runtime_ability->get_ability());
-}
-
-void AbilityContainer::_on_blocked_ability(const Ref<RuntimeAbility> &p_runtime_ability)
-{
-	emit_signal("ability_blocked", p_runtime_ability->get_ability());
-}
-
-void AbilityContainer::_on_ended_ability(const Ref<RuntimeAbility> &p_runtime_ability)
-{
-	emit_signal("ability_ended", p_runtime_ability->get_ability());
-}
-
-void AbilityContainer::_on_granted_ability(const Ref<RuntimeAbility> &p_runtime_ability)
-{
-	emit_signal("ability_granted", p_runtime_ability->get_ability());
-}
-
-void AbilityContainer::_on_revoked_ability(const Ref<RuntimeAbility> &p_runtime_ability)
-{
-	emit_signal("ability_revoked", p_runtime_ability->get_ability());
-}
-
-void AbilityContainer::_on_cooldown_end(const Ref<RuntimeAbility> &p_runtime_ability)
-{
-	emit_signal("cooldown_end", p_runtime_ability->get_ability());
-}
-
-void AbilityContainer::_on_cooldown_start(const Ref<RuntimeAbility> &p_runtime_ability)
-{
-	emit_signal("cooldown_start", p_runtime_ability->get_ability());
-}
-
-void AbilityContainer::_on_unblocked_ability(const Ref<RuntimeAbility> &p_runtime_ability)
-{
-	emit_signal("ability_unblocked", p_runtime_ability->get_ability());
-}
-
 bool AbilityContainer::add_ability(const Ref<Ability> &p_ability)
 {
 	ERR_FAIL_COND_V_MSG(p_ability.is_null(), false, "The Ability cannot be null.");
@@ -950,6 +910,46 @@ void AbilityContainer::_bind_methods()
 	ADD_SIGNAL(MethodInfo("ability_unblocked", PropertyInfo(Variant::OBJECT, "ability", PROPERTY_HINT_RESOURCE_TYPE, "Ability")));
 	ADD_SIGNAL(MethodInfo("cooldown_end", PropertyInfo(Variant::OBJECT, "ability", PROPERTY_HINT_RESOURCE_TYPE, "Ability")));
 	ADD_SIGNAL(MethodInfo("cooldown_start", PropertyInfo(Variant::OBJECT, "ability", PROPERTY_HINT_RESOURCE_TYPE, "Ability")));
+}
+
+void AbilityContainer::_on_active_ability(const Ref<RuntimeAbility> &p_runtime_ability)
+{
+	emit_signal("ability_activated", p_runtime_ability->get_ability());
+}
+
+void AbilityContainer::_on_blocked_ability(const Ref<RuntimeAbility> &p_runtime_ability)
+{
+	emit_signal("ability_blocked", p_runtime_ability->get_ability());
+}
+
+void AbilityContainer::_on_ended_ability(const Ref<RuntimeAbility> &p_runtime_ability)
+{
+	emit_signal("ability_ended", p_runtime_ability->get_ability());
+}
+
+void AbilityContainer::_on_granted_ability(const Ref<RuntimeAbility> &p_runtime_ability)
+{
+	emit_signal("ability_granted", p_runtime_ability->get_ability());
+}
+
+void AbilityContainer::_on_revoked_ability(const Ref<RuntimeAbility> &p_runtime_ability)
+{
+	emit_signal("ability_revoked", p_runtime_ability->get_ability());
+}
+
+void AbilityContainer::_on_cooldown_end(const Ref<RuntimeAbility> &p_runtime_ability)
+{
+	emit_signal("cooldown_end", p_runtime_ability->get_ability());
+}
+
+void AbilityContainer::_on_cooldown_start(const Ref<RuntimeAbility> &p_runtime_ability)
+{
+	emit_signal("cooldown_start", p_runtime_ability->get_ability());
+}
+
+void AbilityContainer::_on_unblocked_ability(const Ref<RuntimeAbility> &p_runtime_ability)
+{
+	emit_signal("ability_unblocked", p_runtime_ability->get_ability());
 }
 
 #pragma endregion

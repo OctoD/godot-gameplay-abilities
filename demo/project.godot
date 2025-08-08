@@ -12,7 +12,7 @@ config_version=5
 
 config/name="godot gameplay abilities"
 run/main_scene="uid://6my7uk0ymjke"
-config/features=PackedStringArray("4.4", "Forward Plus")
+config/features=PackedStringArray("4.5", "Forward Plus")
 config/icon="res://icon.svg"
 
 [input]

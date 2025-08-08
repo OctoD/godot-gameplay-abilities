@@ -681,9 +681,10 @@ Ref<RuntimeAbility> AbilityContainer::find_ability(const Callable &p_predicate) 
 TypedArray<RuntimeAbility> AbilityContainer::get_all_active_abilities() const
 {
 	TypedArray<RuntimeAbility> out;
+	TypedArray<RuntimeAbility> _abilities = runtime_abilities.values();
 
-	for (int i = 0; i < runtime_abilities.size(); i++) {
-		if (Ref<RuntimeAbility> runtime_ability = runtime_abilities[i]; runtime_ability.is_valid() && runtime_ability->is_active()) {
+	for (int i = 0; i < _abilities.size(); i++) {
+		if (Ref<RuntimeAbility> runtime_ability = _abilities[i]; runtime_ability.is_valid() && runtime_ability->is_active()) {
 			out.push_back(runtime_ability);
 		}
 	}
@@ -694,9 +695,10 @@ TypedArray<RuntimeAbility> AbilityContainer::get_all_active_abilities() const
 TypedArray<RuntimeAbility> AbilityContainer::get_all_blocked_abilities() const
 {
 	TypedArray<RuntimeAbility> out;
+	TypedArray<RuntimeAbility> _abilities = runtime_abilities.values();
 
-	for (int i = 0; i < runtime_abilities.size(); i++) {
-		if (Ref<RuntimeAbility> runtime_ability = runtime_abilities[i]; runtime_ability.is_valid() && runtime_ability->is_blocked()) {
+	for (int i = 0; i < _abilities.size(); i++) {
+		if (Ref<RuntimeAbility> runtime_ability = _abilities[i]; runtime_ability.is_valid() && runtime_ability->is_blocked()) {
 			out.push_back(runtime_ability);
 		}
 	}
@@ -707,9 +709,10 @@ TypedArray<RuntimeAbility> AbilityContainer::get_all_blocked_abilities() const
 TypedArray<RuntimeAbility> AbilityContainer::get_all_cooling_down_abilities() const
 {
 	TypedArray<RuntimeAbility> out;
+	TypedArray<RuntimeAbility> _abilities = runtime_abilities.values();
 
-	for (int i = 0; i < runtime_abilities.size(); i++) {
-		if (Ref<RuntimeAbility> runtime_ability = runtime_abilities[i]; runtime_ability.is_valid() && runtime_ability->is_cooldown_active()) {
+	for (int i = 0; i < _abilities.size(); i++) {
+		if (Ref<RuntimeAbility> runtime_ability = _abilities[i]; runtime_ability.is_valid() && runtime_ability->is_cooldown_active()) {
 			out.push_back(runtime_ability);
 		}
 	}
@@ -720,9 +723,10 @@ TypedArray<RuntimeAbility> AbilityContainer::get_all_cooling_down_abilities() co
 TypedArray<RuntimeAbility> AbilityContainer::get_all_granted_abilities() const
 {
 	TypedArray<RuntimeAbility> out;
+	TypedArray<RuntimeAbility> _abilities = runtime_abilities.values();
 
-	for (int i = 0; i < runtime_abilities.size(); i++) {
-		if (Ref<RuntimeAbility> runtime_ability = runtime_abilities[i]; runtime_ability.is_valid() && runtime_ability->is_granted()) {
+	for (int i = 0; i < _abilities.size(); i++) {
+		if (Ref<RuntimeAbility> runtime_ability = _abilities[i]; runtime_ability.is_valid() && runtime_ability->is_granted()) {
 			out.push_back(runtime_ability);
 		}
 	}
@@ -733,9 +737,10 @@ TypedArray<RuntimeAbility> AbilityContainer::get_all_granted_abilities() const
 TypedArray<RuntimeAbility> AbilityContainer::get_all_revoked_abilities() const
 {
 	TypedArray<RuntimeAbility> out;
+	TypedArray<RuntimeAbility> _abilities = runtime_abilities.values();
 
-	for (int i = 0; i < runtime_abilities.size(); i++) {
-		if (Ref<RuntimeAbility> runtime_ability = runtime_abilities[i]; runtime_ability.is_valid() && runtime_ability->is_revoked()) {
+	for (int i = 0; i < _abilities.size(); i++) {
+		if (Ref<RuntimeAbility> runtime_ability = _abilities[i]; runtime_ability.is_valid() && runtime_ability->is_revoked()) {
 			out.push_back(runtime_ability);
 		}
 	}
@@ -745,8 +750,10 @@ TypedArray<RuntimeAbility> AbilityContainer::get_all_revoked_abilities() const
 
 bool AbilityContainer::has_some_active_abilities() const
 {
-	for (int i = 0; i < runtime_abilities.size(); i++) {
-		if (Ref<RuntimeAbility> runtime_ability = runtime_abilities[i]; runtime_ability.is_valid() && runtime_ability->is_active()) {
+	TypedArray<RuntimeAbility> _abilities = runtime_abilities.values();
+
+	for (int i = 0; i < _abilities.size(); i++) {
+		if (Ref<RuntimeAbility> runtime_ability = _abilities[i]; runtime_ability.is_valid() && runtime_ability->is_active()) {
 			return true;
 		}
 	}
@@ -756,8 +763,10 @@ bool AbilityContainer::has_some_active_abilities() const
 
 bool AbilityContainer::has_some_blocked_abilities() const
 {
-	for (int i = 0; i < runtime_abilities.size(); i++) {
-		if (Ref<RuntimeAbility> runtime_ability = runtime_abilities[i]; runtime_ability.is_valid() && runtime_ability->is_blocked()) {
+	TypedArray<RuntimeAbility> _abilities = runtime_abilities.values();
+
+	for (int i = 0; i < _abilities.size(); i++) {
+		if (Ref<RuntimeAbility> runtime_ability = _abilities[i]; runtime_ability.is_valid() && runtime_ability->is_blocked()) {
 			return true;
 		}
 	}
@@ -767,8 +776,10 @@ bool AbilityContainer::has_some_blocked_abilities() const
 
 bool AbilityContainer::has_some_cooling_down_abilities() const
 {
-	for (int i = 0; i < runtime_abilities.size(); i++) {
-		if (Ref<RuntimeAbility> runtime_ability = runtime_abilities[i]; runtime_ability.is_valid() && runtime_ability->is_cooldown_active()) {
+	TypedArray<RuntimeAbility> _abilities = runtime_abilities.values();
+
+	for (int i = 0; i < _abilities.size(); i++) {
+		if (Ref<RuntimeAbility> runtime_ability = _abilities[i]; runtime_ability.is_valid() && runtime_ability->is_cooldown_active()) {
 			return true;
 		}
 	}
@@ -778,8 +789,10 @@ bool AbilityContainer::has_some_cooling_down_abilities() const
 
 bool AbilityContainer::has_some_granted_abilities() const
 {
-	for (int i = 0; i < runtime_abilities.size(); i++) {
-		if (Ref<RuntimeAbility> runtime_ability = runtime_abilities[i]; runtime_ability.is_valid() && runtime_ability->is_granted()) {
+	TypedArray<RuntimeAbility> _abilities = runtime_abilities.values();
+
+	for (int i = 0; i < _abilities.size(); i++) {
+		if (Ref<RuntimeAbility> runtime_ability = _abilities[i]; runtime_ability.is_valid() && runtime_ability->is_granted()) {
 			return true;
 		}
 	}
@@ -789,8 +802,10 @@ bool AbilityContainer::has_some_granted_abilities() const
 
 bool AbilityContainer::has_some_revoked_abilities() const
 {
-	for (int i = 0; i < runtime_abilities.size(); i++) {
-		if (Ref<RuntimeAbility> runtime_ability = runtime_abilities[i]; runtime_ability.is_valid() && runtime_ability->is_revoked()) {
+	TypedArray<RuntimeAbility> _abilities = runtime_abilities.values();
+
+	for (int i = 0; i < _abilities.size(); i++) {
+		if (Ref<RuntimeAbility> runtime_ability = _abilities[i]; runtime_ability.is_valid() && runtime_ability->is_revoked()) {
 			return true;
 		}
 	}

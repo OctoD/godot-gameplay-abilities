@@ -172,10 +172,6 @@ namespace octod::gameplay::abilities
 		/// @return The ability cooldown.
 		[[nodiscard]] double get_cooldown() const;
 
-		/// @brief Gets the remaining cooldown.
-		/// @return The remaining cooldown if active, 0.0 otherwise.
-		[[nodiscard]] double get_remaining_cooldown() const;
-
 		/// @brief Gets the ability's data.
 		/// @return The ability's data
 		[[nodiscard]] Variant get_data() const;
@@ -183,6 +179,10 @@ namespace octod::gameplay::abilities
 		/// @brief Gets the ability duration.
 		/// @return The ability duration.
 		[[nodiscard]] double get_duration() const;
+
+		/// @brief Gets the remaining cooldown.
+		/// @return The remaining cooldown if active, 0.0 otherwise.
+		[[nodiscard]] double get_remaining_cooldown() const;
 
 		/// @brief Gets the remaining duration of the ability.
 		/// @return The remaining duration if active, 0.0 otherwise.

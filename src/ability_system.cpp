@@ -342,15 +342,6 @@ double RuntimeAbility::get_cooldown() const
 	return 0.0;
 }
 
-double RuntimeAbility::get_remaining_cooldown() const
-{
-	if (IS_STATE(ABILITY_STATE_COOLING_DOWN) && is_cooldown_active()) {
-		return cooldown_time;
-	}
-
-	return 0.0;
-}
-
 Variant RuntimeAbility::get_data() const
 {
 	return data;
@@ -362,6 +353,15 @@ double RuntimeAbility::get_duration() const
 		if (double duration = 0.0; GDVIRTUAL_CALL_PTR(ability, _get_duration, container, duration)) {
 			return duration;
 		}
+	}
+
+	return 0.0;
+}
+
+double RuntimeAbility::get_remaining_cooldown() const
+{
+	if (IS_STATE(ABILITY_STATE_COOLING_DOWN) && is_cooldown_active()) {
+		return cooldown_time;
 	}
 
 	return 0.0;

@@ -520,9 +520,9 @@ void RuntimeAbility::_bind_methods()
 	ClassDB::bind_method(D_METHOD("get_ability"), &RuntimeAbility::get_ability);
 	ClassDB::bind_method(D_METHOD("get_container"), &RuntimeAbility::get_container);
 	ClassDB::bind_method(D_METHOD("get_cooldown"), &RuntimeAbility::get_cooldown);
-	ClassDB::bind_method(D_METHOD("get_remaining_cooldown"), &RuntimeAbility::get_remaining_cooldown);
 	ClassDB::bind_method(D_METHOD("get_data"), &RuntimeAbility::get_data);
 	ClassDB::bind_method(D_METHOD("get_duration"), &RuntimeAbility::get_duration);
+	ClassDB::bind_method(D_METHOD("get_remaining_cooldown"), &RuntimeAbility::get_remaining_cooldown);
 	ClassDB::bind_method(D_METHOD("get_remaining_duration"), &RuntimeAbility::get_remaining_duration);
 	ClassDB::bind_method(D_METHOD("grant"), &RuntimeAbility::grant);
 	ClassDB::bind_method(D_METHOD("is_active"), &RuntimeAbility::is_active);

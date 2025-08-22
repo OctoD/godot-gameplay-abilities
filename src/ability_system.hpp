@@ -180,6 +180,14 @@ namespace octod::gameplay::abilities
 		/// @return The ability duration.
 		[[nodiscard]] double get_duration() const;
 
+		/// @brief Gets the remaining cooldown.
+		/// @return The remaining cooldown if active, 0.0 otherwise.
+		[[nodiscard]] double get_remaining_cooldown() const;
+
+		/// @brief Gets the remaining duration of the ability.
+		/// @return The remaining duration if active, 0.0 otherwise.
+		[[nodiscard]] double get_remaining_duration() const;
+
 		/// @brief Grants the ability.
 		AbilityEventType grant();
 

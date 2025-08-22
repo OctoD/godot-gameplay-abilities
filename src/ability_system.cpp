@@ -358,6 +358,24 @@ double RuntimeAbility::get_duration() const
 	return 0.0;
 }
 
+double RuntimeAbility::get_remaining_cooldown() const
+{
+	if (IS_STATE(ABILITY_STATE_COOLING_DOWN) && is_cooldown_active()) {
+		return cooldown_time;
+	}
+
+	return 0.0;
+}
+
+double RuntimeAbility::get_remaining_duration() const
+{
+	if (IS_STATE(ABILITY_STATE_ACTIVE) && is_active()) {
+		return duration_time;
+	}
+
+	return 0.0;
+}
+
 AbilityEventType RuntimeAbility::grant()
 {
 	ENSURE_ABILITY_EXECUTION(ABILITY_EVENT_TYPE_ERROR_GRANTING);
@@ -504,6 +522,8 @@ void RuntimeAbility::_bind_methods()
 	ClassDB::bind_method(D_METHOD("get_cooldown"), &RuntimeAbility::get_cooldown);
 	ClassDB::bind_method(D_METHOD("get_data"), &RuntimeAbility::get_data);
 	ClassDB::bind_method(D_METHOD("get_duration"), &RuntimeAbility::get_duration);
+	ClassDB::bind_method(D_METHOD("get_remaining_cooldown"), &RuntimeAbility::get_remaining_cooldown);
+	ClassDB::bind_method(D_METHOD("get_remaining_duration"), &RuntimeAbility::get_remaining_duration);
 	ClassDB::bind_method(D_METHOD("grant"), &RuntimeAbility::grant);
 	ClassDB::bind_method(D_METHOD("is_active"), &RuntimeAbility::is_active);
 	ClassDB::bind_method(D_METHOD("is_blocked"), &RuntimeAbility::is_blocked);

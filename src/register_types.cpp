@@ -1,3 +1,13 @@
+/**************************************************************************/
+/*  register_types.cpp                                                    */
+/**************************************************************************/
+/*                         This file is part of:                          */
+/*                        Godot Gameplay Systems                          */
+/*              https://github.com/OctoD/godot-gameplay-systems           */
+/**************************************************************************/
+/* Read the license file in this repo.						              */
+/**************************************************************************/
+
 #include "register_types.h"
 #include <gdextension_interface.h>
 #include <godot_cpp/godot.hpp>

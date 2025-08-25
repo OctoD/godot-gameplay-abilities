@@ -49,6 +49,18 @@
 				Gets the duration of the ability.
 			</description>
 		</method>
+		<method name="get_remaining_cooldown" qualifiers="const">
+			<return type="float" />
+			<description>
+				Gets the remaining cooldown of the ability.
+			</description>
+		</method>
+		<method name="get_remaining_duration" qualifiers="const">
+			<return type="float" />
+			<description>
+				Gets the remaining duration of the ability.
+			</description>
+		</method>
 		<method name="grant">
 			<return type="int" enum="ggas.AbilityEventType" />
 			<description>

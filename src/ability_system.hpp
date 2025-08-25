@@ -1,5 +1,17 @@
+/**************************************************************************/
+/*  ability_system.hpp                                                    */
+/**************************************************************************/
+/*                         This file is part of:                          */
+/*                        Godot Gameplay Systems                          */
+/*              https://github.com/OctoD/godot-gameplay-systems           */
+/**************************************************************************/
+/* Read the license file in this repo.						              */
+/**************************************************************************/
+
 #ifndef OCTOD_GAMEPLAY_ABILITIES_ABILITY_SYSTEM_HPP
 #define OCTOD_GAMEPLAY_ABILITIES_ABILITY_SYSTEM_HPP
+
+#include "ability_system.hpp"
 
 #include <godot_cpp/classes/node.hpp>
 #include <godot_cpp/classes/resource.hpp>
@@ -131,6 +143,8 @@ namespace octod::gameplay::abilities
 		Ref<Ability> ability;
 		/// @brief The ability container which contains, owns and runs the ability.
 		AbilityContainer *container;
+		/// @brief Some arbitrary data stored on this ability.
+		Variant data;
 		/// @brief The last tick time. Used by duration.
 		double duration_time = 0.0;
 		/// @brief The last tick time. Used by cooldown.
@@ -158,9 +172,21 @@ namespace octod::gameplay::abilities
 		/// @return The ability cooldown.
 		[[nodiscard]] double get_cooldown() const;
 
+		/// @brief Gets the ability's data.
+		/// @return The ability's data
+		[[nodiscard]] Variant get_data() const;
+
 		/// @brief Gets the ability duration.
 		/// @return The ability duration.
 		[[nodiscard]] double get_duration() const;
+
+		/// @brief Gets the remaining cooldown.
+		/// @return The remaining cooldown if active, 0.0 otherwise.
+		[[nodiscard]] double get_remaining_cooldown() const;
+
+		/// @brief Gets the remaining duration of the ability.
+		/// @return The remaining duration if active, 0.0 otherwise.
+		[[nodiscard]] double get_remaining_duration() const;
 
 		/// @brief Grants the ability.
 		AbilityEventType grant();
@@ -203,6 +229,10 @@ namespace octod::gameplay::abilities
 		/// @brief Sets the ability container.
 		/// @param p_container The ability container.
 		void set_container(AbilityContainer *p_container);
+
+		/// @brief Sets the ability's data.
+		/// @param p_data the ability's data.
+		void set_data(const Variant &p_data);
 
 		/// @brief Returns true if the ability should be activated.
 		/// @return True if the ability should be activated, false otherwise.
@@ -254,48 +284,6 @@ namespace octod::gameplay::abilities
 		Dictionary runtime_abilities = Dictionary();
 		TypedArray<Ability> initial_abilities = TypedArray<Ability>();
 
-	protected:
-		/// @brief Binds the methods to godot.
-		static void _bind_methods();
-
-		[[nodiscard]] Ref<RuntimeAbility> build_runtime_ability(const Ref<Ability> &p_ability) const;
-
-		/// @brief Called when the node receives a notification.
-		// ReSharper disable once CppHidingFunction
-		void _notification(int p_what);
-
-		/// @brief Handles the active ability signal.
-		/// @param p_runtime_ability The runtime ability.
-		void _on_active_ability(const Ref<RuntimeAbility> &p_runtime_ability);
-
-		/// @brief Handles the blocked ability signal.
-		/// @param p_runtime_ability The runtime ability.
-		void _on_blocked_ability(const Ref<RuntimeAbility> &p_runtime_ability);
-
-		/// @brief Handles the ended ability signal.
-		/// @param p_runtime_ability The runtime ability.
-		void _on_ended_ability(const Ref<RuntimeAbility> &p_runtime_ability);
-
-		/// @brief Handles the granted ability signal.
-		/// @param p_runtime_ability The runtime ability.
-		void _on_granted_ability(const Ref<RuntimeAbility> &p_runtime_ability);
-
-		/// @brief Handles the revoked ability signal.
-		/// @param p_runtime_ability The runtime ability.
-		void _on_revoked_ability(const Ref<RuntimeAbility> &p_runtime_ability);
-
-		/// @brief Handles the cooldown end signal.
-		/// @param p_runtime_ability The runtime ability.
-		void _on_cooldown_end(const Ref<RuntimeAbility> &p_runtime_ability);
-
-		/// @brief Handles the cooldown start signal.
-		/// @param p_runtime_ability The runtime ability.
-		void _on_cooldown_start(const Ref<RuntimeAbility> &p_runtime_ability);
-
-		/// @brief Handles the ability unblock signal.
-		/// @param p_runtime_ability The runtime ability.
-		void _on_unblocked_ability(const Ref<RuntimeAbility> &p_runtime_ability);
-
 	public:
 		/// @brief Returns an instance of a RuntimeAbility. Override this method if you want to use an extended class of RuntimeAbility.
 		GDVIRTUAL1RC(Ref<RuntimeAbility>, _build_runtime_ability, Ref<Resource>); // NOLINT(*-unnecessary-value-param)
@@ -324,6 +312,26 @@ namespace octod::gameplay::abilities
 		/// @return The ability
 		[[nodiscard]] Ref<RuntimeAbility> find_ability(const Callable &p_predicate) const;
 
+		/// @brief Gets all active abilities
+		/// @return The abilities
+		[[nodiscard]] TypedArray<RuntimeAbility> get_all_active_abilities() const;
+
+		/// @brief Gets all blocked abilities
+		/// @return The abilities
+		[[nodiscard]] TypedArray<RuntimeAbility> get_all_blocked_abilities() const;
+
+		/// @brief Gets all abilities that have a cooldown active
+		/// @return The abilities
+		[[nodiscard]] TypedArray<RuntimeAbility> get_all_cooling_down_abilities() const;
+
+		/// @brief Gets all granted abilities
+		/// @return The abilities
+		[[nodiscard]] TypedArray<RuntimeAbility> get_all_granted_abilities() const;
+
+		/// @brief Gets all revoked abilities
+		/// @return The abilities
+		[[nodiscard]] TypedArray<RuntimeAbility> get_all_revoked_abilities() const;
+
 		/// @brief Gets the runtime abilities.
 		/// @return The runtime abilities.
 		[[nodiscard]] TypedArray<RuntimeAbility> get_runtime_abilities() const;
@@ -341,6 +349,26 @@ namespace octod::gameplay::abilities
 		/// @param p_variant The ability to check.
 		/// @return True if the container has the ability, false otherwise.
 		[[nodiscard]] bool has_ability(const Variant &p_variant) const;
+
+		/// @brief Checks if there are some active abilities.
+		/// @return True if some were found, false otherwise.
+		[[nodiscard]] bool has_some_active_abilities() const;
+
+		/// @brief Checks if there are some active abilities.
+		/// @return True if some were found, false otherwise.
+		[[nodiscard]] bool has_some_blocked_abilities() const;
+
+		/// @brief Checks if there are some active abilities.
+		/// @return True if some were found, false otherwise.
+		[[nodiscard]] bool has_some_cooling_down_abilities() const;
+
+		/// @brief Checks if there are some active abilities.
+		/// @return True if some were found, false otherwise.
+		[[nodiscard]] bool has_some_granted_abilities() const;
+
+		/// @brief Checks if there are some active abilities.
+		/// @return True if some were found, false otherwise.
+		[[nodiscard]] bool has_some_revoked_abilities() const;
 
 		/// @brief Checks if the ability is active.
 		/// @param p_variant The ability to check.
@@ -404,9 +432,52 @@ namespace octod::gameplay::abilities
 		/// @param p_ability_or_ability_name The ability to unblock.
 		/// @return The resulting AbilityEventType.
 		[[nodiscard]] AbilityEventType try_unblock(const Variant &p_ability_or_ability_name) const;
+
+	protected:
+		/// @brief Binds the methods to godot.
+		static void _bind_methods();
+
+		[[nodiscard]] Ref<RuntimeAbility> build_runtime_ability(const Ref<Ability> &p_ability) const;
+
+		/// @brief Called when the node receives a notification.
+		// ReSharper disable once CppHidingFunction
+		void _notification(int p_what);
+
+		/// @brief Handles the active ability signal.
+		/// @param p_runtime_ability The runtime ability.
+		void _on_active_ability(const Ref<RuntimeAbility> &p_runtime_ability);
+
+		/// @brief Handles the blocked ability signal.
+		/// @param p_runtime_ability The runtime ability.
+		void _on_blocked_ability(const Ref<RuntimeAbility> &p_runtime_ability);
+
+		/// @brief Handles the ended ability signal.
+		/// @param p_runtime_ability The runtime ability.
+		void _on_ended_ability(const Ref<RuntimeAbility> &p_runtime_ability);
+
+		/// @brief Handles the granted ability signal.
+		/// @param p_runtime_ability The runtime ability.
+		void _on_granted_ability(const Ref<RuntimeAbility> &p_runtime_ability);
+
+		/// @brief Handles the revoked ability signal.
+		/// @param p_runtime_ability The runtime ability.
+		void _on_revoked_ability(const Ref<RuntimeAbility> &p_runtime_ability);
+
+		/// @brief Handles the cooldown end signal.
+		/// @param p_runtime_ability The runtime ability.
+		void _on_cooldown_end(const Ref<RuntimeAbility> &p_runtime_ability);
+
+		/// @brief Handles the cooldown start signal.
+		/// @param p_runtime_ability The runtime ability.
+		void _on_cooldown_start(const Ref<RuntimeAbility> &p_runtime_ability);
+
+		/// @brief Handles the ability unblock signal.
+		/// @param p_runtime_ability The runtime ability.
+		void _on_unblocked_ability(const Ref<RuntimeAbility> &p_runtime_ability);
 	};
 
 #pragma endregion
+
 #pragma region Ability
 
 	// ReSharper disable once CppClassCanBeFinal
@@ -434,6 +505,8 @@ namespace octod::gameplay::abilities
 		GDVIRTUAL1RC(double, _get_cooldown, AbilityContainer *);
 		/// @brief Gets the ability duration.
 		GDVIRTUAL1RC(double, _get_duration, AbilityContainer *);
+		/// @brief Gets the ability's initial data.
+		GDVIRTUAL1RC(Variant, _get_initial_data, AbilityContainer *);
 		/// @brief Called when the ability is activated.
 		/// @param The ability container.
 		GDVIRTUAL2(_on_activate, AbilityContainer *, RuntimeAbility *);
